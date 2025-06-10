@@ -1,13 +1,13 @@
-package org.sistema.vista;
+package org.sistema.vista.gestionpaciente;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class VentanaArchivo extends JFrame {
+public class VentanaGestionPaciente extends JFrame {
     private JLabel lblTitulo = new JLabel("Abrir archivo");
     private LienzoArchivo lienzoArchivo = new LienzoArchivo();
 
-    public VentanaArchivo() throws HeadlessException {
+    public VentanaGestionPaciente() throws HeadlessException {
         super();
         this.setTitle("Análisis de archivos");
         this.setSize(800, 520);

@@ -13,7 +13,7 @@ public class Cita {
     private Integer idCita;
     private String especialidad;
     private String doctor;
-    private String paciente;
+    private Paciente paciente;
     private double costo;
     private LocalDateTime fecha;
     private String estado;

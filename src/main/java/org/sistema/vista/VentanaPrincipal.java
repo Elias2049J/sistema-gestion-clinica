@@ -1,12 +1,18 @@
 package org.sistema.vista;
 
+import org.sistema.vista.gestionpaciente.VentanaGestionPaciente;
+import org.sistema.vista.gestionpaciente.VentanaHistorialCitas;
+import org.sistema.vista.gestionpaciente.VentanaHistorialClinico;
+
 import javax.swing.*;
 import java.awt.*;
 import java.io.Serializable;
 
 public class VentanaPrincipal extends JFrame implements Serializable {
-    private VentanaArchivo ventanaArchivo;
-    private VentanaImprimirCita ventanaImprimirCita;
+    private VentanaGestionPaciente ventanaGestionPaciente;
+    private VentanaHistorialClinico ventanaHistorialClinico;
+    private VentanaHistorialCitas ventanaHistorialCitas;
+
     private  LienzoMenu lienzoMenu = new LienzoMenu();
     private LienzoCentral lienzoCentral = new LienzoCentral();
 
@@ -25,9 +31,10 @@ public class VentanaPrincipal extends JFrame implements Serializable {
         private JMenuBar barraMenu = new JMenuBar();
 
         private JMenu mnGestionPacientes = new JMenu("Gestionar pacientes");
-        private JMenuItem registroDatosPersonales = new JMenuItem("Registrar datos personales");
-        private JMenuItem historialClinico = new JMenuItem("Historial clinico");
-        private JMenuItem historialCitas = new JMenuItem("Historial Citas");
+        private JMenuItem registrarPaciente = new JMenuItem("Registrar nuevo paciente");
+        private JMenuItem gestionarPaciente = new JMenuItem("Gestionar pacientes");
+        private JMenuItem historialClinico = new JMenuItem("Historiales clinicos");
+        private JMenuItem historialCitas = new JMenuItem("Historiales de Citas");
 
         private JMenu menuGestionCitas = new JMenu("Gestión de citas");
         private JMenuItem programacionCitas = new JMenuItem("Programar citas");
@@ -35,8 +42,8 @@ public class VentanaPrincipal extends JFrame implements Serializable {
         private JMenuItem imprimirCita = new JMenuItem("Imprimir Cita");
 
         private JMenu menuGestionMedicos = new JMenu("Gestionar medicos y personal");
-        private JMenuItem menuMedicos = new JMenu("Gestionar medicos");
-        private JMenuItem mnPersonal = new JMenuItem("Acerca de");
+        private JMenuItem gestionarMedicos = new JMenu("Gestionar medicos");
+        private JMenuItem gestionarPersonal = new JMenuItem("Gestionar Personal");
 
         public LienzoMenu(){
             super();
@@ -44,7 +51,8 @@ public class VentanaPrincipal extends JFrame implements Serializable {
             this.add(barraMenu);
 
             this.barraMenu.add(mnGestionPacientes);
-            this.mnGestionPacientes.add(registroDatosPersonales);
+            this.mnGestionPacientes.add(registrarPaciente);
+            this.mnGestionPacientes.add(gestionarPaciente);
             this.mnGestionPacientes.add(historialClinico);
             this.mnGestionPacientes.add(historialCitas);
 
@@ -55,17 +63,25 @@ public class VentanaPrincipal extends JFrame implements Serializable {
 
             this.barraMenu.add(menuGestionMedicos);
             this.menuGestionMedicos.add(imprimirCita);
-            this.menuGestionMedicos.add(menuMedicos);
-            this.menuGestionMedicos.add(mnPersonal);
+            this.menuGestionMedicos.add(gestionarMedicos);
+            this.menuGestionMedicos.add(gestionarPersonal);
 
-            imprimirCita.addActionListener(e -> {
-                ventanaImprimirCita = new VentanaImprimirCita();
-                ventanaImprimirCita.setVisible(true);
+            // para abrir la ventana de gestionar pacientes
+            gestionarPaciente.addActionListener(e -> {
+                ventanaGestionPaciente = new VentanaGestionPaciente();
+                ventanaGestionPaciente.setVisible(true);
             });
 
-            registroDatosPersonales.addActionListener(e -> {
-                ventanaImprimirCita = new VentanaImprimirCita();
-                ventanaImprimirCita.setVisible(true);
+            // para abrir la ventana de historiales clínicos
+            historialClinico.addActionListener(e -> {
+                ventanaHistorialClinico = new VentanaHistorialClinico();
+                ventanaHistorialClinico.setVisible(true);
+            });
+
+            // para abrir la ventana de historiales de citas
+            historialCitas.addActionListener(e -> {
+                ventanaHistorialCitas = new VentanaHistorialCitas();
+                ventanaHistorialCitas.setVisible(true);
             });
         }
     }
