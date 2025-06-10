@@ -1,6 +1,6 @@
 package org.sistema.vista;
 
-import org.sistema.model.Cita;
+import org.sistema.model.entidad.Cita;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
