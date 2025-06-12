@@ -7,6 +7,7 @@ import org.sistema.model.data.DataHistorialCitas;
 import org.sistema.model.data.DataHistorialClinico;
 import org.sistema.model.entidad.HistorialCitas;
 import org.sistema.model.entidad.HistorialClinico;
+import org.sistema.model.entidad.Paciente;
 import org.sistema.use_case.PacienteUseCase;
 
 @Data
@@ -22,17 +23,22 @@ public class PacienteService implements PacienteUseCase {
     }
 
     @Override
-    public boolean registrarPaciente(Integer idPaciente) {
-        return false;
+    public Paciente consultarDatos(Integer integer) {
+        return null;
     }
 
     @Override
-    public boolean actualizarDatosPaciente(Integer idPaciente) {
-        return false;
+    public Paciente crearNuevo(Integer idPaciente) {
+        return null;
     }
 
     @Override
-    public boolean eliminarPaciente(Integer idPaciente) {
+    public Paciente actualizarDatos(Integer idPaciente) {
+        return null;
+    }
+
+    @Override
+    public boolean eliminar(Integer idPaciente) {
         return false;
     }
 

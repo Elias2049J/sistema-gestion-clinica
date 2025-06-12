@@ -1,12 +1,14 @@
 package org.sistema.vista.gestionpaciente;
 
 import org.sistema.model.entidad.HistorialClinico;
+import org.sistema.model.entidad.Paciente;
 import org.sistema.model.servicio.PacienteService;
 import org.sistema.use_case.PacienteUseCase;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.time.LocalDate;
+import java.util.List;
 
 public class VentanaHistorialClinico extends JFrame {
 
@@ -30,218 +32,229 @@ public class VentanaHistorialClinico extends JFrame {
         //instancio el servicio/modelo de lógica de negocio para pacientes
         private PacienteUseCase pacienteService = new PacienteService();
 
+        private JPanel panelBusqueda = new JPanel(new GridBagLayout());
+
+        private JLabel lblBusqueda = new JLabel("BUSCAR POR ID O NOMBRE DEL PACIENTE");
         private JLabel lblIDPaciente = new JLabel("Ingrese el ID del paciente: ");
         private JTextField jtfIdPaciente = new JTextField(10);
+        private JButton btnBuscarPorId = new JButton("Buscar");
 
-        private JButton btnBuscar = new JButton("Buscar");
+        private JLabel lblNombrePaciente = new JLabel("Ingrese el Nombre del paciente: ");
+        private JTextField jtfNombrePaciente = new JTextField(10);
+        private JButton btnBuscarPorNombre = new JButton("Buscar");
 
-        //labels para cada campo
-        private JLabel lblIdHistorial = new JLabel("Id Historial:");
-        private JLabel lblPaciente = new JLabel("Datos paciente:");
-        private JLabel lblFecha = new JLabel("Fecha:");
-        private JLabel lblEstado = new JLabel("Estado:");
-        private JLabel lblDiagnosticos = new JLabel("Diagnosticos:");
-        private JLabel lblTratamientos = new JLabel("Tratamientos:");
-        private JLabel lblConsultas = new JLabel("Consultas:");
-        private JLabel lblAntecedentes = new JLabel("Antecedentes:");
-        private JLabel lblAlergias = new JLabel("Alergias:");
-        private JLabel lblObservaciones = new JLabel("Observaciones:");
-
-        //campos de texto para mostrar los datos de un historial
-        private JTextField jtfIdHistorial = new JTextField(30);
-        private JTextField jtfPaciente = new JTextField(30);
-        private JTextField jtfFecha = new JTextField(30);
-        private JTextField jtfEstado = new JTextField(30);
-        private JTextField jtfDiagnosticos = new JTextField(30);
-        private JTextField jtfTratamientos = new JTextField(30);
-        private JTextField jtfConsultas = new JTextField(30);
-        private JTextField jtfAntecedentes = new JTextField(30);
-        private JTextField jtfAlergias = new JTextField(30);
-        private JTextField jtfObservaciones = new JTextField(30);
-
-        //tabla
-        private String[] columnasTabla = {"Label", "Valor"};
-        private Object[][] datosHistorial = {};
-        private JTable tablaHistorial = new JTable(datosHistorial, columnasTabla);
-        private JScrollPane scpTabla = new JScrollPane(tablaHistorial);
+        private JScrollPane scpResultados = new JScrollPane();
+        private JTextArea txtS = new JTextArea();
 
         public LienzoCentral() {
             super();
             this.setLayout(new GridBagLayout());
-            GridBagConstraints gbc = new GridBagConstraints();
-            //margenes externos para los elementos
-            gbc.insets = new Insets(2, 2, 2, 2);
+            GridBagConstraints gbcPadre = new GridBagConstraints();
+            gbcPadre.insets = new Insets(10, 20, 10, 10);
 
-            // lbl, campo y boton para la busqueda
-            gbc.gridx = 0;
-            gbc.gridy = 0;
-            gbc.fill = GridBagConstraints.NONE;
-            gbc.weightx = 0;
-            this.add(lblIDPaciente, gbc);
-            gbc.gridx = 1;
-            gbc.fill = GridBagConstraints.HORIZONTAL;
-            gbc.weightx = 1.0;
-            this.add(jtfIdPaciente, gbc);
-            gbc.gridx = 2;
-            gbc.fill = GridBagConstraints.NONE;
-            gbc.weightx = 0;
-            this.add(btnBuscar, gbc);
+            // elementos del panel de busqueda
+            GridBagConstraints gbcBusqueda = new GridBagConstraints();
+            gbcBusqueda.insets = new Insets(2, 2, 2, 2);
+            gbcBusqueda.fill = GridBagConstraints.BOTH;
+            gbcBusqueda.weightx = 1.0;
 
-            // elementos para mostrar el historial
-            gbc.gridx = 0;
-            gbc.gridy = 1;
-            gbc.fill = GridBagConstraints.NONE;
-            gbc.weightx = 0;
-            this.add(lblIdHistorial, gbc);
-            gbc.gridx = 1;
-            gbc.fill = GridBagConstraints.HORIZONTAL;
-            gbc.weightx = 1.0;
-            this.add(jtfIdHistorial, gbc);
+            // subtitulo panel busqueda
+            gbcBusqueda.gridx = 1;
+            gbcBusqueda.gridy = 0;
+            gbcBusqueda.gridwidth = 3;
+            gbcBusqueda.gridheight = 1;
+            gbcBusqueda.weighty = 1;
+            gbcBusqueda.fill = GridBagConstraints.HORIZONTAL;
+            lblBusqueda.setFont(new Font("Arial", Font.BOLD, 18));
+            panelBusqueda.add(lblBusqueda, gbcBusqueda);
 
-            gbc.gridx = 0;
-            gbc.gridy = 2;
-            gbc.fill = GridBagConstraints.NONE;
-            gbc.weightx = 0;
-            this.add(lblPaciente, gbc);
-            gbc.gridx = 1;
-            gbc.fill = GridBagConstraints.HORIZONTAL;
-            gbc.weightx = 1.0;
-            this.add(jtfPaciente, gbc);
+            // fila vacia para separar el subtitulo
+            gbcBusqueda.gridx = 0;
+            gbcBusqueda.gridy = 1;
+            gbcBusqueda.gridwidth = 5;
+            gbcBusqueda.gridheight = 1;
+            gbcBusqueda.weighty = 0;
+            gbcBusqueda.fill = GridBagConstraints.HORIZONTAL;
+            panelBusqueda.add(Box.createVerticalStrut(10), gbcBusqueda);
 
-            gbc.gridx = 0;
-            gbc.gridy = 3;
-            gbc.fill = GridBagConstraints.NONE;
-            gbc.weightx = 0;
-            this.add(lblFecha, gbc);
-            gbc.gridx = 1;
-            gbc.fill = GridBagConstraints.HORIZONTAL;
-            gbc.weightx = 1.0;
-            this.add(jtfFecha, gbc);
+            // busqueda por id
+            gbcBusqueda.gridx = 0;
+            gbcBusqueda.gridy = 2;
+            gbcBusqueda.gridwidth = 1;
+            gbcBusqueda.gridheight = 1;
+            gbcBusqueda.weighty = 1;
+            gbcBusqueda.fill = GridBagConstraints.NONE;
+            lblIDPaciente.setFont(new Font("Arial", Font.BOLD, 16));
+            panelBusqueda.add(lblIDPaciente, gbcBusqueda);
 
-            gbc.gridx = 0;
-            gbc.gridy = 4;
-            gbc.fill = GridBagConstraints.NONE;
-            gbc.weightx = 0;
-            this.add(lblEstado, gbc);
-            gbc.gridx = 1;
-            gbc.fill = GridBagConstraints.HORIZONTAL;
-            gbc.weightx = 1.0;
-            this.add(jtfEstado, gbc);
+            gbcBusqueda.gridx = 1;
+            gbcBusqueda.gridy = 2;
+            gbcBusqueda.gridwidth = 1;
+            gbcBusqueda.gridheight = 1;
+            gbcBusqueda.weighty = 1;
+            gbcBusqueda.fill = GridBagConstraints.HORIZONTAL;
+            panelBusqueda.add(jtfIdPaciente, gbcBusqueda);
 
-            gbc.gridx = 0;
-            gbc.gridy = 5;
-            gbc.fill = GridBagConstraints.NONE;
-            gbc.weightx = 0;
-            this.add(lblDiagnosticos, gbc);
-            gbc.gridx = 1;
-            gbc.fill = GridBagConstraints.HORIZONTAL;
-            gbc.weightx = 1.0;
-            this.add(jtfDiagnosticos, gbc);
+            gbcBusqueda.gridx = 0;
+            gbcBusqueda.gridy = 3;
+            gbcBusqueda.gridwidth = 2;
+            gbcBusqueda.gridheight = 1;
+            gbcBusqueda.weighty = 1;
+            gbcBusqueda.weightx = 2;
+            gbcBusqueda.fill = GridBagConstraints.HORIZONTAL;
+            panelBusqueda.add(btnBuscarPorId, gbcBusqueda);
 
-            gbc.gridx = 0;
-            gbc.gridy = 6;
-            gbc.fill = GridBagConstraints.NONE;
-            gbc.weightx = 0;
-            this.add(lblTratamientos, gbc);
-            gbc.gridx = 1;
-            gbc.fill = GridBagConstraints.HORIZONTAL;
-            gbc.weightx = 1.0;
-            this.add(jtfTratamientos, gbc);
+            // columna vacia para separar los tipos de busqeuda
+            gbcBusqueda.gridx = 2;
+            gbcBusqueda.gridy = 2;
+            gbcBusqueda.gridwidth = 1;
+            gbcBusqueda.gridheight = 2;
+            gbcBusqueda.weightx = 0.1;
+            gbcBusqueda.weighty = 1;
+            gbcBusqueda.fill = GridBagConstraints.BOTH;
+            panelBusqueda.add(Box.createHorizontalStrut(30), gbcBusqueda);
 
-            gbc.gridx = 0;
-            gbc.gridy = 7;
-            gbc.fill = GridBagConstraints.NONE;
-            gbc.weightx = 0;
-            this.add(lblConsultas, gbc);
-            gbc.gridx = 1;
-            gbc.fill = GridBagConstraints.HORIZONTAL;
-            gbc.weightx = 1.0;
-            this.add(jtfConsultas, gbc);
+            // busqueda por nombre
+            gbcBusqueda.gridx = 3;
+            gbcBusqueda.gridy = 2;
+            gbcBusqueda.gridwidth = 1;
+            gbcBusqueda.gridheight = 1;
+            gbcBusqueda.weighty = 1;
+            gbcBusqueda.weightx = 1;
+            gbcBusqueda.fill = GridBagConstraints.NONE;
+            lblNombrePaciente.setFont(new Font("Arial", Font.BOLD, 16));
+            panelBusqueda.add(lblNombrePaciente, gbcBusqueda);
 
-            gbc.gridx = 0;
-            gbc.gridy = 8;
-            gbc.fill = GridBagConstraints.NONE;
-            gbc.weightx = 0;
-            this.add(lblAntecedentes, gbc);
-            gbc.gridx = 1;
-            gbc.fill = GridBagConstraints.HORIZONTAL;
-            gbc.weightx = 1.0;
-            this.add(jtfAntecedentes, gbc);
+            gbcBusqueda.gridx = 4;
+            gbcBusqueda.gridy = 2;
+            gbcBusqueda.gridwidth = 1;
+            gbcBusqueda.gridheight = 1;
+            gbcBusqueda.weighty = 1;
+            gbcBusqueda.fill = GridBagConstraints.HORIZONTAL;
+            panelBusqueda.add(jtfNombrePaciente, gbcBusqueda);
 
-            gbc.gridx = 0;
-            gbc.gridy = 9;
-            gbc.fill = GridBagConstraints.NONE;
-            gbc.weightx = 0;
-            this.add(lblAlergias, gbc);
-            gbc.gridx = 1;
-            gbc.fill = GridBagConstraints.HORIZONTAL;
-            gbc.weightx = 1.0;
-            this.add(jtfAlergias, gbc);
+            gbcBusqueda.gridx = 3;
+            gbcBusqueda.gridy = 3;
+            gbcBusqueda.gridwidth = 2;
+            gbcBusqueda.gridheight = 1;
+            gbcBusqueda.weighty = 1;
+            gbcBusqueda.weightx = 2;
+            gbcBusqueda.fill = GridBagConstraints.HORIZONTAL;
+            panelBusqueda.add(btnBuscarPorNombre, gbcBusqueda);
 
-            gbc.gridx = 0;
-            gbc.gridy = 10;
-            gbc.fill = GridBagConstraints.NONE;
-            gbc.weightx = 0;
-            this.add(lblObservaciones, gbc);
-            gbc.gridx = 1;
-            gbc.fill = GridBagConstraints.HORIZONTAL;
-            gbc.weightx = 1.0;
-            this.add(jtfObservaciones, gbc);
-
-            //tabla
-            gbc.gridx = 0;
-            gbc.gridy = 11;
-            gbc.gridwidth = 2;
-            gbc.fill = GridBagConstraints.BOTH;
-            gbc.weightx = 1.0;
-            this.add(scpTabla, gbc);
+            // ubicacion del panel busqeuda en el grigbaglayout padre
+            gbcPadre.gridx = 0;
+            gbcPadre.gridy = 0;
+            gbcPadre.weightx = 1;
+            gbcPadre.fill = GridBagConstraints.NONE;
+            this.add(panelBusqueda, gbcPadre);
+            // ubicacion del scroll en el grigbaglayout padre
+            gbcPadre.gridx = 0;
+            gbcPadre.gridy = 1;
+            gbcPadre.weightx = 1;
+            gbcPadre.weighty = 2;
+            gbcPadre.fill = GridBagConstraints.BOTH;
+            txtS.setMargin(new Insets(20, 20, 20, 20));
+            txtS.setFont(new Font("Consolas", Font.BOLD, 16));
+            txtS.setEditable(false);
+            scpResultados.setViewportView(txtS);
+            this.add(scpResultados, gbcPadre);
 
             //boton para ejecutar la busqueda
-            btnBuscar.addActionListener(e -> {
+            btnBuscarPorId.addActionListener(e -> {
                 //se obtiene el valor ingresado y se parsea a integer
                 Integer idPacienteIngresado = Integer.parseInt(jtfIdPaciente.getText());
                 //se usa el servicio para buscar
                 HistorialClinico elementosHistorial = pacienteService.obtenerHistorialClinico(idPacienteIngresado);
-                //se parsea de integer a string
-                jtfIdHistorial.setText(String.valueOf(elementosHistorial.getIdHistorial()));
-                jtfPaciente.setText(String.valueOf(elementosHistorial.getPaciente()));
-                jtfFecha.setText(String.valueOf(elementosHistorial.getFechaCreacion()));
-                jtfEstado.setText(elementosHistorial.getEstado());
-                jtfDiagnosticos.setText(elementosHistorial.getDiagnosticos().toString());
-                jtfTratamientos.setText(elementosHistorial.getTratamientos().toString());
-                jtfConsultas.setText(elementosHistorial.getConsultas().toString());
-                jtfAntecedentes.setText(elementosHistorial.getAntecedentes());
-                jtfAlergias.setText(elementosHistorial.getAlergias());
-                jtfObservaciones.setText(elementosHistorial.getObservaciones());
-
-                // Mostrar los valores en la tabla: primera columna label, segunda columna valor
-                String[][] datosTabla = {
-                        {lblIdHistorial.getText(), String.valueOf(elementosHistorial.getIdHistorial())},
-                        {lblPaciente.getText(), String.valueOf(elementosHistorial.getPaciente())},
-                        {lblFecha.getText(), String.valueOf(elementosHistorial.getFechaCreacion())},
-                        {lblEstado.getText(), elementosHistorial.getEstado()},
-                        {lblDiagnosticos.getText(), String.valueOf(elementosHistorial.getDiagnosticos())},
-                        {lblTratamientos.getText(), String.valueOf(elementosHistorial.getTratamientos())},
-                        {lblConsultas.getText(), String.valueOf(elementosHistorial.getConsultas())},
-                        {lblAntecedentes.getText(), elementosHistorial.getAntecedentes()},
-                        {lblAlergias.getText(), elementosHistorial.getAlergias()},
-                        {lblObservaciones.getText(), elementosHistorial.getObservaciones()}
-                };
-                tablaHistorial.setModel(new DefaultTableModel(datosTabla, columnasTabla));
+                if (elementosHistorial != null) {
+                    imprimirSeccion(
+                        elementosHistorial.getIdHistorial(),
+                        elementosHistorial.getPaciente(),
+                        elementosHistorial.getFechaCreacion(),
+                        elementosHistorial.getDiagnosticos(),
+                        elementosHistorial.getTratamientos(),
+                        elementosHistorial.getConsultas(),
+                        elementosHistorial.getAntecedentes(),
+                        elementosHistorial.getAlergias(),
+                        elementosHistorial.getObservaciones()
+                    );
+                }
             });
+        }
+
+        public boolean imprimirLinea(String texto) {
+            txtS.append(texto + "\n");
+            return false;
+        }
+
+        public boolean imprimirSeccion(Integer id, Paciente paciente, LocalDate fecha, List<?> diag, List<?> trat, List<?> cons, String ant, String alrg, String obs) {
+            txtS.setText("");
+            imprimirLinea(completarEspacios("ID Historial")+ ": " + id);
+            imprimirLinea(completarEspacios("Paciente")+ ": " + paciente);
+            imprimirLinea(completarEspacios("Fecha de Creacion")+ ": " + fecha);
+            imprimirLinea(completarEspacios("Diagnosticos")+ ": " + diag) ;
+            imprimirLinea(completarEspacios("Tratamientos")+ ": " + trat);
+            imprimirLinea(completarEspacios("Consultas")+ ":"+ cons);
+            imprimirLinea(completarEspacios("Antecedentes")+ ":"+ ant);
+            imprimirLinea(completarEspacios("Alergias")+ ":"+ alrg);
+            imprimirLinea(completarEspacios("Observaciones")+ ":"+ obs);
+            txtS.append("\n");
+            return false;
+        }
+
+        public String completarEspacios(String str) {
+            StringBuilder sb = new StringBuilder(str);
+            while (sb.length() < 20) {
+                sb.append(" ");
+            }
+            return sb.toString();
         }
     }
 
     class LienzoHeader extends JPanel{
+        private JLabel lblTitulo = new JLabel("BUSCAR HISTORIAL CLÍNICO DEL PACIENTE", SwingConstants.CENTER);
         public LienzoHeader (){
             super();
+            this.setLayout(new BorderLayout());
+            this.setBackground(new Color(33, 122, 210));
+            this.lblTitulo.setFont(new Font("Arial", Font.BOLD, 24));
+            this.lblTitulo.setForeground(Color.WHITE);
+            this.add(lblTitulo, BorderLayout.CENTER);
+        }
+
+        //para hacer que el lienzo ocupe el 12% de alto del contenedor padre
+        @Override
+        public Dimension getPreferredSize(){
+            Container contenedorPadre = getParent();
+            int ancho = contenedorPadre.getWidth();
+            //se castea a int
+            int alto = (int) (contenedorPadre.getHeight() * 0.12);
+            return new Dimension(ancho, alto);
         }
     }
 
     class LienzoFooter extends JPanel{
+        private JButton btnSalir = new JButton("Salir");
         public LienzoFooter (){
             super();
+            this.setLayout(new BorderLayout());
+            this.setBackground(new Color(33, 122, 210));
+            this.setForeground(Color.WHITE);
+            this.add(btnSalir, BorderLayout.EAST);
+            this.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
+            btnSalir.addActionListener(e -> {
+                dispose();
+            });
+        }
+
+        @Override
+        public Dimension getPreferredSize(){
+            Container contenedorPadre = getParent();
+            int ancho = contenedorPadre.getWidth();
+            //se castea a int
+            int alto = (int) (contenedorPadre.getHeight() * 0.08);
+            return new Dimension(ancho, alto);
         }
     }
 }
