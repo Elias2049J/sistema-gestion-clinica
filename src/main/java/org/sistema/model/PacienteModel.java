@@ -1,44 +1,26 @@
-package org.sistema.model.servicio;
+package org.sistema.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.sistema.model.data.DataHistorialCitas;
-import org.sistema.model.data.DataHistorialClinico;
-import org.sistema.model.entidad.HistorialCitas;
-import org.sistema.model.entidad.HistorialClinico;
-import org.sistema.model.entidad.Paciente;
+import org.sistema.data.DataHistorialCitas;
+import org.sistema.data.DataHistorialClinico;
+import org.sistema.entidad.HistorialCitas;
+import org.sistema.entidad.HistorialClinico;
+import org.sistema.entidad.Paciente;
 import org.sistema.use_case.PacienteUseCase;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PacienteService implements PacienteUseCase {
+@EqualsAndHashCode(callSuper = false)
+public class PacienteModel extends CrudModel<Paciente, Integer> implements PacienteUseCase  {
     private DataHistorialClinico dataHistorialClinico = new DataHistorialClinico();
     private DataHistorialCitas dataHistorialCitas = new DataHistorialCitas();
 
     @Override
     public boolean registrarDatosPersonales() {
-        return false;
-    }
-
-    @Override
-    public Paciente consultarDatos(Integer integer) {
-        return null;
-    }
-
-    @Override
-    public Paciente crearNuevo(Integer idPaciente) {
-        return null;
-    }
-
-    @Override
-    public Paciente actualizarDatos(Integer idPaciente) {
-        return null;
-    }
-
-    @Override
-    public boolean eliminar(Integer idPaciente) {
         return false;
     }
 

@@ -1,4 +1,4 @@
-package org.sistema.model.entidad;
+package org.sistema.entidad;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

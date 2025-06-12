@@ -1,4 +1,4 @@
-package org.sistema.model.entidad;
+package org.sistema.entidad;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

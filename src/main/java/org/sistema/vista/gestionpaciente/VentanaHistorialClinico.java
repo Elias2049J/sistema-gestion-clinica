@@ -1,8 +1,8 @@
 package org.sistema.vista.gestionpaciente;
 
-import org.sistema.model.entidad.HistorialClinico;
-import org.sistema.model.entidad.Paciente;
-import org.sistema.model.servicio.PacienteService;
+import org.sistema.entidad.HistorialClinico;
+import org.sistema.entidad.Paciente;
+import org.sistema.model.PacienteModel;
 import org.sistema.use_case.PacienteUseCase;
 
 import javax.swing.*;
@@ -30,7 +30,7 @@ public class VentanaHistorialClinico extends JFrame {
 
     static class LienzoCentral extends JPanel {
         //instancio el servicio/modelo de lógica de negocio para pacientes
-        private PacienteUseCase pacienteService = new PacienteService();
+        private PacienteUseCase pacienteService = new PacienteModel();
 
         private JPanel panelBusqueda = new JPanel(new GridBagLayout());
 

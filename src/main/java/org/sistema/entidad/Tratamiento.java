@@ -1,4 +1,4 @@
-package org.sistema.model.entidad;
+package org.sistema.entidad;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Diagnostico {
-    private Integer idDiagnostico;
+public class Tratamiento {
+    private Integer idTratamiento;
     private String descripcion;
 }

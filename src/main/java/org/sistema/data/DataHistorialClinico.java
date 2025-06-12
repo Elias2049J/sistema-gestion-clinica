@@ -1,12 +1,12 @@
-package org.sistema.model.data;
+package org.sistema.data;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.sistema.model.entidad.HistorialClinico;
-import org.sistema.model.entidad.Paciente;
-import org.sistema.model.entidad.Diagnostico;
-import org.sistema.model.entidad.Tratamiento;
-import org.sistema.model.entidad.Consulta;
+import org.sistema.entidad.HistorialClinico;
+import org.sistema.entidad.Paciente;
+import org.sistema.entidad.Diagnostico;
+import org.sistema.entidad.Tratamiento;
+import org.sistema.entidad.Consulta;
 
 import java.util.ArrayList;
 import java.util.List;

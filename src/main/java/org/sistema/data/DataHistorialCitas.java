@@ -1,5 +1,9 @@
-package org.sistema.model.data;
+package org.sistema.data;
 
+import org.sistema.entidad.Cita;
+import org.sistema.entidad.HistorialCitas;
+import org.sistema.entidad.HistorialClinico;
+import org.sistema.entidad.Paciente;
 import org.sistema.model.entidad.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;

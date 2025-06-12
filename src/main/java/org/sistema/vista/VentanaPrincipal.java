@@ -149,6 +149,11 @@ public class VentanaPrincipal extends JFrame implements Serializable {
             this.add(panelCitas, gbcPadre);
             gbcPadre.gridx = 2;
             this.add(panelMedicos, gbcPadre);
+
+            btnVentanaHistCli.addActionListener(e -> {
+                ventanaHistorialClinico = new VentanaHistorialClinico();
+                ventanaHistorialClinico.setVisible(true);
+            });
         }
     }
 

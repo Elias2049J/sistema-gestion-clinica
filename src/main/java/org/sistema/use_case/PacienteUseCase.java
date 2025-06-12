@@ -1,8 +1,8 @@
 package org.sistema.use_case;
 
-import org.sistema.model.entidad.HistorialCitas;
-import org.sistema.model.entidad.HistorialClinico;
-import org.sistema.model.entidad.Paciente;
+import org.sistema.entidad.HistorialCitas;
+import org.sistema.entidad.HistorialClinico;
+import org.sistema.entidad.Paciente;
 
 public interface PacienteUseCase extends CrudUseCase<Paciente, Integer>{
     boolean registrarDatosPersonales();
