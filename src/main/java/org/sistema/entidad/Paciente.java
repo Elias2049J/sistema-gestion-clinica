@@ -11,6 +11,7 @@ public class Paciente {
     private Integer idPaciente;
     private String nombre;
     private String apellido;
+    private Integer edad;
     private String dni;
     private String direccion;
     private String telefono;

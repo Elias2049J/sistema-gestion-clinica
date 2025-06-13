@@ -7,6 +7,7 @@ import org.sistema.use_case.PacienteUseCase;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.FileNotFoundException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -16,7 +17,7 @@ public class VentanaHistorialClinico extends JFrame {
     private LienzoCentral lienzoCentral = new LienzoCentral();
     private LienzoFooter lienzoFooter = new LienzoFooter();
 
-    public VentanaHistorialClinico(){
+    public VentanaHistorialClinico() throws FileNotFoundException {
         super();
         this.setTitle("Ver historiales clínicos");
         this.setSize(800, 600);
@@ -30,27 +31,28 @@ public class VentanaHistorialClinico extends JFrame {
 
     static class LienzoCentral extends JPanel {
         //instancio el servicio/modelo de lógica de negocio para pacientes
-        private PacienteUseCase pacienteService = new PacienteModel();
+        private PacienteUseCase pacienteModel = new PacienteModel();
 
         private JPanel panelBusqueda = new JPanel(new GridBagLayout());
 
-        private JLabel lblBusqueda = new JLabel("BUSCAR POR ID O NOMBRE DEL PACIENTE");
-        private JLabel lblIDPaciente = new JLabel("Ingrese el ID del paciente: ");
-        private JTextField jtfIdPaciente = new JTextField(10);
-        private JButton btnBuscarPorId = new JButton("Buscar");
-
         private JLabel lblNombrePaciente = new JLabel("Ingrese el Nombre del paciente: ");
-        private JTextField jtfNombrePaciente = new JTextField(10);
+        private JTextField jtfNombrePaciente = new JTextField(20);
         private JButton btnBuscarPorNombre = new JButton("Buscar");
 
         private JScrollPane scpResultados = new JScrollPane();
         private JTextArea txtS = new JTextArea();
 
-        public LienzoCentral() {
+        public LienzoCentral() throws FileNotFoundException {
             super();
             this.setLayout(new GridBagLayout());
             GridBagConstraints gbcPadre = new GridBagConstraints();
             gbcPadre.insets = new Insets(10, 20, 10, 10);
+
+            // tamaño fijo para evitar que colapsen los jtf
+            Dimension sizeFijo = new Dimension(200, 25);
+            jtfNombrePaciente.setPreferredSize(sizeFijo);
+            jtfNombrePaciente.setMinimumSize(sizeFijo);
+            jtfNombrePaciente.setMaximumSize(sizeFijo);
 
             // elementos del panel de busqueda
             GridBagConstraints gbcBusqueda = new GridBagConstraints();
@@ -58,99 +60,61 @@ public class VentanaHistorialClinico extends JFrame {
             gbcBusqueda.fill = GridBagConstraints.BOTH;
             gbcBusqueda.weightx = 1.0;
 
-            // subtitulo panel busqueda
-            gbcBusqueda.gridx = 1;
-            gbcBusqueda.gridy = 0;
-            gbcBusqueda.gridwidth = 3;
-            gbcBusqueda.gridheight = 1;
-            gbcBusqueda.weighty = 1;
-            gbcBusqueda.fill = GridBagConstraints.HORIZONTAL;
-            lblBusqueda.setFont(new Font("Arial", Font.BOLD, 18));
-            panelBusqueda.add(lblBusqueda, gbcBusqueda);
-
+            int gridy = 0;
             // fila vacia para separar el subtitulo
             gbcBusqueda.gridx = 0;
-            gbcBusqueda.gridy = 1;
+            gbcBusqueda.gridy = gridy++;
             gbcBusqueda.gridwidth = 5;
             gbcBusqueda.gridheight = 1;
             gbcBusqueda.weighty = 0;
+            gbcBusqueda.weightx = 0;
             gbcBusqueda.fill = GridBagConstraints.HORIZONTAL;
             panelBusqueda.add(Box.createVerticalStrut(10), gbcBusqueda);
 
-            // busqueda por id
-            gbcBusqueda.gridx = 0;
-            gbcBusqueda.gridy = 2;
-            gbcBusqueda.gridwidth = 1;
-            gbcBusqueda.gridheight = 1;
-            gbcBusqueda.weighty = 1;
-            gbcBusqueda.fill = GridBagConstraints.NONE;
-            lblIDPaciente.setFont(new Font("Arial", Font.BOLD, 16));
-            panelBusqueda.add(lblIDPaciente, gbcBusqueda);
-
-            gbcBusqueda.gridx = 1;
-            gbcBusqueda.gridy = 2;
-            gbcBusqueda.gridwidth = 1;
-            gbcBusqueda.gridheight = 1;
-            gbcBusqueda.weighty = 1;
-            gbcBusqueda.fill = GridBagConstraints.HORIZONTAL;
-            panelBusqueda.add(jtfIdPaciente, gbcBusqueda);
-
-            gbcBusqueda.gridx = 0;
-            gbcBusqueda.gridy = 3;
-            gbcBusqueda.gridwidth = 2;
-            gbcBusqueda.gridheight = 1;
-            gbcBusqueda.weighty = 1;
-            gbcBusqueda.weightx = 2;
-            gbcBusqueda.fill = GridBagConstraints.HORIZONTAL;
-            panelBusqueda.add(btnBuscarPorId, gbcBusqueda);
-
-            // columna vacia para separar los tipos de busqeuda
-            gbcBusqueda.gridx = 2;
-            gbcBusqueda.gridy = 2;
-            gbcBusqueda.gridwidth = 1;
-            gbcBusqueda.gridheight = 2;
-            gbcBusqueda.weightx = 0.1;
-            gbcBusqueda.weighty = 1;
-            gbcBusqueda.fill = GridBagConstraints.BOTH;
-            panelBusqueda.add(Box.createHorizontalStrut(30), gbcBusqueda);
-
             // busqueda por nombre
-            gbcBusqueda.gridx = 3;
-            gbcBusqueda.gridy = 2;
+            gbcBusqueda.gridx = 0;
+            gbcBusqueda.gridy = gridy++;
             gbcBusqueda.gridwidth = 1;
             gbcBusqueda.gridheight = 1;
             gbcBusqueda.weighty = 1;
-            gbcBusqueda.weightx = 1;
+            gbcBusqueda.weightx = 0;
             gbcBusqueda.fill = GridBagConstraints.NONE;
+            gbcBusqueda.anchor = GridBagConstraints.EAST;
             lblNombrePaciente.setFont(new Font("Arial", Font.BOLD, 16));
             panelBusqueda.add(lblNombrePaciente, gbcBusqueda);
 
-            gbcBusqueda.gridx = 4;
-            gbcBusqueda.gridy = 2;
+            gbcBusqueda.gridx = 1;
+            gbcBusqueda.gridy = gridy - 1;
             gbcBusqueda.gridwidth = 1;
             gbcBusqueda.gridheight = 1;
             gbcBusqueda.weighty = 1;
-            gbcBusqueda.fill = GridBagConstraints.HORIZONTAL;
+            gbcBusqueda.weightx = 0;
+            gbcBusqueda.fill = GridBagConstraints.NONE;
+            gbcBusqueda.anchor = GridBagConstraints.WEST;
             panelBusqueda.add(jtfNombrePaciente, gbcBusqueda);
 
+            // boton buscar
             gbcBusqueda.gridx = 3;
-            gbcBusqueda.gridy = 3;
-            gbcBusqueda.gridwidth = 2;
+            gbcBusqueda.gridy = gridy - 1;
+            gbcBusqueda.gridwidth = 1;
             gbcBusqueda.gridheight = 1;
             gbcBusqueda.weighty = 1;
-            gbcBusqueda.weightx = 2;
+            gbcBusqueda.weightx = 0;
             gbcBusqueda.fill = GridBagConstraints.HORIZONTAL;
+            gbcBusqueda.anchor = GridBagConstraints.CENTER;
             panelBusqueda.add(btnBuscarPorNombre, gbcBusqueda);
 
-            // ubicacion del panel busqeuda en el grigbaglayout padre
+            // ubicacion del panel busqueda en el grigbaglayout padre
             gbcPadre.gridx = 0;
-            gbcPadre.gridy = 0;
+            gbcPadre.gridy = gridy++;
             gbcPadre.weightx = 1;
-            gbcPadre.fill = GridBagConstraints.NONE;
+            gbcPadre.fill = GridBagConstraints.HORIZONTAL;
+            gbcPadre.anchor = GridBagConstraints.NORTH;
             this.add(panelBusqueda, gbcPadre);
+
             // ubicacion del scroll en el grigbaglayout padre
             gbcPadre.gridx = 0;
-            gbcPadre.gridy = 1;
+            gbcPadre.gridy = gridy++;
             gbcPadre.weightx = 1;
             gbcPadre.weighty = 2;
             gbcPadre.fill = GridBagConstraints.BOTH;
@@ -161,11 +125,11 @@ public class VentanaHistorialClinico extends JFrame {
             this.add(scpResultados, gbcPadre);
 
             //boton para ejecutar la busqueda
-            btnBuscarPorId.addActionListener(e -> {
+            btnBuscarPorNombre.addActionListener(e -> {
                 //se obtiene el valor ingresado y se parsea a integer
-                Integer idPacienteIngresado = Integer.parseInt(jtfIdPaciente.getText());
+                Integer idPacienteIngresado = Integer.parseInt(jtfNombrePaciente.getText());
                 //se usa el servicio para buscar
-                HistorialClinico elementosHistorial = pacienteService.obtenerHistorialClinico(idPacienteIngresado);
+                HistorialClinico elementosHistorial = pacienteModel.obtenerHistorialClinico(idPacienteIngresado);
                 if (elementosHistorial != null) {
                     imprimirSeccion(
                         elementosHistorial.getIdHistorial(),
@@ -212,7 +176,7 @@ public class VentanaHistorialClinico extends JFrame {
     }
 
     class LienzoHeader extends JPanel{
-        private JLabel lblTitulo = new JLabel("BUSCAR HISTORIAL CLÍNICO DEL PACIENTE", SwingConstants.CENTER);
+        private JLabel lblTitulo = new JLabel("HISTORIAL CLÍNICO DEL PACIENTE", SwingConstants.CENTER);
         public LienzoHeader (){
             super();
             this.setLayout(new BorderLayout());

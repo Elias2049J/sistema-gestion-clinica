@@ -3,13 +3,16 @@ package org.sistema.vista;
 import org.sistema.vista.gestionpaciente.VentanaGestionPaciente;
 import org.sistema.vista.gestionpaciente.VentanaHistorialCitas;
 import org.sistema.vista.gestionpaciente.VentanaHistorialClinico;
+import org.sistema.vista.gestionpaciente.VentanaRegistroPaciente;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.FileNotFoundException;
 import java.io.Serializable;
 
 public class VentanaPrincipal extends JFrame implements Serializable {
     private VentanaGestionPaciente ventanaGestionPaciente;
+    private VentanaRegistroPaciente ventanaRegistroPaciente;
     private VentanaHistorialClinico ventanaHistorialClinico;
     private VentanaHistorialCitas ventanaHistorialCitas;
 
@@ -34,8 +37,8 @@ public class VentanaPrincipal extends JFrame implements Serializable {
         private JLabel lblGestionCitas = new JLabel("Gestion de citas");
         private JLabel lblGestionMedicos = new JLabel("Gestion de Personal");
 
-        private JButton btnVentanaRegistrar = new JButton("Registrar Paciente");
-        private JButton btnVentanaGestPaciente = new JButton("Gestionar Paciente");
+        private JButton btnVentanaRegPaciente = new JButton("Registrar Paciente");
+        private JButton btnVentanaGestPaciente = new JButton("Gestionar Pacientes");
         private JButton btnVentanaHistCli = new JButton("Buscar Historial Clínico");
         private JButton btnVentanaHistCitas = new JButton("Buscar Historial de Citas");
 
@@ -82,11 +85,11 @@ public class VentanaPrincipal extends JFrame implements Serializable {
             lblGestionPacientes.setFont(new Font("Arial", Font.BOLD, 20));
             gbcP.gridy = 1;
             panelPacientes.add(lblGestionPacientes, gbcP);
-            btnVentanaRegistrar.setIcon(UIManager.getIcon("FileView.fileIcon"));
+            btnVentanaRegPaciente.setIcon(UIManager.getIcon("FileView.fileIcon"));
             btnVentanaGestPaciente.setIcon(UIManager.getIcon("FileView.directoryIcon"));
             btnVentanaHistCli.setIcon(UIManager.getIcon("FileChooser.detailsViewIcon"));
             gbcP.gridy = 2;
-            panelPacientes.add(btnVentanaRegistrar, gbcP);
+            panelPacientes.add(btnVentanaRegPaciente, gbcP);
             gbcP.gridy = 3;
             panelPacientes.add(btnVentanaGestPaciente, gbcP);
             gbcP.gridy = 4;
@@ -151,8 +154,30 @@ public class VentanaPrincipal extends JFrame implements Serializable {
             this.add(panelMedicos, gbcPadre);
 
             btnVentanaHistCli.addActionListener(e -> {
-                ventanaHistorialClinico = new VentanaHistorialClinico();
+                try {
+                    ventanaHistorialClinico = new VentanaHistorialClinico();
+                } catch (FileNotFoundException ex) {
+                    throw new RuntimeException(ex);
+                }
                 ventanaHistorialClinico.setVisible(true);
+            });
+
+            btnVentanaRegPaciente.addActionListener(e -> {
+                try {
+                    ventanaRegistroPaciente = new VentanaRegistroPaciente();
+                } catch (FileNotFoundException ex) {
+                    throw new RuntimeException(ex);
+                }
+                ventanaRegistroPaciente.setVisible(true);
+            });
+
+            btnVentanaGestPaciente.addActionListener(e -> {
+                try {
+                    ventanaGestionPaciente = new VentanaGestionPaciente();
+                } catch (FileNotFoundException ex) {
+                    throw new RuntimeException(ex);
+                }
+                ventanaGestionPaciente.setVisible(true);
             });
         }
     }

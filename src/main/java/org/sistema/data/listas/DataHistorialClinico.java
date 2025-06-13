@@ -1,4 +1,4 @@
-package org.sistema.data;
+package org.sistema.data.listas;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,9 +24,9 @@ public class DataHistorialClinico {
     public boolean precargarDatos(){
 
         // pacientes
-        Paciente paciente1 = new Paciente(1, "Miguel", "Centellas", "12345678", "La Molina mas na", "987654321", "activo");
-        Paciente paciente2 = new Paciente(2, "Maria", "Calderon", "12345679", "Calle falsa 123", "912345678", "inactivo");
-        Paciente paciente3 = new Paciente(3, "Axcel", "Sanchez", "23457891", "Calle falsa 234", "123456789", "activo");
+        Paciente paciente1 = new Paciente(1, "Miguel", "Centellas", 26,"12345678", "La Molina mas na", "987654321", "activo");
+        Paciente paciente2 = new Paciente(2, "Maria", "Calderon", 25,"12345679", "Calle falsa 123", "912345678", "inactivo");
+        Paciente paciente3 = new Paciente(3, "Axcel", "Sanchez", 28,"23457891", "Calle falsa 234", "123456789", "activo");
 
         // diagnsticos
         Diagnostico diag1 = new Diagnostico(1, "Mucha elegancia");
