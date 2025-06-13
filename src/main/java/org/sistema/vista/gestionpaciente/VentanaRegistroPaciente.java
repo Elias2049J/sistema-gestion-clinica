@@ -131,16 +131,16 @@ public class VentanaRegistroPaciente extends JFrame {
                     JOptionPane.showMessageDialog(this, "Edad inválida. Debe ser un número positivo.", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-                if (dni.isEmpty() || !dni.matches("\\d{8,15}")) {
-                    JOptionPane.showMessageDialog(this, "DNI inválido. Debe ser numérico y de 8 a 15 dígitos.", "Error", JOptionPane.ERROR_MESSAGE);
+                if (dni.isEmpty() || !dni.matches("\\d{8}")) {
+                    JOptionPane.showMessageDialog(this, "DNI inválido. Debe ser numérico y de 8 dígitos.", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
                 if (direccion.isEmpty()) {
                     JOptionPane.showMessageDialog(this, "La dirección no puede estar vacía", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-                if (telefono.isEmpty() || !telefono.matches("\\d{6,15}")) {
-                    JOptionPane.showMessageDialog(this, "Teléfono inválido. Debe ser numérico y de 6 a 15 dígitos.", "Error", JOptionPane.ERROR_MESSAGE);
+                if (telefono.isEmpty() || !telefono.matches("\\d{9}")) {
+                    JOptionPane.showMessageDialog(this, "Teléfono inválido. Debe ser numérico y de 9 digitos", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
