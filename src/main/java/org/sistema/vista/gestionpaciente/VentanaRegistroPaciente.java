@@ -117,10 +117,12 @@ public class VentanaRegistroPaciente extends JFrame {
                 // validaciones para todos los campos
                 if (nombre.isEmpty()) {
                     JOptionPane.showMessageDialog(this, "El nombre no puede estar vacío", "Error", JOptionPane.ERROR_MESSAGE);
+                    jtfNombre.requestFocus();
                     return;
                 }
                 if (apellido.isEmpty()) {
                     JOptionPane.showMessageDialog(this, "El apellido no puede estar vacío", "Error", JOptionPane.ERROR_MESSAGE);
+                    jtfApellido.requestFocus();
                     return;
                 }
                 int edad;
@@ -129,18 +131,22 @@ public class VentanaRegistroPaciente extends JFrame {
                     if (edad <= 0) throw new NumberFormatException();
                 } catch (NumberFormatException ex) {
                     JOptionPane.showMessageDialog(this, "Edad inválida. Debe ser un número positivo.", "Error", JOptionPane.ERROR_MESSAGE);
+                    jtfEdad.requestFocus();
                     return;
                 }
                 if (dni.isEmpty() || !dni.matches("\\d{8}")) {
                     JOptionPane.showMessageDialog(this, "DNI inválido. Debe ser numérico y de 8 dígitos.", "Error", JOptionPane.ERROR_MESSAGE);
+                    jtfDni.requestFocus();
                     return;
                 }
                 if (direccion.isEmpty()) {
                     JOptionPane.showMessageDialog(this, "La dirección no puede estar vacía", "Error", JOptionPane.ERROR_MESSAGE);
+                    jtfDireccion.requestFocus();
                     return;
                 }
                 if (telefono.isEmpty() || !telefono.matches("\\d{9}")) {
                     JOptionPane.showMessageDialog(this, "Teléfono inválido. Debe ser numérico y de 9 digitos", "Error", JOptionPane.ERROR_MESSAGE);
+                    jtfTlf.requestFocus();
                     return;
                 }
 
@@ -154,10 +160,10 @@ public class VentanaRegistroPaciente extends JFrame {
                         jtfDireccion.setText("");
                         jtfTlf.setText("");
                     } else {
-                        JOptionPane.showMessageDialog(this, "Error al registrar el paciente", "Error", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(this, "Error al registrar el paciente. Verifique los datos ingresados.", "Error", JOptionPane.ERROR_MESSAGE);
                     }
                 } catch (FileNotFoundException ex) {
-                    throw new RuntimeException(ex);
+                    JOptionPane.showMessageDialog(this, "Error de archivo: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 }
             });
         }

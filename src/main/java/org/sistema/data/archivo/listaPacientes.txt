@@ -1,2 +1,2 @@
 idPaciente,nombre,apellido,edad,dni,direccion,telefono,estado
-1,miguel,,45,12345645464784,calle guarana,123456789,Activo
+1,miguel,centellas,65,12345678,calle 13,123456789,Activo

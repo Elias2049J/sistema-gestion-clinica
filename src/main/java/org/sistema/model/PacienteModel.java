@@ -35,6 +35,13 @@ public class PacienteModel implements PacienteUseCase {
     @Override
     //metodo para crear un nuevo paciente, recibe sus atributos y agrega el paciente a la lista de pacientes
     public boolean crearPaciente(String nombre, String apellido, Integer edad, String dni, String direccion, String telefono) throws FileNotFoundException {
+        // validaciones internas
+        if (nombre == null || nombre.trim().isEmpty()) return false;
+        if (apellido == null || apellido.trim().isEmpty()) return false;
+        if (edad == null || edad <= 0) return false;
+        if (dni == null || !dni.matches("\\d{8}")) return false;
+        if (direccion == null || direccion.trim().isEmpty()) return false;
+        if (telefono == null || !telefono.matches("\\d{9}")) return false;
         Integer id;
         // si la lista d epacientes está vacía, el id del nuevo paciente es 1
         if (DataGestionPacientes.getPacientes().isEmpty()) {
@@ -103,7 +110,7 @@ public class PacienteModel implements PacienteUseCase {
         }
         return false;
     }
-    
+
     @Override
     public boolean eliminar(Integer id) {
         return false;

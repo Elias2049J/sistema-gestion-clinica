@@ -11,7 +11,7 @@ public class PersistenciaPaciente implements PersistenciaInterface<Paciente> {
     @Override
     public boolean llenarListaDesdeArchivo(List<Paciente> pacientes) throws FileNotFoundException {
         pacientes.clear();
-        File archivo = new File("src/main/java/org/sistema/data/archivos/listaPacientes.txt");
+        File archivo = new File("src/main/java/org/sistema/data/archivo/listaPacientes.txt");
         if (archivo.exists()) {
             try {
                 BufferedReader br = new BufferedReader(new FileReader(archivo));
@@ -44,7 +44,7 @@ public class PersistenciaPaciente implements PersistenciaInterface<Paciente> {
     // metodo para sobrescribir el archivo con la lista
     @Override
     public boolean actualizarArchivo(List<Paciente> lista) {
-        File archivo = new File("src/main/java/org/sistema/data/archivos/listaPacientes.txt");
+        File archivo = new File("src/main/java/org/sistema/data/archivo/listaPacientes.txt");
         try (PrintWriter writer = new PrintWriter(new FileWriter(archivo, false))) {
             // Escribir cabecera
             writer.println("idPaciente,nombre,apellido,edad,dni,direccion,telefono,estado");
