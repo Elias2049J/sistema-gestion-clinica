@@ -1,15 +1,11 @@
 package org.sistema.vista.gestionpaciente;
 
-import org.sistema.entidad.HistorialClinico;
-import org.sistema.entidad.Paciente;
 import org.sistema.model.PacienteModel;
 import org.sistema.use_case.PacienteUseCase;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.FileNotFoundException;
-import java.time.LocalDate;
-import java.util.List;
 
 public class VentanaHistorialClinico extends JFrame {
 
@@ -126,52 +122,7 @@ public class VentanaHistorialClinico extends JFrame {
 
             //boton para ejecutar la busqueda
             btnBuscarPorNombre.addActionListener(e -> {
-                //se obtiene el valor ingresado y se parsea a integer
-                Integer idPacienteIngresado = Integer.parseInt(jtfNombrePaciente.getText());
-                //se usa el servicio para buscar
-                HistorialClinico elementosHistorial = pacienteModel.obtenerHistorialClinico(idPacienteIngresado);
-                if (elementosHistorial != null) {
-                    imprimirSeccion(
-                        elementosHistorial.getIdHistorial(),
-                        elementosHistorial.getPaciente(),
-                        elementosHistorial.getFechaCreacion(),
-                        elementosHistorial.getDiagnosticos(),
-                        elementosHistorial.getTratamientos(),
-                        elementosHistorial.getConsultas(),
-                        elementosHistorial.getAntecedentes(),
-                        elementosHistorial.getAlergias(),
-                        elementosHistorial.getObservaciones()
-                    );
-                }
             });
-        }
-
-        public boolean imprimirLinea(String texto) {
-            txtS.append(texto + "\n");
-            return false;
-        }
-
-        public boolean imprimirSeccion(Integer id, Paciente paciente, LocalDate fecha, List<?> diag, List<?> trat, List<?> cons, String ant, String alrg, String obs) {
-            txtS.setText("");
-            imprimirLinea(completarEspacios("ID Historial")+ ": " + id);
-            imprimirLinea(completarEspacios("Paciente")+ ": " + paciente);
-            imprimirLinea(completarEspacios("Fecha de Creacion")+ ": " + fecha);
-            imprimirLinea(completarEspacios("Diagnosticos")+ ": " + diag) ;
-            imprimirLinea(completarEspacios("Tratamientos")+ ": " + trat);
-            imprimirLinea(completarEspacios("Consultas")+ ":"+ cons);
-            imprimirLinea(completarEspacios("Antecedentes")+ ":"+ ant);
-            imprimirLinea(completarEspacios("Alergias")+ ":"+ alrg);
-            imprimirLinea(completarEspacios("Observaciones")+ ":"+ obs);
-            txtS.append("\n");
-            return false;
-        }
-
-        public String completarEspacios(String str) {
-            StringBuilder sb = new StringBuilder(str);
-            while (sb.length() < 20) {
-                sb.append(" ");
-            }
-            return sb.toString();
         }
     }
 

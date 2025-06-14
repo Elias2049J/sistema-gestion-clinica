@@ -1,9 +1,13 @@
 package org.sistema.vista.gestionpaciente;
 
 import lombok.Getter;
-import org.sistema.data.listas.DataGestionPacientes;
 import org.sistema.entidad.Paciente;
+import org.sistema.model.CitaModel;
+import org.sistema.model.HistorialClinicoModel;
+import org.sistema.repository.DataRepository;
 import org.sistema.model.PacienteModel;
+import org.sistema.use_case.CitaUseCase;
+import org.sistema.use_case.HistorialClinicoUseCase;
 import org.sistema.use_case.PacienteUseCase;
 
 import javax.swing.*;
@@ -29,11 +33,13 @@ public class VentanaGestionPaciente extends JFrame {
         this.add(lienzoCentral, BorderLayout.CENTER);
         this.add(lienzoFooter, BorderLayout.SOUTH);
     }
-
-    static class LienzoCentral extends JPanel {
+    @Getter
+    class LienzoCentral extends JPanel {
         //instancio el servicio para gestionar pacientes
-        @Getter
+
         private PacienteUseCase pacienteModel = new PacienteModel();
+        private HistorialClinicoUseCase historialClinicoModel = new HistorialClinicoModel();
+        private CitaUseCase citaModel = new CitaModel();
 
         private JPanel panelBusqueda = new JPanel(new GridBagLayout());
 
@@ -55,10 +61,10 @@ public class VentanaGestionPaciente extends JFrame {
             this.setLayout(new GridBagLayout());
 
             // llenar los datos de la tabla con datos de pacientes recorriendo la lista
-            int n = DataGestionPacientes.getPacientes().size();
+            int n = DataRepository.getPacientes().size();
             datosTabla = new Object[n][8];
             for (int i = 0; i < n; i++) {
-                Paciente p = DataGestionPacientes.getPacientes().get(i);
+                Paciente p = DataRepository.getPacientes().get(i);
                 datosTabla[i][0] = p.getIdPaciente();
                 datosTabla[i][1] = p.getNombre();
                 datosTabla[i][2] = p.getApellido();
@@ -178,7 +184,6 @@ public class VentanaGestionPaciente extends JFrame {
     }
 
     class LienzoFooter extends JPanel{
-
         private JButton btnGuardar = new JButton("Guardar cambios");
         private LienzoCentral lienzoCentral;
         private JButton btnSalir = new JButton("Salir");
@@ -238,7 +243,10 @@ public class VentanaGestionPaciente extends JFrame {
                             return;
                         }
                         //se crea un paciente por cada iteracion
-                        Paciente paciente = new Paciente(id, nombre, apellido, edad, dni, direccion, telefono, estado);
+                        Paciente paciente = new Paciente(
+                                id, nombre, apellido, edad, dni, direccion, telefono, estado,
+                                lienzoCentral.getHistorialClinicoModel().consultarPorPaciente(id),
+                                lienzoCentral.getCitaModel().obtenerCitasPorPaciente(id));
                         // cada paciente se agrega a la lista
                         listaModificada.add(paciente);
                     } catch (Exception ex) {

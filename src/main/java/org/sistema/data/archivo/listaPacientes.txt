@@ -1,2 +1,3 @@
 idPaciente,nombre,apellido,edad,dni,direccion,telefono,estado
-1,miguel,centellas,65,12345678,calle 13,123456789,Activo
+1,Miguel,Centellas,45,12345678,calle false,123456789,Activo
+2,estefanini,marian,24,12345678,calle 13,321654988,Activo

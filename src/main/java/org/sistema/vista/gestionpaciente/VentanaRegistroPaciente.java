@@ -24,7 +24,7 @@ public class VentanaRegistroPaciente extends JFrame {
         this.add(lienzoFooter, BorderLayout.SOUTH);
     }
 
-    static class LienzoCentral extends JPanel {
+    class LienzoCentral extends JPanel {
         private PacienteUseCase pacienteModel = new PacienteModel();
 
         private JLabel lblRegistro = new JLabel("INGRESAR DATOS", SwingConstants.CENTER);
@@ -44,7 +44,7 @@ public class VentanaRegistroPaciente extends JFrame {
 
         private JButton btnRegistrar = new JButton("Registrar");
 
-        public LienzoCentral() throws FileNotFoundException {
+        public LienzoCentral() {
             super();
             this.setLayout(new GridBagLayout());
             GridBagConstraints gbc = new GridBagConstraints();
@@ -149,21 +149,16 @@ public class VentanaRegistroPaciente extends JFrame {
                     jtfTlf.requestFocus();
                     return;
                 }
-
-                try {
-                    if (pacienteModel.crearPaciente(nombre, apellido, edad, dni, direccion, telefono)) {
-                        JOptionPane.showMessageDialog(this, "Paciente registrado exitosamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-                        jtfNombre.setText("");
-                        jtfApellido.setText("");
-                        jtfEdad.setText("");
-                        jtfDni.setText("");
-                        jtfDireccion.setText("");
-                        jtfTlf.setText("");
-                    } else {
-                        JOptionPane.showMessageDialog(this, "Error al registrar el paciente. Verifique los datos ingresados.", "Error", JOptionPane.ERROR_MESSAGE);
-                    }
-                } catch (FileNotFoundException ex) {
-                    JOptionPane.showMessageDialog(this, "Error de archivo: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                if (pacienteModel.crearPaciente(nombre, apellido, edad, dni, direccion, telefono)) {
+                    JOptionPane.showMessageDialog(this, "Paciente registrado exitosamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                    jtfNombre.setText("");
+                    jtfApellido.setText("");
+                    jtfEdad.setText("");
+                    jtfDni.setText("");
+                    jtfDireccion.setText("");
+                    jtfTlf.setText("");
+                } else {
+                    JOptionPane.showMessageDialog(this, "Error al registrar el paciente. Verifique los datos ingresados.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             });
         }

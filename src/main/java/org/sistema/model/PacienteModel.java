@@ -1,13 +1,11 @@
 package org.sistema.model;
 
 import lombok.Getter;
-import org.sistema.entidad.HistorialCitas;
-import org.sistema.entidad.HistorialClinico;
 import org.sistema.entidad.Paciente;
 import org.sistema.interfaces.PersistenciaInterface;
 import org.sistema.persistencia.PersistenciaPaciente;
+import org.sistema.repository.DataRepository;
 import org.sistema.use_case.PacienteUseCase;
-import org.sistema.data.listas.DataGestionPacientes;
 
 import java.io.FileNotFoundException;
 import java.util.List;
@@ -16,15 +14,24 @@ import java.util.List;
 public class PacienteModel implements PacienteUseCase {
     private PersistenciaInterface<Paciente> persistenciaPaciente = new PersistenciaPaciente();
 
-    public PacienteModel() throws FileNotFoundException {
-        persistenciaPaciente.llenarListaDesdeArchivo(DataGestionPacientes.getPacientes());
+    public PacienteModel() {
+        try {
+            persistenciaPaciente.llenarListaDesdeArchivo(DataRepository.getPacientes());
+        } catch (FileNotFoundException e) {
+            System.out.println("Error al instanciar la lista de pacientes desde el archivo en constructor de pacienteModel"+e.getMessage());
+        }
     }
 
-    //metodo para consultar un paciente por su id
+    //consulta un paciente por su id
     @Override
-    public Paciente consultarPorID(Integer id) throws FileNotFoundException {
-        persistenciaPaciente.llenarListaDesdeArchivo(DataGestionPacientes.getPacientes());
-        for (Paciente paciente: DataGestionPacientes.getPacientes()) {
+    public Paciente consultarPorID(Integer id) {
+        try {
+            persistenciaPaciente.llenarListaDesdeArchivo(DataRepository.getPacientes());
+        } catch (FileNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+
+        for (Paciente paciente: DataRepository.getPacientes()) {
             if(paciente.getIdPaciente().equals(id)) {
                 return paciente;
             }
@@ -33,8 +40,14 @@ public class PacienteModel implements PacienteUseCase {
     }
 
     @Override
-    //metodo para crear un nuevo paciente, recibe sus atributos y agrega el paciente a la lista de pacientes
-    public boolean crearPaciente(String nombre, String apellido, Integer edad, String dni, String direccion, String telefono) throws FileNotFoundException {
+    //crea un nuevo paciente, recibe sus atributos y lo agrega a la lista
+    public boolean crearPaciente(String nombre, String apellido, Integer edad, String dni, String direccion, String telefono) {
+        try {
+            persistenciaPaciente.llenarListaDesdeArchivo(DataRepository.getPacientes());
+        } catch (FileNotFoundException e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
         // validaciones internas
         if (nombre == null || nombre.trim().isEmpty()) return false;
         if (apellido == null || apellido.trim().isEmpty()) return false;
@@ -43,25 +56,31 @@ public class PacienteModel implements PacienteUseCase {
         if (direccion == null || direccion.trim().isEmpty()) return false;
         if (telefono == null || !telefono.matches("\\d{9}")) return false;
         Integer id;
-        // si la lista d epacientes está vacía, el id del nuevo paciente es 1
-        if (DataGestionPacientes.getPacientes().isEmpty()) {
+        // si la lista de pacientes está vacía, el id del nuevo paciente es 1
+        if (DataRepository.getPacientes().isEmpty()) {
             id = 1;
         } else {
-            //si no esta vacia, se obtitne el ultimo id de paciente y se suma 1
-            id = DataGestionPacientes.getPacientes().getLast().getIdPaciente()+1;
+            //si no esta vacia, obtiene el ultimo id de paciente y se suma 1
+            id = DataRepository.getPacientes().getLast().getIdPaciente()+1;
         }
         String estado = "Activo"; // estado por defecto
-        Paciente nuevoPaciente = new Paciente(id, nombre, apellido, edad, dni, direccion, telefono, estado);
-        DataGestionPacientes.agregarPaciente(nuevoPaciente);
-        persistenciaPaciente.actualizarArchivo(DataGestionPacientes.getPacientes());
-        persistenciaPaciente.llenarListaDesdeArchivo(DataGestionPacientes.getPacientes());
+        //el historial clinico y las citas son null por defecto
+        Paciente nuevoPaciente = new Paciente(id, nombre, apellido, edad, dni, direccion, telefono, estado, null, null);
+        DataRepository.agregarPaciente(nuevoPaciente);
+        persistenciaPaciente.actualizarArchivo(DataRepository.getPacientes());
+        try {
+            persistenciaPaciente.llenarListaDesdeArchivo(DataRepository.getPacientes());
+        } catch (FileNotFoundException e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
         return true;
     }
 
     //metodo para actualizar los datos de un paciente
     @Override
-    public boolean actualizarPaciente(Integer id, String nombre, String apellido, String dni, String direccion, String telefono, String estado) throws FileNotFoundException {
-        for (Paciente paciente : DataGestionPacientes.getPacientes()) {
+    public boolean actualizarPaciente(Integer id, String nombre, String apellido, String dni, String direccion, String telefono, String estado) {
+        for (Paciente paciente : DataRepository.getPacientes()) {
             // si encuentra el id le asigna los valores
             if (paciente.getIdPaciente().equals(id)) {
                 paciente.setNombre(nombre);
@@ -70,49 +89,50 @@ public class PacienteModel implements PacienteUseCase {
                 paciente.setDireccion(direccion);
                 paciente.setTelefono(telefono);
                 paciente.setEstado(estado);
-                //actualiza el archivo
-                persistenciaPaciente.actualizarArchivo(DataGestionPacientes.getPacientes());
-                return true;
+                break;
             }
         }
-        return false;
-    }
-
-    //lógica para obtener el historial clínico por ID del paciente
-    @Override
-    public HistorialClinico obtenerHistorialClinico(Integer idPaciente) {
-        for (HistorialClinico historialClinico: DataGestionPacientes.getHistorialesClinicos()) {
-            if (historialClinico.getPaciente().getIdPaciente().equals(idPaciente)) {
-                return historialClinico;
-            }
+        //actualiza el archivo
+        persistenciaPaciente.actualizarArchivo(DataRepository.getPacientes());
+        try {
+            persistenciaPaciente.llenarListaDesdeArchivo(DataRepository.getPacientes());
+        } catch (FileNotFoundException e) {
+            System.out.println(e.getMessage());
+            return false;
         }
-        return null;
+        return true;
     }
 
     @Override
-    public HistorialCitas obtenerHistorialCitas(Integer idPaciente) {
-        for (HistorialCitas historialCitas : DataGestionPacientes.getHistorialesCitas()) {
-            if (historialCitas.getPaciente().getIdPaciente().equals(idPaciente)) {
-                return historialCitas;
-            }
-        }
-        return null;
-    }
-
-    @Override
+    //actualiza el archivo de lista
     public boolean guardarCambiosDesdeTabla(List<Paciente> lista) {
         persistenciaPaciente.actualizarArchivo(lista);
         try {
-            persistenciaPaciente.llenarListaDesdeArchivo(DataGestionPacientes.getPacientes());
-            return true;
+            persistenciaPaciente.llenarListaDesdeArchivo(DataRepository.getPacientes());
         } catch (FileNotFoundException e) {
             System.out.println(e.getMessage());
+            return false;
         }
-        return false;
+        return true;
     }
 
     @Override
     public boolean eliminar(Integer id) {
-        return false;
+        try {
+            persistenciaPaciente.llenarListaDesdeArchivo(DataRepository.getPacientes());
+            for (int i = 0; i < DataRepository.getPacientes().size(); i++) {
+                // se busca el paciente por el id ingresado
+                if(DataRepository.getPacientes().get(i).getIdPaciente().equals(id)) {
+                    DataRepository.getPacientes().remove(i);
+                    // si se elimina se sale del ciclo
+                    break;
+                }
+            }
+            persistenciaPaciente.actualizarArchivo(DataRepository.getPacientes());
+        } catch (FileNotFoundException e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+        return true;
     }
 }

@@ -10,14 +10,11 @@ import java.time.LocalTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Cita {
-    private Integer idCita;
-    private Paciente paciente;
-    private Medico medico;
-    private String especialidad;
-    private String motivo;
+public class EvaluacionMedica {
+    private Integer idEvaluacion;
+    private HistorialClinico historialClinico;
+    private String diagnostico;
+    private String tratamiento;
     private LocalDate fecha;
     private LocalTime hora;
-    private double costo;
-    private String estado;
 }
