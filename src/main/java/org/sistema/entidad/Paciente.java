@@ -20,5 +20,5 @@ public class Paciente {
     private String telefono;
     private String estado;
     private HistorialClinico historialClinico;
-    private List<Cita> citas = new ArrayList<>();
+    private List<Cita> citas;
 }

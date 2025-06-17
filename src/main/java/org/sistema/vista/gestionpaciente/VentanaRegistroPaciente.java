@@ -149,7 +149,7 @@ public class VentanaRegistroPaciente extends JFrame {
                     jtfTlf.requestFocus();
                     return;
                 }
-                if (pacienteModel.crearPaciente(nombre, apellido, edad, dni, direccion, telefono)) {
+                if (pacienteModel.create(nombre, apellido, edad, dni, direccion, telefono)) {
                     JOptionPane.showMessageDialog(this, "Paciente registrado exitosamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
                     jtfNombre.setText("");
                     jtfApellido.setText("");

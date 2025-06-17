@@ -5,7 +5,7 @@ import org.sistema.entidad.*;
 
 import java.util.ArrayList;
 import java.util.List;
-// centraliza las listas de las entidades, en memoria,
+// centraliza las listas de las entidades en memoria,
 // actúa como capa de abstracción entre los modelos y la persistencia
 
 public class DataRepository {

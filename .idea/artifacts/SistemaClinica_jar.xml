@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="SistemaClinica:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/SistemaClinica_jar</output-path>
+    <root id="archive" name="SistemaClinica.jar">
+      <element id="module-output" name="SistemaClinica" />
+      <element id="module-test-output" name="SistemaClinica" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/formdev/flatlaf/3.4/flatlaf-3.4.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.32/lombok-1.18.32.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

@@ -3,16 +3,16 @@ package org.sistema.persistencia;
 import org.sistema.repository.DataRepository;
 import org.sistema.entidad.EvaluacionMedica;
 import org.sistema.entidad.HistorialClinico;
-import org.sistema.interfaces.PersistenciaInterface;
+import org.sistema.interfaces.PersistenceInterface;
 
 import java.io.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
-public class PersistenciaEvaluacionMedica implements PersistenciaInterface<EvaluacionMedica> {
+public class PersistenceEvaluacionMedica implements PersistenceInterface<EvaluacionMedica> {
     @Override
-    public boolean llenarListaDesdeArchivo(List<EvaluacionMedica> lista) {
+    public boolean loadListFromFile(List<EvaluacionMedica> lista) {
         lista.clear();
         File archivo = new File("src/main/java/org/sistema/data/archivo/listaEvaluacionesMedicas.txt");
         if (!archivo.exists()) return false;
@@ -59,7 +59,7 @@ public class PersistenciaEvaluacionMedica implements PersistenciaInterface<Evalu
     }
 
     @Override
-    public boolean actualizarArchivo(List<EvaluacionMedica> lista) {
+    public boolean updateFileFromList(List<EvaluacionMedica> lista) {
         File archivo = new File("src/main/java/org/sistema/data/archivo/listaEvaluacionesMedicas.txt");
         try (PrintWriter writer = new PrintWriter(new FileWriter(archivo))) {
             writer.println("idEvaluacion,idHistorial,diagnostico,tratamiento,fecha,hora");

@@ -4,16 +4,16 @@ import org.sistema.repository.DataRepository;
 import org.sistema.entidad.EvaluacionMedica;
 import org.sistema.entidad.HistorialClinico;
 import org.sistema.entidad.Paciente;
-import org.sistema.interfaces.PersistenciaInterface;
+import org.sistema.interfaces.PersistenceInterface;
 
 import java.io.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PersistenciaHistorialClinico implements PersistenciaInterface<HistorialClinico> {
+public class PersistenceHistorialClinico implements PersistenceInterface<HistorialClinico> {
     @Override
-    public boolean llenarListaDesdeArchivo(List<HistorialClinico> lista){
+    public boolean loadListFromFile(List<HistorialClinico> lista) {
         lista.clear();
         File archivo = new File("src/main/java/org/sistema/data/archivo/listaHistorialClinico.txt");
         if (!archivo.exists()) {
@@ -74,7 +74,7 @@ public class PersistenciaHistorialClinico implements PersistenciaInterface<Histo
     }
 
     @Override
-    public boolean actualizarArchivo(List<HistorialClinico> lista) {
+    public boolean updateFileFromList(List<HistorialClinico> lista) {
         File archivo = new File("src/main/java/org/sistema/data/archivo/listaHistorialClinico.txt");
         try (PrintWriter writer = new PrintWriter(new FileWriter(archivo, false))) {
             writer.println("idHistorial,idPaciente,antecedentes,alergias,observaciones,fechaCreacion,estado");

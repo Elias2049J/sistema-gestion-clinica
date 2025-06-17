@@ -5,10 +5,10 @@ import org.sistema.entidad.EvaluacionMedica;
 import java.util.List;
 
 public interface EvaluacionMedicaUseCase {
-    boolean crearEvaluacionMedica(EvaluacionMedica evaluacion);
-    boolean actualizarEvaluacionMedica(EvaluacionMedica evaluacion);
-    EvaluacionMedica consultarPorID(Integer id);
-    List<EvaluacionMedica> obtenerEvaluacionesPorHistorial(Integer idHistorialClinico);
-    boolean eliminarEvaluacionMedica(Integer id);
-    boolean guardarCambiosDesdeTabla(List<EvaluacionMedica> lista);
+    boolean create(EvaluacionMedica evaluacion);
+    boolean update(EvaluacionMedica evaluacion);
+    EvaluacionMedica getById(Integer id);
+    List<EvaluacionMedica> getByHistoryId(Integer idHistorialClinico);
+    boolean delete(Integer id);
+    boolean saveFromList(List<EvaluacionMedica> lista);
 }

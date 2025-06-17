@@ -4,17 +4,17 @@ import org.sistema.repository.DataRepository;
 import org.sistema.entidad.Cita;
 import org.sistema.entidad.Medico;
 import org.sistema.entidad.Paciente;
-import org.sistema.interfaces.PersistenciaInterface;
+import org.sistema.interfaces.PersistenceInterface;
 
 import java.io.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
-public class PersistenciaCita implements PersistenciaInterface<Cita> {
+public class PersistenceCita implements PersistenceInterface<Cita> {
 
     @Override
-    public boolean llenarListaDesdeArchivo(List<Cita> lista) {
+    public boolean loadListFromFile(List<Cita> lista) {
         File archivo = new File("src/main/java/org/sistema/data/archivo/listaCitas.txt");
         if(!archivo.exists()) return false;
         try (BufferedReader br = new BufferedReader(new FileReader(archivo))) {
@@ -79,7 +79,7 @@ public class PersistenciaCita implements PersistenciaInterface<Cita> {
     }
 
     @Override
-    public boolean actualizarArchivo(List<Cita> lista) {
+    public boolean updateFileFromList(List<Cita> lista) {
         File archivo = new File("src/main/java/org/sistema/data/archivo/listaPacientes.txt");
         try (PrintWriter writer = new PrintWriter(new FileWriter(archivo, false))) {
             // Escribir cabecera
