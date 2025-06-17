@@ -154,11 +154,7 @@ public class VentanaPrincipal extends JFrame implements Serializable {
             this.add(panelMedicos, gbcPadre);
 
             btnVentanaHistCli.addActionListener(e -> {
-                try {
-                    ventanaHistorialClinico = new VentanaHistorialClinico();
-                } catch (FileNotFoundException ex) {
-                    throw new RuntimeException(ex);
-                }
+                ventanaHistorialClinico = new VentanaHistorialClinico();
                 ventanaHistorialClinico.setVisible(true);
             });
 

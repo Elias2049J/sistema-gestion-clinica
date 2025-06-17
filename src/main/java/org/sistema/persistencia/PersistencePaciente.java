@@ -4,16 +4,16 @@ import org.sistema.repository.DataRepository;
 import org.sistema.entidad.Cita;
 import org.sistema.entidad.HistorialClinico;
 import org.sistema.entidad.Paciente;
-import org.sistema.interfaces.PersistenciaInterface;
+import org.sistema.interfaces.PersistenceInterface;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PersistenciaPaciente implements PersistenciaInterface<Paciente> {
+public class PersistencePaciente implements PersistenceInterface<Paciente> {
     //metodo para asignar pacientes a una lista de pacientes desde un archivo
     @Override
-    public boolean llenarListaDesdeArchivo(List<Paciente> pacientes) {
+    public boolean loadListFromFile(List<Paciente> pacientes) {
         pacientes.clear();
         File archivo = new File("src/main/java/org/sistema/data/archivo/listaPacientes.txt");
         if (!archivo.exists()) return false;
@@ -77,7 +77,7 @@ public class PersistenciaPaciente implements PersistenciaInterface<Paciente> {
 
     // metodo para sobrescribir el archivo con la lista
     @Override
-    public boolean actualizarArchivo(List<Paciente> lista) {
+    public boolean updateFileFromList(List<Paciente> lista) {
         File archivo = new File("src/main/java/org/sistema/data/archivo/listaPacientes.txt");
         try (PrintWriter writer = new PrintWriter(new FileWriter(archivo, false))) {
             // Escribir cabecera

@@ -56,7 +56,7 @@ public class VentanaGestionPaciente extends JFrame {
         private JTable tablaResultados;
         private JScrollPane scpResultados;
 
-        public LienzoCentral() throws FileNotFoundException {
+        public LienzoCentral() {
             super();
             this.setLayout(new GridBagLayout());
 
@@ -161,7 +161,7 @@ public class VentanaGestionPaciente extends JFrame {
         }
     }
 
-    class LienzoHeader extends JPanel{
+    class LienzoHeader extends JPanel {
         private JLabel lblTitulo = new JLabel("PANEL DE ADMINISTRACION DE PACIENTES", SwingConstants.CENTER);
         public LienzoHeader (){
             super();
@@ -215,11 +215,11 @@ public class VentanaGestionPaciente extends JFrame {
 
                         // validaciones
                         if (nombre.isEmpty()) {
-                            JOptionPane.showMessageDialog(this, "El nombre no puede estar vacío (fila " + (i+1) + ")", "Error", JOptionPane.ERROR_MESSAGE);
+                            JOptionPane.showMessageDialog(lienzoCentral, "El nombre no puede estar vacío (fila " + (i+1) + ")", "Error", JOptionPane.ERROR_MESSAGE);
                             return;
                         }
                         if (apellido.isEmpty()) {
-                            JOptionPane.showMessageDialog(this, "El apellido no puede estar vacío (fila " + (i+1) + ")", "Error", JOptionPane.ERROR_MESSAGE);
+                            JOptionPane.showMessageDialog(lienzoCentral, "El apellido no puede estar vacío (fila " + (i+1) + ")", "Error", JOptionPane.ERROR_MESSAGE);
                             return;
                         }
                         int edad;
@@ -227,35 +227,35 @@ public class VentanaGestionPaciente extends JFrame {
                             edad = Integer.parseInt(edadStr);
                             if (edad <= 0) throw new NumberFormatException();
                         } catch (NumberFormatException ex) {
-                            JOptionPane.showMessageDialog(this, "Edad inválida en la fila " + (i+1) + ". Debe ser un número positivo.", "Error", JOptionPane.ERROR_MESSAGE);
+                            JOptionPane.showMessageDialog(lienzoCentral, "Edad inválida en la fila " + (i+1) + ". Debe ser un número positivo.", "Error", JOptionPane.ERROR_MESSAGE);
                             return;
                         }
                         if (dni.isEmpty() || !dni.matches("\\d{8}")) {
-                            JOptionPane.showMessageDialog(this, "DNI inválido en la fila " + (i+1) + ". Debe ser numérico y de 8 dígitos.", "Error", JOptionPane.ERROR_MESSAGE);
+                            JOptionPane.showMessageDialog(lienzoCentral, "DNI inválido en la fila " + (i+1) + ". Debe ser numérico y de 8 dígitos.", "Error", JOptionPane.ERROR_MESSAGE);
                             return;
                         }
                         if (direccion.isEmpty()) {
-                            JOptionPane.showMessageDialog(this, "La dirección no puede estar vacía (fila " + (i+1) + ")", "Error", JOptionPane.ERROR_MESSAGE);
+                            JOptionPane.showMessageDialog(lienzoCentral, "La dirección no puede estar vacía (fila " + (i+1) + ")", "Error", JOptionPane.ERROR_MESSAGE);
                             return;
                         }
                         if (telefono.isEmpty() || !telefono.matches("\\d{9}")) {
-                            JOptionPane.showMessageDialog(this, "Teléfono inválido en la fila " + (i+1) + ". Debe ser numérico y de 9 dígitos.", "Error", JOptionPane.ERROR_MESSAGE);
+                            JOptionPane.showMessageDialog(lienzoCentral, "Teléfono inválido en la fila " + (i+1) + ". Debe ser numérico y de 9 dígitos.", "Error", JOptionPane.ERROR_MESSAGE);
                             return;
                         }
                         //se crea un paciente por cada iteracion
                         Paciente paciente = new Paciente(
                                 id, nombre, apellido, edad, dni, direccion, telefono, estado,
-                                lienzoCentral.getHistorialClinicoModel().consultarPorPaciente(id),
+                                lienzoCentral.getHistorialClinicoModel().getByPatientID(id),
                                 lienzoCentral.getCitaModel().obtenerCitasPorPaciente(id));
                         // cada paciente se agrega a la lista
                         listaModificada.add(paciente);
                     } catch (Exception ex) {
-                        JOptionPane.showMessageDialog(this, "Error en los datos de la tabla (fila " + (i+1) + "): " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(lienzoCentral, "Error en los datos de la tabla (fila " + (i+1) + "): " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                         return;
                     }
                 }
                 //para guardar todas las modificaciones de la tabla
-                if(lienzoCentral.getPacienteModel().guardarCambiosDesdeTabla(listaModificada)) {
+                if(lienzoCentral.getPacienteModel().saveFromList(listaModificada)) {
                     JOptionPane.showMessageDialog(lienzoCentral, "Se guardaron los datos correctamente", "Exito", JOptionPane.INFORMATION_MESSAGE);
                 } else {
                     JOptionPane.showMessageDialog(lienzoCentral, "Hubo un error al guardar los datos modificados", "Error", JOptionPane.ERROR_MESSAGE);

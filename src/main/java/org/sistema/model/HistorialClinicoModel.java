@@ -3,33 +3,28 @@ package org.sistema.model;
 import org.sistema.entidad.EvaluacionMedica;
 import org.sistema.entidad.HistorialClinico;
 import org.sistema.entidad.Paciente;
-import org.sistema.interfaces.PersistenciaInterface;
-import org.sistema.persistencia.PersistenciaHistorialClinico;
+import org.sistema.interfaces.PersistenceInterface;
+import org.sistema.persistencia.PersistenceHistorialClinico;
 import org.sistema.repository.DataRepository;
 import org.sistema.use_case.EvaluacionMedicaUseCase;
 import org.sistema.use_case.HistorialClinicoUseCase;
 import org.sistema.use_case.PacienteUseCase;
 
-import java.io.FileNotFoundException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class HistorialClinicoModel implements HistorialClinicoUseCase {
-    private PersistenciaInterface<HistorialClinico> persistenciaHistorial = new PersistenciaHistorialClinico();
+    private PersistenceInterface<HistorialClinico> persistenciaHistorial = new PersistenceHistorialClinico();
     private PacienteUseCase pacienteModel = new PacienteModel();
     private EvaluacionMedicaUseCase evaluacionModel = new EvaluacionMedicaModel();
 
     public HistorialClinicoModel(){
-        try {
-            persistenciaHistorial.llenarListaDesdeArchivo(DataRepository.getHistorialesClinicos());
-        } catch (FileNotFoundException e) {
-            System.out.println("Error al instanciar la lista de historiales clinicos desde el archivo en constructor de HistorialClinicoModel: s"+e.getMessage());
-        }
+        persistenciaHistorial.loadListFromFile(DataRepository.getHistorialesClinicos());
     }
 
     @Override
-    public boolean crearHistorialClinico(Integer idPaciente, List<EvaluacionMedica> evaluacionesMedicas, String antecedentes, String alergias, String observaciones, LocalDate fechaCreacion, String estado) {
+    public boolean create(Integer idPaciente, List<EvaluacionMedica> evaluacionesMedicas, String antecedentes, String alergias, String observaciones, LocalDate fechaCreacion, String estado) {
         Integer idHistorial;
         if(DataRepository.getHistorialesClinicos().isEmpty()) {
             idHistorial = 1;
@@ -37,12 +32,12 @@ public class HistorialClinicoModel implements HistorialClinicoUseCase {
             idHistorial = DataRepository.getHistorialesClinicos().getLast().getIdHistorial()+1;
         }
 
-        Paciente paciente = pacienteModel.consultarPorID(idPaciente);
+        Paciente paciente = pacienteModel.getById(idPaciente);
         List<EvaluacionMedica> evaluaciones;
         if (evaluacionesMedicas != null) {
             evaluaciones = evaluacionesMedicas;
         } else {
-            evaluaciones = evaluacionModel.obtenerEvaluacionesPorHistorial(idHistorial);
+            evaluaciones = evaluacionModel.getByHistoryId(idHistorial);
         }
         if (evaluaciones == null) {
             evaluaciones = new ArrayList<>();
@@ -50,24 +45,20 @@ public class HistorialClinicoModel implements HistorialClinicoUseCase {
 
         HistorialClinico nuevoHistorial = new HistorialClinico(idHistorial, paciente, evaluaciones, antecedentes, alergias, observaciones, fechaCreacion, estado);
         DataRepository.agregarHistorialClinico(nuevoHistorial);
-        persistenciaHistorial.actualizarArchivo(DataRepository.getHistorialesClinicos());
+        persistenciaHistorial.updateFileFromList(DataRepository.getHistorialesClinicos());
         return true;
     }
 
     @Override
     //TODO
-    public boolean actualizarHistorialClinico(Integer idHistorial, Integer idPaciente, List<EvaluacionMedica> evaluacionesMedicas, String antecedentes, String alergias, String observaciones, LocalDate fechaCreacion, String estado) {
+    public boolean update(Integer idHistorial, Integer idPaciente, List<EvaluacionMedica> evaluacionesMedicas, String antecedentes, String alergias, String observaciones, LocalDate fechaCreacion, String estado) {
         return false;
     }
 
     //obtiene el historial clínico por id
     @Override
-    public HistorialClinico consultarPorPaciente(Integer idPaciente) {
-        try {
-            persistenciaHistorial.llenarListaDesdeArchivo(DataRepository.getHistorialesClinicos());
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+    public HistorialClinico getByPatientID(Integer idPaciente) {
+        persistenciaHistorial.loadListFromFile(DataRepository.getHistorialesClinicos());
         for (HistorialClinico historialClinico: DataRepository.getHistorialesClinicos()) {
             if (historialClinico.getPaciente().getIdPaciente().equals(idPaciente)) {
                 return historialClinico;
@@ -78,13 +69,13 @@ public class HistorialClinicoModel implements HistorialClinicoUseCase {
 
     @Override
     //TODO
-    public boolean eliminarHistorialClinico(Integer id) {
+    public boolean delete(Integer id) {
         return false;
     }
 
     @Override
     //TODO
-    public boolean guardarCambiosDesdeTabla(List<HistorialClinico> lista) {
+    public boolean saveFromList(List<HistorialClinico> lista) {
         return false;
     }
 }

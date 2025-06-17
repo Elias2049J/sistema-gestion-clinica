@@ -3,19 +3,18 @@ package org.sistema.model;
 import org.sistema.entidad.Cita;
 import org.sistema.entidad.Medico;
 import org.sistema.entidad.Paciente;
-import org.sistema.interfaces.PersistenciaInterface;
-import org.sistema.persistencia.PersistenciaCita;
+import org.sistema.interfaces.PersistenceInterface;
+import org.sistema.persistencia.PersistenceCita;
 import org.sistema.repository.DataRepository;
 import org.sistema.use_case.CitaUseCase;
 
-import java.io.FileNotFoundException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CitaModel implements CitaUseCase {
-    private PersistenciaInterface<Cita> persistenciaCita = new PersistenciaCita();
+    private PersistenceInterface<Cita> persistenciaCita = new PersistenceCita();
 
     @Override
     // crea una nueva
@@ -63,12 +62,8 @@ public class CitaModel implements CitaUseCase {
         paciente.getCitas().add(nuevaCita);
 
         DataRepository.agregarCita(nuevaCita);
-        persistenciaCita.actualizarArchivo(DataRepository.getCitas());
-        try {
-            persistenciaCita.llenarListaDesdeArchivo(DataRepository.getCitas());
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+        persistenciaCita.updateFileFromList(DataRepository.getCitas());
+        persistenciaCita.loadListFromFile(DataRepository.getCitas());
         //si sale bien retorna true
         return true;
     }

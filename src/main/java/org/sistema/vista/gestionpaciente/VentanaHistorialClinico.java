@@ -1,11 +1,13 @@
 package org.sistema.vista.gestionpaciente;
 
-import org.sistema.model.PacienteModel;
-import org.sistema.use_case.PacienteUseCase;
+import org.sistema.entidad.HistorialClinico;
+import org.sistema.model.HistorialClinicoModel;
+import org.sistema.repository.DataRepository;
+import org.sistema.use_case.HistorialClinicoUseCase;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.io.FileNotFoundException;
 
 public class VentanaHistorialClinico extends JFrame {
 
@@ -13,7 +15,7 @@ public class VentanaHistorialClinico extends JFrame {
     private LienzoCentral lienzoCentral = new LienzoCentral();
     private LienzoFooter lienzoFooter = new LienzoFooter();
 
-    public VentanaHistorialClinico() throws FileNotFoundException {
+    public VentanaHistorialClinico() {
         super();
         this.setTitle("Ver historiales clínicos");
         this.setSize(800, 600);
@@ -27,22 +29,50 @@ public class VentanaHistorialClinico extends JFrame {
 
     static class LienzoCentral extends JPanel {
         //instancio el servicio/modelo de lógica de negocio para pacientes
-        private PacienteUseCase pacienteModel = new PacienteModel();
+        private HistorialClinicoUseCase historyModel = new HistorialClinicoModel();
 
         private JPanel panelBusqueda = new JPanel(new GridBagLayout());
 
-        private JLabel lblNombrePaciente = new JLabel("Ingrese el Nombre del paciente: ");
+        private JLabel lblNombrePaciente = new JLabel("Ingrese el Nombre o ID del paciente: ");
         private JTextField jtfNombrePaciente = new JTextField(20);
-        private JButton btnBuscarPorNombre = new JButton("Buscar");
+        private JButton btnBuscar = new JButton("Buscar");
 
-        private JScrollPane scpResultados = new JScrollPane();
-        private JTextArea txtS = new JTextArea();
+        private Object[][] datosTabla;
+        private String[] columnasTabla = {"ID", "Paciente", "Cant. Ev. Medicas", "Antecedentes", "Alergias", "Observaciones", "Fecha de creación", "Estado"};
+        private JScrollPane scpResultados;
+        private JPanel panelResultados = new JPanel(new BorderLayout());
+        private DefaultTableModel modeloTabla = new DefaultTableModel();
+        private JTable tabla = new JTable();
 
-        public LienzoCentral() throws FileNotFoundException {
+        public LienzoCentral() {
             super();
             this.setLayout(new GridBagLayout());
             GridBagConstraints gbcPadre = new GridBagConstraints();
             gbcPadre.insets = new Insets(10, 20, 10, 10);
+
+            int n;
+            if (DataRepository.getHistorialesClinicos() != null && !DataRepository.getHistorialesClinicos().isEmpty()) {
+                n = DataRepository.getHistorialesClinicos().size();
+                datosTabla = new Object[n][8];
+                for (int i = 1; i < n; i++) {
+                    HistorialClinico h = DataRepository.getHistorialesClinicos().get(i);
+                    datosTabla[i][0] = h.getIdHistorial();
+                    datosTabla[i][1] = h.getPaciente().getNombre();
+                    datosTabla[i][2] = h.getEvaluacionesMedicas().size();
+                    datosTabla[i][3] = h.getAntecedentes();
+                    datosTabla[i][4] = h.getAlergias();
+                    datosTabla[i][5] = h.getObservaciones();
+                    datosTabla[i][6] = h.getFechaCreacion().toString();
+                    datosTabla[i][7] = h.getEstado();
+                }
+            } else datosTabla = new Object[1][8];
+            datosTabla[0][0] = "No hay datos disponibles aún";
+
+            modeloTabla = new DefaultTableModel(datosTabla, columnasTabla);
+            tabla = new JTable(modeloTabla);
+            panelResultados.removeAll();
+            scpResultados = new JScrollPane(tabla);
+            panelResultados.add(scpResultados);
 
             // tamaño fijo para evitar que colapsen los jtf
             Dimension sizeFijo = new Dimension(200, 25);
@@ -98,7 +128,7 @@ public class VentanaHistorialClinico extends JFrame {
             gbcBusqueda.weightx = 0;
             gbcBusqueda.fill = GridBagConstraints.HORIZONTAL;
             gbcBusqueda.anchor = GridBagConstraints.CENTER;
-            panelBusqueda.add(btnBuscarPorNombre, gbcBusqueda);
+            panelBusqueda.add(btnBuscar, gbcBusqueda);
 
             // ubicacion del panel busqueda en el grigbaglayout padre
             gbcPadre.gridx = 0;
@@ -114,14 +144,16 @@ public class VentanaHistorialClinico extends JFrame {
             gbcPadre.weightx = 1;
             gbcPadre.weighty = 2;
             gbcPadre.fill = GridBagConstraints.BOTH;
-            txtS.setMargin(new Insets(20, 20, 20, 20));
-            txtS.setFont(new Font("Consolas", Font.BOLD, 16));
-            txtS.setEditable(false);
-            scpResultados.setViewportView(txtS);
-            this.add(scpResultados, gbcPadre);
+            this.add(panelResultados, gbcPadre);
 
             //boton para ejecutar la busqueda
-            btnBuscarPorNombre.addActionListener(e -> {
+            btnBuscar.addActionListener(e -> {
+                String txt = jtfNombrePaciente.getText().trim();
+                int id;
+                if (txt.matches("\\d+") && !txt.matches("\\s*") && !txt.matches("0+")) {
+                    id = Integer.parseInt(txt);
+                    historyModel.getByPatientID(id);
+                }
             });
         }
     }

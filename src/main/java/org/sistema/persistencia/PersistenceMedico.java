@@ -3,15 +3,15 @@ package org.sistema.persistencia;
 import org.sistema.repository.DataRepository;
 import org.sistema.entidad.Cita;
 import org.sistema.entidad.Medico;
-import org.sistema.interfaces.PersistenciaInterface;
+import org.sistema.interfaces.PersistenceInterface;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PersistenciaMedico implements PersistenciaInterface<Medico> {
+public class PersistenceMedico implements PersistenceInterface<Medico> {
     @Override
-    public boolean llenarListaDesdeArchivo(List<Medico> lista) {
+    public boolean loadListFromFile(List<Medico> lista) {
         lista.clear();
         File archivo = new File("src/main/java/org/sistema/data/archivo/listaMedicos.txt");
         if (!archivo.exists()) return false;
@@ -56,7 +56,7 @@ public class PersistenciaMedico implements PersistenciaInterface<Medico> {
     }
 
     @Override
-    public boolean actualizarArchivo(List<Medico> lista) {
+    public boolean updateFileFromList(List<Medico> lista) {
         File archivo = new File("src/main/java/org/sistema/data/archivo/listaMedicos.txt");
         try (PrintWriter writer = new PrintWriter(new FileWriter(archivo, false))) {
             writer.println("idEmpleado,nombre,apellido,edad,cargo,especialidad");
