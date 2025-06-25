@@ -1,4 +1,4 @@
-package org.sistema.vista.gestionpaciente;
+package org.sistema.vista.sec_paciente;
 
 import javax.swing.*;
 

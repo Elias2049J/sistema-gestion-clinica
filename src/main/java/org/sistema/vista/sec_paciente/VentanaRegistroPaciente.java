@@ -1,19 +1,21 @@
-package org.sistema.vista.gestionpaciente;
+package org.sistema.vista.sec_paciente;
 
+import org.sistema.entidad.Paciente;
+import org.sistema.interfaces.CrudInterface;
 import org.sistema.model.PacienteModel;
-import org.sistema.use_case.PacienteUseCase;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.FileNotFoundException;
 
 public class VentanaRegistroPaciente extends JFrame {
+    private CrudInterface<Paciente, Integer> crudPacienteModel;
     private LienzoHeader lienzoHeader = new LienzoHeader();
     private LienzoCentral lienzoCentral = new LienzoCentral();
     private LienzoFooter lienzoFooter = new LienzoFooter();
 
-    public VentanaRegistroPaciente() throws FileNotFoundException {
+    public VentanaRegistroPaciente() {
         super();
+        this.crudPacienteModel = new PacienteModel();
         this.setTitle("Registro de Pacientes");
         this.setSize(600, 500);
         this.setLocationRelativeTo(rootPane);
@@ -25,8 +27,6 @@ public class VentanaRegistroPaciente extends JFrame {
     }
 
     class LienzoCentral extends JPanel {
-        private PacienteUseCase pacienteModel = new PacienteModel();
-
         private JLabel lblRegistro = new JLabel("INGRESAR DATOS", SwingConstants.CENTER);
 
         private JLabel lblNombre = new JLabel("Nombres:");
@@ -149,7 +149,8 @@ public class VentanaRegistroPaciente extends JFrame {
                     jtfTlf.requestFocus();
                     return;
                 }
-                if (pacienteModel.create(nombre, apellido, edad, dni, direccion, telefono)) {
+                Paciente p = new Paciente();
+                if (crudPacienteModel.crear(p)) {
                     JOptionPane.showMessageDialog(this, "Paciente registrado exitosamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
                     jtfNombre.setText("");
                     jtfApellido.setText("");

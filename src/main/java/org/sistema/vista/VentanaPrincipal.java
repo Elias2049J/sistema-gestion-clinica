@@ -1,9 +1,8 @@
 package org.sistema.vista;
 
-import org.sistema.vista.gestionpaciente.VentanaGestionPaciente;
-import org.sistema.vista.gestionpaciente.VentanaHistorialCitas;
-import org.sistema.vista.gestionpaciente.VentanaHistorialClinico;
-import org.sistema.vista.gestionpaciente.VentanaRegistroPaciente;
+import org.sistema.vista.sec_paciente.VentanaGestionPaciente;
+import org.sistema.vista.sec_paciente.VentanaHistorialCitas;
+import org.sistema.vista.sec_paciente.VentanaRegistroPaciente;
 
 import javax.swing.*;
 import java.awt.*;

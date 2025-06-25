@@ -1,0 +1,147 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+package "entidad" {
+    class Paciente {
+        - idPaciente: Integer
+        - nombre: String
+        - apellido: String
+        - edad: Integer
+        - dni: String
+        - direccion: String
+        - telefono: String
+        - estado: String
+        - historialCitas: List<Cita>
+    }
+
+    class Cita {
+        - idCita: Integer
+        - paciente: Paciente
+        - medico: String
+        - especialidad: String
+        - fecha: LocalDate
+        - hora: LocalTime
+        - costo: double
+        - estado: String
+    }
+}
+
+package "interfaces" {
+    interface CrudInterface<T, ID> {
+        + boolean crear(T objeto)
+        + boolean update(T objeto)
+        + T getById(ID id)
+        + boolean delete(ID id)
+        + List<T> findAll()
+    }
+
+    interface PersistenceInterface<T> {
+        + boolean importarLista(List<T> lista)
+        + boolean exportarLista(List<T> lista)
+    }
+
+    interface RepositoryInterface<T, ID> {
+        + boolean save(T entity)
+        + boolean update(T entity)
+        + T getById(ID id)
+        + ID getId(T entity)
+        + boolean delete(ID id)
+        + List<T> findAll()
+        + boolean cargarDatos()
+    }
+
+    interface ExportarInterface {
+    }
+}
+
+package "persistencia" {
+    abstract class Persistencia<T> {
+        # abstract String getFilePath()
+        # abstract T parsearLinea(String linea)
+        # abstract String getCabecera()
+        # abstract String formatObjeto(T objeto)
+        + boolean importarLista(List<T> lista)
+        + boolean exportarLista(List<T> lista)
+    }
+
+    class PersistenciaPaciente {
+        # String getFilePath()
+        # Paciente parsearLinea(String linea)
+        # String getCabecera()
+        # String formatObjeto(Paciente paciente)
+    }
+
+    class PersistenciaCita {
+        # String getFilePath()
+        # Cita parsearLinea(String linea)
+        # String getCabecera()
+        # String formatObjeto(Cita cita)
+    }
+}
+
+package "repository" {
+    class Repository<T, ID> {
+        - List<T> elementos
+        - Function<T, ID> idExtractor
+        - PersistenceInterface<T> persistencia
+        + ID getId(T entity)
+        + boolean save(T entity)
+        + T getById(ID id)
+        + boolean delete(ID id)
+        + List<T> findAll()
+        + boolean update(T entity)
+        + boolean cargarDatos()
+    }
+}
+
+package "model" {
+    class PacienteModel {
+        - PersistenceInterface<Paciente> persistenciaPaciente
+        + boolean crear(Paciente objeto)
+        + boolean update(Paciente objeto)
+        + Paciente getById(Integer id)
+        + boolean delete(Integer id)
+        + List<Paciente> findAll()
+    }
+
+    class CitaModel {
+        - PersistenceInterface<Cita> persistenciaCita
+        + boolean crear(Cita objeto)
+        + boolean update(Cita objeto)
+        + Cita getById(Integer id)
+        + boolean delete(Integer id)
+        + List<Cita> findAll()
+    }
+
+    class ExportarModel {
+    }
+}
+
+package "vista" {
+    class VentanaPrincipal {
+        - VentanaGestionPaciente ventanaGestionPaciente
+        - VentanaRegistroPaciente ventanaRegistroPaciente
+        - VentanaHistorialClinico ventanaHistorialClinico
+        - VentanaHistorialCitas ventanaHistorialCitas
+    }
+
+    class VentanaAyuda {
+    }
+}
+
+Paciente "1" -- "N*" Cita : tiene >
+Cita "N*" -- "1" Paciente : pertenece a >
+
+Persistencia ..|> PersistenceInterface : implementa
+PersistenciaPaciente --|> Persistencia : hereda
+PersistenciaCita --|> Persistencia : hereda
+
+Repository ..|> RepositoryInterface : implementa
+PacienteModel ..|> CrudInterface : implementa
+CitaModel ..|> CrudInterface : implementa
+ExportarModel ..|> ExportarInterface : implementa
+
+PacienteModel --> PersistenciaPaciente : usa
+CitaModel --> PersistenciaCita : usa
+
+@enduml

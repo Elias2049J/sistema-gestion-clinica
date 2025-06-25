@@ -1,14 +1,9 @@
-package org.sistema.vista.gestionpaciente;
+package org.sistema.vista.sec_paciente;
 
 import lombok.Getter;
 import org.sistema.entidad.Paciente;
-import org.sistema.model.CitaModel;
-import org.sistema.model.HistorialClinicoModel;
-import org.sistema.repository.DataRepository;
+import org.sistema.interfaces.CrudInterface;
 import org.sistema.model.PacienteModel;
-import org.sistema.use_case.CitaUseCase;
-import org.sistema.use_case.HistorialClinicoUseCase;
-import org.sistema.use_case.PacienteUseCase;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -18,12 +13,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class VentanaGestionPaciente extends JFrame {
+    private CrudInterface<Paciente, Integer> crudPacienteModel;
     private LienzoHeader lienzoHeader = new LienzoHeader();
     private LienzoCentral lienzoCentral = new LienzoCentral();
     private LienzoFooter lienzoFooter = new LienzoFooter(lienzoCentral);
 
     public VentanaGestionPaciente() throws FileNotFoundException {
         super();
+        this.crudPacienteModel = new PacienteModel();
         this.setTitle("Gestión de Pacientes");
         this.setSize(800, 600);
         this.setLocationRelativeTo(rootPane);
@@ -35,12 +32,6 @@ public class VentanaGestionPaciente extends JFrame {
     }
     @Getter
     class LienzoCentral extends JPanel {
-        //instancio el servicio para gestionar pacientes
-
-        private PacienteUseCase pacienteModel = new PacienteModel();
-        private HistorialClinicoUseCase historialClinicoModel = new HistorialClinicoModel();
-        private CitaUseCase citaModel = new CitaModel();
-
         private JPanel panelBusqueda = new JPanel(new GridBagLayout());
 
         private JLabel lblBusqueda = new JLabel("Ingrese el Nombre del paciente: ");
@@ -48,7 +39,6 @@ public class VentanaGestionPaciente extends JFrame {
         private JButton btnBuscar = new JButton("Buscar");
 
         private JPanel panelResultados = new JPanel(new BorderLayout());
-        //columnas de la tabla
         private String[] columnasTabla = {"ID", "Nombre", "Apellido", "Edad", "DNI", "Dirección", "Teléfono", "Estado"};
         private Object[][] datosTabla;
         @Getter
@@ -61,10 +51,9 @@ public class VentanaGestionPaciente extends JFrame {
             this.setLayout(new GridBagLayout());
 
             // llenar los datos de la tabla con datos de pacientes recorriendo la lista
-            int n = DataRepository.getPacientes().size();
-            datosTabla = new Object[n][8];
-            for (int i = 0; i < n; i++) {
-                Paciente p = DataRepository.getPacientes().get(i);
+            Paciente p = new Paciente();
+            datosTabla = new Object[5][8];
+            for (int i = 0; i < 5; i++) {
                 datosTabla[i][0] = p.getIdPaciente();
                 datosTabla[i][1] = p.getNombre();
                 datosTabla[i][2] = p.getApellido();
@@ -242,23 +231,10 @@ public class VentanaGestionPaciente extends JFrame {
                             JOptionPane.showMessageDialog(lienzoCentral, "Teléfono inválido en la fila " + (i+1) + ". Debe ser numérico y de 9 dígitos.", "Error", JOptionPane.ERROR_MESSAGE);
                             return;
                         }
-                        //se crea un paciente por cada iteracion
-                        Paciente paciente = new Paciente(
-                                id, nombre, apellido, edad, dni, direccion, telefono, estado,
-                                lienzoCentral.getHistorialClinicoModel().getByPatientID(id),
-                                lienzoCentral.getCitaModel().obtenerCitasPorPaciente(id));
-                        // cada paciente se agrega a la lista
-                        listaModificada.add(paciente);
                     } catch (Exception ex) {
                         JOptionPane.showMessageDialog(lienzoCentral, "Error en los datos de la tabla (fila " + (i+1) + "): " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                         return;
                     }
-                }
-                //para guardar todas las modificaciones de la tabla
-                if(lienzoCentral.getPacienteModel().saveFromList(listaModificada)) {
-                    JOptionPane.showMessageDialog(lienzoCentral, "Se guardaron los datos correctamente", "Exito", JOptionPane.INFORMATION_MESSAGE);
-                } else {
-                    JOptionPane.showMessageDialog(lienzoCentral, "Hubo un error al guardar los datos modificados", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             });
         }

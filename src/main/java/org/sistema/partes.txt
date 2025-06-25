@@ -1,0 +1,16 @@
+Henoc:
+Seccion Pacientes
+
+AXCEL:
+Seccion Citas:
+- Programar (Crear una nueva cita) -> Imprimir Ticket (boton)
+- Actualizacion, Eliminacion de Citas (Una sola ventana)
+
+Maria - Miguel:
+SECCION REPORTES:
+-Una ventana con estas opciones:
+*Listar Pacientes
+*Imprimir Historial de Citas de un Paciente
+*Agregar mas visualizaciones de reportes tipo analisis de datos si es posible ()
+
+USUARIO: TERMINALISTA
