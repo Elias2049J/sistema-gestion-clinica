@@ -1,0 +1,11 @@
+--------------------
+Ticket de Cita Nro.0
+Dni del Paciente: 12345678
+Nombres: Jorge
+Apellidos: Herrera
+Médico: Dr Strange
+Especialidad: Medicina General
+Fecha : 2025-11-10
+Hora05:26
+Costo: 65.0
+--------------------

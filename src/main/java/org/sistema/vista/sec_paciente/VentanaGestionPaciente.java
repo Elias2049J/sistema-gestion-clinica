@@ -7,6 +7,7 @@ import org.sistema.model.CrudPacienteModel;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class VentanaGestionPaciente extends JFrame {
     private CrudInterface<Paciente, Integer> crudPacienteModel;
@@ -66,6 +67,7 @@ public class VentanaGestionPaciente extends JFrame {
         private JButton btnGuardar = new JButton("Guardar Cambios en la fila");
         private JButton btnDescartar = new JButton("Descartar Cambios");
         private JButton btnEliminar = new JButton("Eliminar Paciente");
+        private JButton btnEliminarTodo = new JButton("Eliminar Todos");
         private GridBagConstraints gbcInferior = new GridBagConstraints();
 
         public LienzoCentral() {
@@ -107,10 +109,13 @@ public class VentanaGestionPaciente extends JFrame {
             this.btnDescartar.setForeground(Color.WHITE);
             this.btnEliminar.setBackground(new Color(33, 122, 210));
             this.btnEliminar.setForeground(Color.WHITE);
+            this.btnEliminarTodo.setBackground(new Color(33, 122, 210));
+            this.btnEliminarTodo.setForeground(Color.WHITE);
 
             this.panelBtns.add(btnGuardar, gbcInferior);
             this.panelBtns.add(btnDescartar, gbcInferior);
             this.panelBtns.add(btnEliminar, gbcInferior);
+            this.panelBtns.add(btnEliminarTodo, gbcInferior);
             this.add(panelBtns, BorderLayout.SOUTH);
 
             btnGuardar.addActionListener(e -> {
@@ -148,6 +153,16 @@ public class VentanaGestionPaciente extends JFrame {
                 } else {
                     JOptionPane.showMessageDialog(this, "No se pudo eliminar el paciente.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
+            });
+
+            btnEliminarTodo.addActionListener(e-> {
+                int confirmacion = JOptionPane.showConfirmDialog(this, "¿Eliminar todo?",
+                        "Confirmar", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+                if (confirmacion != JOptionPane.YES_OPTION) return;
+                for (Paciente p : new ArrayList<>(crudPacienteModel.findAll())) {
+                    crudPacienteModel.delete(p.getIdPaciente());
+                }
+                actualizarTabla();
             });
         }
 

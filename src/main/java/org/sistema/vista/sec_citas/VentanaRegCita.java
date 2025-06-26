@@ -1,8 +1,11 @@
 package org.sistema.vista.sec_citas;
 
+import lombok.Getter;
 import org.sistema.entidad.Cita;
 import org.sistema.entidad.Paciente;
+import org.sistema.interfaces.CitaUseCase;
 import org.sistema.interfaces.CrudInterface;
+import org.sistema.model.CitaModel;
 import org.sistema.model.CrudCitaModel;
 import org.sistema.model.CrudPacienteModel;
 
@@ -16,6 +19,7 @@ import java.time.format.DateTimeParseException;
 public class VentanaRegCita extends JFrame {
     private CrudInterface<Cita, Integer> crudCitaModel;
     private CrudInterface<Paciente, Integer> crudPacienteModel;
+    private CitaUseCase citaModel;
     private LienzoHeader lienzoHeader;
     private LienzoCentral lienzoCentral;
     private LienzoFooter lienzoFooter;
@@ -24,6 +28,7 @@ public class VentanaRegCita extends JFrame {
         super();
         this.crudCitaModel = new CrudCitaModel();
         this.crudPacienteModel = new CrudPacienteModel();
+        this.citaModel = new CitaModel();
         this.lienzoHeader = new LienzoHeader();
         this.lienzoCentral = new LienzoCentral();
         this.lienzoFooter = new LienzoFooter();
@@ -125,6 +130,7 @@ public class VentanaRegCita extends JFrame {
             gbc.gridx = 0;
             gbc.gridy = 8;
             gbc.gridwidth = 3;
+            gbc.gridheight = 2;
             gbc.anchor = GridBagConstraints.CENTER;
             btnRegistrar.setBackground(new Color(33, 122, 210));
             btnRegistrar.setForeground(Color.WHITE);
@@ -206,7 +212,6 @@ public class VentanaRegCita extends JFrame {
                     JOptionPane.showMessageDialog(this, "El costo debe ser un número positivo", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-
                 Cita cita = new Cita();
                 cita.setPaciente(pacienteElegido);
                 cita.setMedico(medico);
@@ -214,10 +219,20 @@ public class VentanaRegCita extends JFrame {
                 cita.setFecha(fecha);
                 cita.setHora(hora);
                 cita.setCosto(costo);
+                cita.setEstado("PROGRAMADA");
 
                 if (crudCitaModel.crear(cita)) {
-                    JOptionPane.showMessageDialog(this, "Cita registrada con exito", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Cita registrada con éxito", "Éxito", JOptionPane.INFORMATION_MESSAGE);
                     resetCampos();
+
+                    int confirmacion = JOptionPane.showConfirmDialog(this, "¿Imprimir Ticket?", "Confirmar", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+                    if (confirmacion == JOptionPane.YES_OPTION) {
+                        if (citaModel.imprimirCita(cita)) {
+                            JOptionPane.showMessageDialog(this, "Ticket impreso con éxito", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                        } else {
+                            JOptionPane.showMessageDialog(this, "Hubo un error al imprimir", "Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
                 } else {
                     JOptionPane.showMessageDialog(this, "Error al registrar la cita", "Error", JOptionPane.ERROR_MESSAGE);
                 }

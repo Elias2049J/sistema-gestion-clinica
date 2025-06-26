@@ -26,16 +26,13 @@ public class CrudCitaModel implements CrudInterface<Cita, Integer> {
     public boolean crear(Cita objeto) {
         Integer idCita;
         Paciente p = objeto.getPaciente();
-
         if (p == null || p.getIdPaciente() == null) {
             return false;
         }
-
         Paciente pacienteActual = pacienteRepository.getById(p.getIdPaciente());
         if (pacienteActual == null) {
             return false;
         }
-
         List<Cita> citas;
         if (pacienteActual.getHistorialCitas() == null || pacienteActual.getHistorialCitas().isEmpty()) {
             citas = new ArrayList<>();

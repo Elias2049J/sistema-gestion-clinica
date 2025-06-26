@@ -1,21 +1,2 @@
 ID         NOMBRE          APELLIDO        EDAD   DNI          DIRECCION                      TELEFONO     ESTADO    
-1          Donofrio        gaa             45     12345678     calle falsa                    987654321    ACTIVO    
-2          Maria           Rodriguez       32     23456789     Avenida Imaginaria 123         912345678    ACTIVO    
-3          Juan            Perez           25     34567890     Calle No Existe 456            923456789    ACTIVO    
-4          Carmen          Gonzalez        56     45678901     Pasaje Inventado 789           934567890    ACTIVO    
-5          Roberto         Fernandez       41     56789012     Boulevard Fantasía 101         945678901    ACTIVO    
-6          patricia        lopez           28     67890123     Callejón Sin Salida 222        956789012    ACTIVO    
-7          miguel          torres          63     78901234     Avenida del Nunca Jamás 333    967890123    ACTIVO    
-8          lucia           martinez        19     89012345     Calle del Unicornio 444        978901234    ACTIVO    
-9          alejandro       sanchez         37     90123456     Paseo de las Sirenas 555       989012345    ACTIVO    
-10         veronica        diaz            52     01234567     Ruta de la Fantasía 666        990123456    ACTIVO    
-11         carlos          ramirez         29     12345678     Avenida Perdida 777            901234567    ACTIVO    
-12         sofia           ruiz            44     23456789     Camino Inexistente 888         912345678    ACTIVO    
-13         francisco       morales         31     34567890     Pasaje del Olvido 999          923456789    ACTIVO    
-14         ana             reyes           58     45678901     Boulevard Invisible 00         934567890    ACTIVO    
-15         gabriel         flores          26     56789012     Callejón Desaparecido 111      945678901    ACTIVO    
-16         valentina       castro          39     67890123     Avenida Imaginación 222        956789012    ACTIVO    
-17         daniel          ortega          48     78901234     Calle Ilusoria 333             967890123    ACTIVO    
-18         martina         jimenez         22     89012345     Paseo de los Sueños 444        978901234    ACTIVO    
-19         javier          vasquez         35     90123456     Camino al Infinito 555         989012345    ACTIVO    
-20         natalia         molina          67     01234567     Ruta de Nunca Acabar 666       990123456    ACTIVO    
+1          Jorge           Herrera         45     12345678     Calle falsa 123                987654321    ACTIVO    

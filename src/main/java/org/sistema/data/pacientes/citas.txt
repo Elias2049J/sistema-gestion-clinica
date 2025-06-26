@@ -1,0 +1,2 @@
+Id_Cita      ID_Paciente                    Medico       Especialidad    Fecha           Hora       Costo                          Estado         
+1            1                              Dr Strange   Medicina General 2025-11-10      05:26      65.0                           PROGRAMADA     
