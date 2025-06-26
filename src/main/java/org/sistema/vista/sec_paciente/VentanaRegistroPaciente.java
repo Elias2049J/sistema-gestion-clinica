@@ -2,20 +2,24 @@ package org.sistema.vista.sec_paciente;
 
 import org.sistema.entidad.Paciente;
 import org.sistema.interfaces.CrudInterface;
-import org.sistema.model.PacienteModel;
+import org.sistema.model.CrudPacienteModel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class VentanaRegistroPaciente extends JFrame {
     private CrudInterface<Paciente, Integer> crudPacienteModel;
-    private LienzoHeader lienzoHeader = new LienzoHeader();
-    private LienzoCentral lienzoCentral = new LienzoCentral();
-    private LienzoFooter lienzoFooter = new LienzoFooter();
+    private LienzoHeader lienzoHeader;
+    private LienzoCentral lienzoCentral;
+    private LienzoFooter lienzoFooter;
 
     public VentanaRegistroPaciente() {
         super();
-        this.crudPacienteModel = new PacienteModel();
+        this.crudPacienteModel = new CrudPacienteModel();
+        this.lienzoHeader = new LienzoHeader();
+        this.lienzoCentral = new LienzoCentral();
+        this.lienzoFooter = new LienzoFooter();
         this.setTitle("Registro de Pacientes");
         this.setSize(600, 500);
         this.setLocationRelativeTo(rootPane);
@@ -77,7 +81,7 @@ public class VentanaRegistroPaciente extends JFrame {
             gbc.gridy++;
             this.add(lblTlf, gbc);
 
-            // columna vacia para serpara
+            // columna vacia para separar
             gbc.gridx = 1;
             gbc.gridy = 1;
             gbc.gridheight = 7;
@@ -104,6 +108,8 @@ public class VentanaRegistroPaciente extends JFrame {
             gbc.gridy++;
             gbc.gridwidth = 3;
             gbc.anchor = GridBagConstraints.CENTER;
+            btnRegistrar.setBackground(new Color(33, 122, 210));
+            btnRegistrar.setForeground(Color.WHITE);
             this.add(btnRegistrar, gbc);
 
             btnRegistrar.addActionListener(e -> {
@@ -125,6 +131,7 @@ public class VentanaRegistroPaciente extends JFrame {
                     jtfApellido.requestFocus();
                     return;
                 }
+
                 int edad;
                 try {
                     edad = Integer.parseInt(edadStr);
@@ -134,30 +141,37 @@ public class VentanaRegistroPaciente extends JFrame {
                     jtfEdad.requestFocus();
                     return;
                 }
+
                 if (dni.isEmpty() || !dni.matches("\\d{8}")) {
                     JOptionPane.showMessageDialog(this, "DNI inválido. Debe ser numérico y de 8 dígitos.", "Error", JOptionPane.ERROR_MESSAGE);
                     jtfDni.requestFocus();
                     return;
                 }
+
                 if (direccion.isEmpty()) {
                     JOptionPane.showMessageDialog(this, "La dirección no puede estar vacía", "Error", JOptionPane.ERROR_MESSAGE);
                     jtfDireccion.requestFocus();
                     return;
                 }
+
                 if (telefono.isEmpty() || !telefono.matches("\\d{9}")) {
-                    JOptionPane.showMessageDialog(this, "Teléfono inválido. Debe ser numérico y de 9 digitos", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Teléfono inválido. Debe ser numérico y de 9 dígitos", "Error", JOptionPane.ERROR_MESSAGE);
                     jtfTlf.requestFocus();
                     return;
                 }
+
                 Paciente p = new Paciente();
+                p.setNombre(nombre);
+                p.setApellido(apellido);
+                p.setEdad(edad);
+                p.setDni(dni);
+                p.setDireccion(direccion);
+                p.setTelefono(telefono);
+                p.setHistorialCitas(new ArrayList<>());
+
                 if (crudPacienteModel.crear(p)) {
                     JOptionPane.showMessageDialog(this, "Paciente registrado exitosamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-                    jtfNombre.setText("");
-                    jtfApellido.setText("");
-                    jtfEdad.setText("");
-                    jtfDni.setText("");
-                    jtfDireccion.setText("");
-                    jtfTlf.setText("");
+                    dispose();
                 } else {
                     JOptionPane.showMessageDialog(this, "Error al registrar el paciente. Verifique los datos ingresados.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
@@ -167,21 +181,20 @@ public class VentanaRegistroPaciente extends JFrame {
 
     class LienzoHeader extends JPanel{
         private JLabel lblTitulo = new JLabel("REGISTRAR NUEVO PACIENTE EN EL SISTEMA", SwingConstants.CENTER);
-        public LienzoHeader (){
+
+        public LienzoHeader() {
             super();
             this.setLayout(new BorderLayout());
             this.setBackground(new Color(33, 122, 210));
-            this.lblTitulo.setFont(new Font("Arial", Font.BOLD, 24));
+            this.lblTitulo.setFont(new Font("Arial", Font.BOLD, 18));
             this.lblTitulo.setForeground(Color.WHITE);
             this.add(lblTitulo, BorderLayout.CENTER);
         }
 
-        //para hacer que el lienzo ocupe el 12% de alto del contenedor padre
         @Override
-        public Dimension getPreferredSize(){
+        public Dimension getPreferredSize() {
             Container contenedorPadre = getParent();
             int ancho = contenedorPadre.getWidth();
-            //se castea a int
             int alto = (int) (contenedorPadre.getHeight() * 0.12);
             return new Dimension(ancho, alto);
         }
@@ -189,7 +202,8 @@ public class VentanaRegistroPaciente extends JFrame {
 
     class LienzoFooter extends JPanel{
         private JButton btnSalir = new JButton("Salir");
-        public LienzoFooter (){
+
+        public LienzoFooter() {
             super();
             this.setLayout(new BorderLayout());
             this.setBackground(new Color(33, 122, 210));
@@ -203,10 +217,9 @@ public class VentanaRegistroPaciente extends JFrame {
         }
 
         @Override
-        public Dimension getPreferredSize(){
+        public Dimension getPreferredSize() {
             Container contenedorPadre = getParent();
             int ancho = contenedorPadre.getWidth();
-            //se castea a int
             int alto = (int) (contenedorPadre.getHeight() * 0.08);
             return new Dimension(ancho, alto);
         }

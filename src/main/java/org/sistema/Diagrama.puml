@@ -50,7 +50,9 @@ package "interfaces" {
         + boolean cargarDatos()
     }
 
-    interface ExportarInterface {
+    interface ExportarInterface<T> {
+    boolean crearReporte(T t);
+    boolean imprimirReporte();
     }
 }
 
@@ -114,6 +116,8 @@ package "model" {
     }
 
     class ExportarModel {
+    boolean crearReporte(T t);
+    boolean imprimirReporte();
     }
 }
 

@@ -2,23 +2,26 @@ package org.sistema.vista.sec_exportar;
 
 import lombok.Getter;
 import org.sistema.entidad.Paciente;
-import org.sistema.interfaces.ExportarInterface;
-import org.sistema.model.ExportarModel;
+import org.sistema.interfaces.CrudInterface;
+import org.sistema.interfaces.ReportesInterface;
+import org.sistema.model.CrudPacienteModel;
+import org.sistema.model.ReportesModel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.List;
 
 public class VentanaReportesPac extends JFrame {
-    private ExportarInterface<Paciente> expModel;
+    private CrudInterface<Paciente, Integer> crudPacienteModel;
+    private ReportesInterface<Paciente> reporteModel;
     private LienzoHeader lienzoHeader = new LienzoHeader();
     private LienzoCentral lienzoCentral = new LienzoCentral();
     private LienzoFooter lienzoFooter = new LienzoFooter(lienzoCentral);
 
     public VentanaReportesPac() {
         super();
-        this.expModel = new ExportarModel();
+        this.crudPacienteModel = new CrudPacienteModel();
+        this.reporteModel = new ReportesModel(crudPacienteModel);
         this.setTitle("Reportes de Pacientes");
         this.setSize(800, 600);
         this.setLocationRelativeTo(rootPane);
@@ -28,37 +31,39 @@ public class VentanaReportesPac extends JFrame {
         this.add(lienzoCentral, BorderLayout.CENTER);
         this.add(lienzoFooter, BorderLayout.SOUTH);
     }
+
     @Getter
     class LienzoCentral extends JPanel {
         private JPanel panelBusqueda = new JPanel(new GridBagLayout());
-
         private JLabel lblBusqueda = new JLabel("Seleccione el reporte: ");
-        private JComboBox cboReportes = new JComboBox();
+        private JComboBox<String> cboReportes = new JComboBox<>();
         private JButton btnPreview = new JButton("Previsualizar");
 
         private JPanel panelResultados = new JPanel(new BorderLayout());
         private JTextArea txtSReportes = new JTextArea();
         private JScrollPane scpResultados;
 
+        private int reporteElegido = 0;
+
         public LienzoCentral() {
             super();
             this.setLayout(new GridBagLayout());
+            txtSReportes.setFont(new Font("Monospaced", Font.PLAIN, 18));
+            txtSReportes.setMargin(new Insets(20, 20, 20, 20));
             scpResultados = new JScrollPane(txtSReportes);
             panelResultados.removeAll();
             panelResultados.add(scpResultados);
 
             GridBagConstraints gbcPadre = new GridBagConstraints();
             gbcPadre.insets = new Insets(10, 20, 10, 10);
-            panelResultados.add(scpResultados);
 
             // tamaño fijo para evitar que colapsen los jtf
             Dimension sizeFijo = new Dimension(200, 25);
             cboReportes.setPreferredSize(sizeFijo);
             cboReportes.setMinimumSize(sizeFijo);
             cboReportes.setMaximumSize(sizeFijo);
-            cboReportes.addItem(" ");
+            cboReportes.addItem("Seleccione un reporte");
             cboReportes.addItem("Pacientes de la tercera edad");
-            cboReportes.addItem("Pacientes recurrentes");
             cboReportes.addItem("Lista Completa de Pacientes");
 
             // elementos del panel de busqueda
@@ -89,7 +94,8 @@ public class VentanaReportesPac extends JFrame {
             gbcBusqueda.anchor = GridBagConstraints.EAST;
             lblBusqueda.setFont(new Font("Arial", Font.BOLD, 16));
             panelBusqueda.add(lblBusqueda, gbcBusqueda);
-            //campo de buaqeuda
+
+            //campo de búsqueda
             gbcBusqueda.gridx = 1;
             gbcBusqueda.gridy = gridy - 1;
             gbcBusqueda.gridwidth = 1;
@@ -128,22 +134,34 @@ public class VentanaReportesPac extends JFrame {
             this.add(panelResultados, gbcPadre);
 
             btnPreview.addActionListener(e -> {
-                List<Paciente> pacientes = new ArrayList<>();
+                txtSReportes.setText("");
+                reporteElegido = cboReportes.getSelectedIndex();
 
-                pacientes.add(new Paciente(1, "Juan", "Pérez", 30, "12345678", "Av. Siempre Viva 123", "987654321", "Activo", new ArrayList<>()));
-                pacientes.add(new Paciente(2, "María", "Gómez", 25, "23456789", "Jr. Las Flores 456", "912345678", "Activo", new ArrayList<>()));
-                pacientes.add(new Paciente(3, "Luis", "Ramírez", 40, "34567890", "Calle Los Olivos 789", "998877665", "Inactivo", new ArrayList<>()));
-                pacientes.add(new Paciente(4, "Ana", "Torres", 35, "45678901", "Av. Los Incas 321", "955667788", "Activo", new ArrayList<>()));
-                pacientes.add(new Paciente(5, "Carlos", "Mendoza", 28, "56789012", "Jr. San Martín 654", "944332211", "Activo", new ArrayList<>()));
-                expModel.preview(pacientes);
-                txtSReportes.setText("src/main/java/org/sistema/data/reportes/listaPacientes.txt");
+                if (reporteElegido == 0) {
+                    JOptionPane.showMessageDialog(this,
+                            "Por favor seleccione un tipo de reporte",
+                            "Aviso", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+
+                List<String> lineasReporte;
+
+                if (reporteElegido == 1) {
+                    lineasReporte = reporteModel.getListaPacientesTerceraEdadReport();
+                } else {
+                    lineasReporte = reporteModel.getListaPacientesReport(crudPacienteModel.findAll());
+                }
+                for (String linea : lineasReporte) {
+                    txtSReportes.append(linea + "\n");
+                }
             });
         }
+
     }
 
     class LienzoHeader extends JPanel {
-        private JLabel lblTitulo = new JLabel("PANEL DE REPORTERÍAS DE PACIENTES", SwingConstants.CENTER);
-        public LienzoHeader (){
+        private JLabel lblTitulo = new JLabel("PANEL DE REPORTES DE PACIENTES", SwingConstants.CENTER);
+        public LienzoHeader() {
             super();
             this.setLayout(new BorderLayout());
             this.setBackground(new Color(33, 122, 210));
@@ -152,9 +170,8 @@ public class VentanaReportesPac extends JFrame {
             this.add(lblTitulo, BorderLayout.CENTER);
         }
 
-        //para hacer que el lienzo ocupe el 12% de alto del contenedor padre
         @Override
-        public Dimension getPreferredSize(){
+        public Dimension getPreferredSize() {
             Container contenedorPadre = getParent();
             int ancho = contenedorPadre.getWidth();
             //se castea a int
@@ -163,27 +180,48 @@ public class VentanaReportesPac extends JFrame {
         }
     }
 
-    class LienzoFooter extends JPanel{
+    class LienzoFooter extends JPanel {
         private JButton btnImprimir = new JButton("Imprimir Reporte");
-        private LienzoCentral lienzoCentral;
         private JButton btnSalir = new JButton("Salir");
-        public LienzoFooter(LienzoCentral lienzoCentral){
+
+        public LienzoFooter(LienzoCentral lienzoCentral) {
             super();
-            this.lienzoCentral = lienzoCentral;
-            this.setLayout(new BorderLayout());
+            this.setLayout(new FlowLayout(FlowLayout.RIGHT));
             this.setBackground(new Color(33, 122, 210));
             this.setForeground(Color.WHITE);
-            this.add(btnSalir, BorderLayout.EAST);
-            this.add(btnImprimir, BorderLayout.WEST);
+            this.add(btnImprimir);
+            this.add(btnSalir);
             this.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
             btnSalir.addActionListener(e -> dispose());
 
-            btnImprimir.addActionListener(e ->dispose());
+            btnImprimir.addActionListener(e -> {
+                int reporteSeleccionado = lienzoCentral.getReporteElegido();
+
+                if (reporteSeleccionado == 0) {
+                    JOptionPane.showMessageDialog(lienzoCentral, "Visualice un reporte antes de imprimir", "Aviso", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+
+                if (reporteSeleccionado == 1) {
+                    if (reporteModel.exportarReporteTerceraEdad()) {
+                        JOptionPane.showMessageDialog(lienzoCentral, "Impresion exitosa", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(lienzoCentral, "Error al imprimir", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                    return;
+                }
+
+                if (reporteModel.exportarReporte(crudPacienteModel.findAll())) {
+                    JOptionPane.showMessageDialog(lienzoCentral, "Impresion Exitosa", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(lienzoCentral, "Error al imprimir", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            });
         }
 
         @Override
-        public Dimension getPreferredSize(){
+        public Dimension getPreferredSize() {
             Container contenedorPadre = getParent();
             int ancho = contenedorPadre.getWidth();
             //se castea a int

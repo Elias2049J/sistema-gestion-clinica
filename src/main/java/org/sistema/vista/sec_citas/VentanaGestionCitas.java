@@ -3,8 +3,8 @@ package org.sistema.vista.sec_citas;
 import org.sistema.entidad.Cita;
 import org.sistema.entidad.Paciente;
 import org.sistema.interfaces.CrudInterface;
-import org.sistema.model.CitaModel;
-import org.sistema.model.PacienteModel;
+import org.sistema.model.CrudCitaModel;
+import org.sistema.model.CrudPacienteModel;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -19,8 +19,8 @@ public class VentanaGestionCitas extends JFrame{
 
     public VentanaGestionCitas() throws HeadlessException {
         super();
-        this.crudPacienteModel = new PacienteModel();
-        this.crudCitaModel = new CitaModel();
+        this.crudPacienteModel = new CrudPacienteModel();
+        this.crudCitaModel = new CrudCitaModel();
         this.lienzoCentral = new LienzoCentral();
         this.lienzoHeader = new LienzoHeader();
         this.lienzoFooter = new LienzoFooter();

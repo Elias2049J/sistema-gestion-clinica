@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.function.Function;
 
 public class Repository<T, ID> implements RepositoryInterface<T, ID> {
-    private List<T> elementos = new ArrayList<>();
+    protected List<T> elementos = new ArrayList<>();
     private final Function<T, ID> idExtractor;
     private final PersistenceInterface<T> persistencia;
 
@@ -63,5 +63,10 @@ public class Repository<T, ID> implements RepositoryInterface<T, ID> {
     @Override
     public boolean cargarDatos() {
         return persistencia.importarLista(this.elementos);
+    }
+
+    @Override
+    public boolean exportarDatos() {
+        return persistencia.exportarLista(this.elementos);
     }
 }

@@ -3,7 +3,6 @@ package org.sistema.vista;
 import org.sistema.vista.sec_exportar.VentanaReportesPac;
 import org.sistema.vista.sec_exportar.VentanaReportesCitas;
 import org.sistema.vista.sec_paciente.VentanaGestionPaciente;
-import org.sistema.vista.sec_paciente.VentanaHistorialCitas;
 import org.sistema.vista.sec_paciente.VentanaRegistroPaciente;
 
 import javax.swing.*;
@@ -25,7 +24,7 @@ public class VentanaPrincipal extends JFrame implements Serializable {
     public VentanaPrincipal() throws HeadlessException {
         super();
         this.setTitle("Sistema Clínico");
-        this.setSize(800, 600);
+        this.setSize(960, 514);
         this.setLocationRelativeTo(rootPane);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLayout(new BorderLayout());

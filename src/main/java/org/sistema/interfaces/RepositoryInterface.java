@@ -10,4 +10,5 @@ public interface RepositoryInterface<T, ID> {
     boolean delete(ID id);
     List<T> findAll();
     boolean cargarDatos();
+    boolean exportarDatos();
 }

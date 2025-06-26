@@ -1,22 +1,27 @@
 package org.sistema.vista.sec_exportar;
 
 import lombok.Getter;
-import org.sistema.interfaces.ExportarInterface;
-import org.sistema.model.ExportarModel;
+import org.sistema.entidad.Paciente;
+import org.sistema.interfaces.CrudInterface;
+import org.sistema.interfaces.ReportesInterface;
+import org.sistema.model.CrudPacienteModel;
+import org.sistema.model.ReportesModel;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class VentanaReportesCitas extends JFrame {
-    private ExportarInterface ExpModel;
+    private CrudInterface<Paciente, Integer> crudPacienteModel;
+    private ReportesInterface ExpModel;
     private LienzoHeader lienzoHeader = new LienzoHeader();
     private LienzoCentral lienzoCentral = new LienzoCentral();
     private LienzoFooter lienzoFooter = new LienzoFooter(lienzoCentral);
 
     public VentanaReportesCitas() {
         super();
-        this.ExpModel = new ExportarModel();
-        this.setTitle("Reportes de Pacientes");
+        this.crudPacienteModel = new CrudPacienteModel();
+        this.ExpModel = new ReportesModel(crudPacienteModel);
+        this.setTitle("ReportesInterface de Pacientes");
         this.setSize(800, 600);
         this.setLocationRelativeTo(rootPane);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
