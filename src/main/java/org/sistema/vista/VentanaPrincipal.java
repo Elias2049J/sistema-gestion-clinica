@@ -1,5 +1,6 @@
 package org.sistema.vista;
 
+import org.sistema.vista.sec_citas.VentanaRegCita;
 import org.sistema.vista.sec_exportar.VentanaReportesPac;
 import org.sistema.vista.sec_exportar.VentanaReportesCitas;
 import org.sistema.vista.sec_paciente.VentanaGestionPaciente;
@@ -16,6 +17,7 @@ public class VentanaPrincipal extends JFrame implements Serializable {
     private VentanaAyuda ventanaAyuda;
     private VentanaReportesPac ventanaReportesPac;
     private VentanaReportesCitas ventanaReportesCitas;
+    private VentanaRegCita ventanaRegCita;
 
     private LienzoHeader lienzoHeader = new LienzoHeader();
     private LienzoCentral lienzoCentral = new LienzoCentral();
@@ -180,6 +182,11 @@ public class VentanaPrincipal extends JFrame implements Serializable {
             btnVentanaReportesCitas.addActionListener(e -> {
                 ventanaReportesCitas = new VentanaReportesCitas();
                 ventanaReportesCitas.setVisible(true);
+            });
+
+            btnVentanaProgCita.addActionListener(e-> {
+                ventanaRegCita = new VentanaRegCita();
+                ventanaRegCita.setVisible(true);
             });
         }
     }

@@ -1,28 +1,33 @@
 package org.sistema.vista.sec_citas;
 
 import org.sistema.entidad.Cita;
+import org.sistema.entidad.Paciente;
 import org.sistema.interfaces.CrudInterface;
 import org.sistema.model.CrudCitaModel;
+import org.sistema.model.CrudPacienteModel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
-public class VentanaRegCita extends JFrame{
+public class VentanaRegCita extends JFrame {
     private CrudInterface<Cita, Integer> crudCitaModel;
-    private VentanaGestionCitas ventanaGestionCitas;
+    private CrudInterface<Paciente, Integer> crudPacienteModel;
     private LienzoHeader lienzoHeader;
     private LienzoCentral lienzoCentral;
     private LienzoFooter lienzoFooter;
-    private Integer idCliente;
 
-    public VentanaRegCita(Integer idCliente){
+    public VentanaRegCita() {
         super();
-        this.idCliente = idCliente;
         this.crudCitaModel = new CrudCitaModel();
+        this.crudPacienteModel = new CrudPacienteModel();
         this.lienzoHeader = new LienzoHeader();
         this.lienzoCentral = new LienzoCentral();
         this.lienzoFooter = new LienzoFooter();
-        this.setTitle("Registro de Clientes");
+        this.setTitle("Programación de Citas");
         this.setSize(600, 500);
         this.setLocationRelativeTo(rootPane);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -33,22 +38,27 @@ public class VentanaRegCita extends JFrame{
     }
 
     class LienzoCentral extends JPanel {
-        private JLabel lblRegistro = new JLabel("ABRIR CUENTA", SwingConstants.CENTER);
+        private JLabel lblRegistro = new JLabel("Programar Cita", SwingConstants.CENTER);
 
-        private JComboBox<String> cboTipoCuenta = new JComboBox<>();
+        private JLabel lblPaciente = new JLabel("DNI del Paciente:");
+        private JLabel lblNombrePaciente = new JLabel("Nombre del Paciente:");
+        private JLabel lblMedico = new JLabel("Médico:");
+        private JLabel lblEspecialidad = new JLabel("Especialidad:");
+        private JLabel lblFecha = new JLabel("Fecha (dd/MM/yyyy):");
+        private JLabel lblHora = new JLabel("Hora (HH:mm):");
+        private JLabel lblCosto = new JLabel("Costo:");
 
-        private JLabel lblSaldo = new JLabel("Depósito:");
-        private JTextField jtfSaldo = new JTextField(20);
+        private JTextField jtfDniPaciente = new JTextField(20);
+        private JButton btnBuscarPaciente = new JButton("Buscar");
+        private JTextField jtfNombrePaciente = new JTextField(20);
+        private JTextField jtfMedico = new JTextField(20);
+        private JComboBox<String> cboEspecialidad = new JComboBox<>();
+        private JTextField jtfFecha = new JTextField(20);
+        private JTextField jtfHora = new JTextField(20);
+        private JTextField jtfCosto = new JTextField(20);
 
-        private JLabel lblTipoMoneda = new JLabel("Tipo de Moneda");
-        private JComboBox<String> cboTipoMoneda = new JComboBox<>();
-
-        private JLabel lblTasa = new JLabel("Tasa de Interés");
-        private JTextField jtfTasa = new JTextField(20);
-        private JLabel lblLimiteGiros = new JLabel("Límite sobre giros");
-        private JTextField jtfLimiteGiros = new JTextField(20);
-
-        private JButton btnRegistrar = new JButton("Registrar");
+        private JButton btnRegistrar = new JButton("Registrar Cita");
+        private Paciente pacienteElegido = null;
 
         public LienzoCentral() {
             super();
@@ -56,123 +66,204 @@ public class VentanaRegCita extends JFrame{
             GridBagConstraints gbc = new GridBagConstraints();
             gbc.insets = new Insets(8, 8, 8, 8);
             gbc.fill = GridBagConstraints.HORIZONTAL;
-            jtfTasa.setEditable(true);
-            jtfLimiteGiros.setEditable(false);
-            jtfSaldo.setEditable(true);
+
+            jtfNombrePaciente.setEditable(false);
+
+            cboEspecialidad.addItem("Seleccione especialidad");
+            cboEspecialidad.addItem("Medicina General");
+            cboEspecialidad.addItem("Pediatría");
+            cboEspecialidad.addItem("Ginecología");
+            cboEspecialidad.addItem("Cardiología");
+            cboEspecialidad.addItem("Dermatología");
+            cboEspecialidad.addItem("Traumatología");
 
             gbc.gridx = 0;
             gbc.gridy = 0;
-            gbc.gridwidth = 5;
+            gbc.gridwidth = 3;
             gbc.anchor = GridBagConstraints.CENTER;
             lblRegistro.setFont(new Font("Arial", Font.BOLD, 18));
             this.add(lblRegistro, gbc);
 
-            gbc.gridx = 0;
-            gbc.gridy = 1;
-            gbc.gridwidth = 5;
-            gbc.anchor = GridBagConstraints.CENTER;
-            cboTipoCuenta.addItem("Ahorro");
-            cboTipoCuenta.addItem("Corriente");
-            this.add(cboTipoCuenta, gbc);
-
             gbc.anchor = GridBagConstraints.WEST;
             gbc.gridwidth = 1;
-
             gbc.gridx = 0;
-            gbc.gridy = 2;
-            this.add(lblTipoMoneda, gbc);
             gbc.gridy++;
-            this.add(lblSaldo, gbc);
+            this.add(lblPaciente, gbc);
             gbc.gridy++;
-            this.add(lblTasa, gbc);
+            this.add(lblNombrePaciente, gbc);
             gbc.gridy++;
-            this.add(lblLimiteGiros, gbc);
+            this.add(lblMedico, gbc);
+            gbc.gridy++;
+            this.add(lblEspecialidad, gbc);
+            gbc.gridy++;
+            this.add(lblFecha, gbc);
+            gbc.gridy++;
+            this.add(lblHora, gbc);
+            gbc.gridy++;
+            this.add(lblCosto, gbc);
 
             gbc.gridx = 1;
-            gbc.gridy = 2;
-            gbc.gridheight = 7;
-            this.add(Box.createHorizontalStrut(30), gbc);
-            gbc.gridheight = 1;
+            gbc.gridy = 1;
+            this.add(jtfDniPaciente, gbc);
+            gbc.gridy++;
+            this.add(jtfNombrePaciente, gbc);
+            gbc.gridy++;
+            this.add(jtfMedico, gbc);
+            gbc.gridy++;
+            this.add(cboEspecialidad, gbc);
+            gbc.gridy++;
+            this.add(jtfFecha, gbc);
+            gbc.gridy++;
+            this.add(jtfHora, gbc);
+            gbc.gridy++;
+            this.add(jtfCosto, gbc);
 
             gbc.gridx = 2;
-            gbc.gridy = 2;
-            cboTipoMoneda.addItem("Soles");
-            cboTipoMoneda.addItem("Dolares");
-            this.add(cboTipoMoneda, gbc);
-            gbc.gridy++;
-            this.add(jtfSaldo, gbc);
-            gbc.gridy++;
-            this.add(jtfTasa, gbc);
-            gbc.gridy++;
-            this.add(jtfLimiteGiros, gbc);
+            gbc.gridy = 1;
+            this.add(btnBuscarPaciente, gbc);
 
             gbc.gridx = 0;
-            gbc.gridy++;
+            gbc.gridy = 8;
             gbc.gridwidth = 3;
             gbc.anchor = GridBagConstraints.CENTER;
+            btnRegistrar.setBackground(new Color(33, 122, 210));
+            btnRegistrar.setForeground(Color.WHITE);
             this.add(btnRegistrar, gbc);
 
-            cboTipoCuenta.addItemListener(e -> {
-                if (cboTipoCuenta.getSelectedItem() == "Ahorro") {
-                    jtfSaldo.setEditable(true);
-                    jtfTasa.setEditable(true);
-                    jtfLimiteGiros.setEditable(false);
-                    jtfLimiteGiros.setText("");
+            btnBuscarPaciente.addActionListener(e -> {
+                String dni = jtfDniPaciente.getText().trim();
+                if (dni.isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "Ingrese el DNI del paciente", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                pacienteElegido = null;
+                for (Paciente p : crudPacienteModel.findAll()) {
+                    if (p.getDni() != null && p.getDni().equals(dni)) {
+                        pacienteElegido = p;
+                        break;
+                    }
+                }
+
+                if (pacienteElegido != null) {
+                    jtfNombrePaciente.setText(pacienteElegido.getNombre() + " " + pacienteElegido.getApellido());
                 } else {
-                    jtfSaldo.setEditable(true);
-                    jtfTasa.setEditable(false);
-                    jtfLimiteGiros.setEditable(true);
-                    jtfTasa.setText("");
+                    jtfNombrePaciente.setText("");
+                    JOptionPane.showMessageDialog(this, "No se encontró ningún paciente con ese DNI", "Aviso", JOptionPane.WARNING_MESSAGE);
                 }
             });
 
             btnRegistrar.addActionListener(e -> {
-                Double saldo = jtfSaldo.getText().isEmpty() ? null : Double.parseDouble(jtfSaldo.getText());
-                String tipoMoneda = String.valueOf(cboTipoMoneda.getSelectedItem());
-                String tipoCuenta = String.valueOf(cboTipoCuenta.getSelectedItem());
-                Double tasaInteres = null;
-                Double limiteSobreGiros = null;
-
-                if (tipoCuenta.equals("Ahorro")) {
-                    tasaInteres = jtfTasa.getText().isEmpty() ? null : Double.parseDouble(jtfTasa.getText());
-                } else {
-                    limiteSobreGiros = jtfLimiteGiros.getText().isEmpty() ? null : Double.parseDouble(jtfLimiteGiros.getText());
+                if (pacienteElegido == null) {
+                    JOptionPane.showMessageDialog(this, "Debe seleccionar un paciente", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
                 }
-                Cita c = new Cita();
 
-                if (crudCitaModel.crear(c)) {
-                    JOptionPane.showMessageDialog(this, "Se ha registrado correctamente", "Exito", JOptionPane.INFORMATION_MESSAGE);
-                    dispose();
+                String medico = jtfMedico.getText().trim();
+                String especialidad = cboEspecialidad.getSelectedItem().toString();
+                String fechaIngresada = jtfFecha.getText().trim();
+                String horaIngresada = jtfHora.getText().trim();
+                String costoIngresado = jtfCosto.getText().trim();
+                LocalDate fecha;
+                LocalTime hora;
+                double costo;
+
+
+                if (medico.isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "Ingrese el nombre del médico", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                if (especialidad.equals("Seleccione especialidad")) {
+                    JOptionPane.showMessageDialog(this, "Seleccione una especialidad", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                if (fechaIngresada.isEmpty() || horaIngresada.isEmpty() || costoIngresado.isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "Complete todos los campos", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                try {
+                    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                    fecha = LocalDate.parse(fechaIngresada, dateFormatter);
+                } catch (DateTimeParseException ex) {
+                    JOptionPane.showMessageDialog(this, "Formato de fecha incorrecto. Use dd/MM/yyyy", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                try {
+                    DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+                    hora = LocalTime.parse(horaIngresada, timeFormatter);
+                } catch (DateTimeParseException ex) {
+                    JOptionPane.showMessageDialog(this, "Formato de hora incorrecto. Use HH:mm", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                try {
+                    costo = Double.parseDouble(costoIngresado);
+                    if (costo <= 0) throw new NumberFormatException();
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(this, "El costo debe ser un número positivo", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                Cita cita = new Cita();
+                cita.setPaciente(pacienteElegido);
+                cita.setMedico(medico);
+                cita.setEspecialidad(especialidad);
+                cita.setFecha(fecha);
+                cita.setHora(hora);
+                cita.setCosto(costo);
+
+                if (crudCitaModel.crear(cita)) {
+                    JOptionPane.showMessageDialog(this, "Cita registrada con exito", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                    resetCampos();
                 } else {
-                    JOptionPane.showMessageDialog(this, "Hubo un Error al registrar, compruebe los campos", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Error al registrar la cita", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             });
         }
+
+        private void resetCampos() {
+            jtfDniPaciente.setText("");
+            jtfNombrePaciente.setText("");
+            jtfMedico.setText("");
+            cboEspecialidad.setSelectedIndex(0);
+            jtfFecha.setText("");
+            jtfHora.setText("");
+            jtfCosto.setText("");
+            pacienteElegido = null;
+        }
     }
 
-    class LienzoHeader extends JPanel{
-        LienzoHeader (){
+    class LienzoHeader extends JPanel {
+        private JLabel lblTitulo = new JLabel("PROGRAMACIÓN DE CITAS", SwingConstants.CENTER);
+
+        LienzoHeader() {
             super();
             this.setLayout(new BorderLayout());
-            this.setBackground(new Color(37, 55, 40));
+            this.setBackground(new Color(33, 122, 210));
+            this.lblTitulo.setFont(new Font("Arial", Font.BOLD, 20));
+            this.lblTitulo.setForeground(Color.WHITE);
+            this.add(lblTitulo, BorderLayout.CENTER);
         }
 
         @Override
-        public Dimension getPreferredSize(){
+        public Dimension getPreferredSize() {
             Container contenedorPadre = getParent();
             int ancho = contenedorPadre.getWidth();
-            //se castea a int
             int alto = (int) (contenedorPadre.getHeight() * 0.12);
             return new Dimension(ancho, alto);
         }
     }
 
-    class LienzoFooter extends JPanel{
+    class LienzoFooter extends JPanel {
         private JButton btnSalir = new JButton("Cancelar");
-        public LienzoFooter (){
+
+        public LienzoFooter() {
             super();
             this.setLayout(new BorderLayout());
-            this.setBackground(new Color(37, 55, 40));
+            this.setBackground(new Color(33, 122, 210));
             this.setForeground(Color.WHITE);
             this.add(btnSalir, BorderLayout.EAST);
             this.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -183,12 +274,12 @@ public class VentanaRegCita extends JFrame{
         }
 
         @Override
-        public Dimension getPreferredSize(){
+        public Dimension getPreferredSize() {
             Container contenedorPadre = getParent();
             int ancho = contenedorPadre.getWidth();
-            //se castea a int
             int alto = (int) (contenedorPadre.getHeight() * 0.08);
             return new Dimension(ancho, alto);
         }
     }
 }
+
