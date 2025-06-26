@@ -21,16 +21,16 @@ public class VentanaAyuda extends JFrame {
     }
 
     class LienzoCentral extends JPanel {
-        private JLabel lblTitulo = new JLabel("INFORMACIÓN DEL SISTEMA BANCARIO", SwingConstants.CENTER);
 
         private JTextArea infoSistema = new JTextArea(
                 """
-                Bienvenido al Sistema Bancario. El objetivo de este es facilitar la operación de pequeños emprendimientos.
+                Bienvenido al Sistema de la Clínica MataSanos. El objetivo de este es facilitar la gestión de pacientes, de citas y otras reporterías.
                 Versión: 0.01
                 
                 Funcionalidades:
-                - Registro de nuevos clientes.
-                - Consulta de cuentas existentes.
+                - Gestión de Pacientes.
+                - Gestión de Citas.
+                - Reportería.
                 
                 Creado por:
                 - Henoc Jorge
@@ -49,12 +49,10 @@ public class VentanaAyuda extends JFrame {
             gbc.fill = GridBagConstraints.HORIZONTAL;
 
             // Título
-            lblTitulo.setFont(new Font("Arial", Font.BOLD, 18));
             gbc.gridx = 0;
             gbc.gridy = 0;
             gbc.gridwidth = 5;
             gbc.anchor = GridBagConstraints.CENTER;
-            this.add(lblTitulo, gbc);
             infoSistema.setEditable(false);
             infoSistema.setLineWrap(true);
             infoSistema.setWrapStyleWord(true);
@@ -76,10 +74,14 @@ public class VentanaAyuda extends JFrame {
     }
 
     class LienzoHeader extends JPanel {
+        private JLabel lblTitulo = new JLabel("INFORMACIÓN DEL SISTEMA CLÍNICO", SwingConstants.CENTER);
         LienzoHeader() {
             super();
             this.setLayout(new BorderLayout());
-            this.setBackground(new Color(37, 55, 40));
+            this.lblTitulo.setForeground(Color.WHITE);
+            lblTitulo.setFont(new Font("Arial", Font.BOLD, 18));
+            this.add(lblTitulo, BorderLayout.CENTER);
+            this.setBackground(new Color(33, 122, 210));
         }
 
         @Override
@@ -98,7 +100,7 @@ public class VentanaAyuda extends JFrame {
         public LienzoFooter() {
             super();
             this.setLayout(new BorderLayout());
-            this.setBackground(new Color(37, 55, 40));
+            this.setBackground(new Color(33, 122, 210));
             this.setForeground(Color.WHITE);
             this.add(btnSalir, BorderLayout.EAST);
             this.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));

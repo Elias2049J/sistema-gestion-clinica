@@ -1,8 +1,7 @@
 package org.sistema.persistencia;
 
 import org.sistema.entidad.Paciente;
-import org.sistema.entity.Cliente;
-import org.sistema.entity.Cuenta;
+import org.sistema.entidad.Cita;
 
 public class PersistenciaPaciente extends Persistencia<Paciente>{
     @Override

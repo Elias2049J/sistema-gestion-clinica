@@ -1,4 +1,6 @@
 package org.sistema.model;
 
-public class ExportarModel {
+import org.sistema.interfaces.ExportarInterface;
+
+public class ExportarModel implements ExportarInterface {
 }

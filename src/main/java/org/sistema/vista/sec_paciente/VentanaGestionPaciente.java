@@ -18,7 +18,7 @@ public class VentanaGestionPaciente extends JFrame {
     private LienzoCentral lienzoCentral = new LienzoCentral();
     private LienzoFooter lienzoFooter = new LienzoFooter(lienzoCentral);
 
-    public VentanaGestionPaciente() throws FileNotFoundException {
+    public VentanaGestionPaciente() {
         super();
         this.crudPacienteModel = new PacienteModel();
         this.setTitle("Gestión de Pacientes");
