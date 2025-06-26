@@ -1,4 +1,8 @@
 package org.sistema.interfaces;
 
-public interface ExportarInterface {
+import java.util.List;
+
+public interface ExportarInterface <T> {
+    boolean preview(List<T> objeto);
+    boolean imprimir(List<T> objeto);
 }

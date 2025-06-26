@@ -1,21 +1,24 @@
 package org.sistema.vista.sec_exportar;
 
 import lombok.Getter;
+import org.sistema.entidad.Paciente;
 import org.sistema.interfaces.ExportarInterface;
 import org.sistema.model.ExportarModel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class VentanaReportesPac extends JFrame {
-    private ExportarInterface ExpModel;
+    private ExportarInterface<Paciente> expModel;
     private LienzoHeader lienzoHeader = new LienzoHeader();
     private LienzoCentral lienzoCentral = new LienzoCentral();
     private LienzoFooter lienzoFooter = new LienzoFooter(lienzoCentral);
 
     public VentanaReportesPac() {
         super();
-        this.ExpModel = new ExportarModel();
+        this.expModel = new ExportarModel();
         this.setTitle("Reportes de Pacientes");
         this.setSize(800, 600);
         this.setLocationRelativeTo(rootPane);
@@ -125,6 +128,15 @@ public class VentanaReportesPac extends JFrame {
             this.add(panelResultados, gbcPadre);
 
             btnPreview.addActionListener(e -> {
+                List<Paciente> pacientes = new ArrayList<>();
+
+                pacientes.add(new Paciente(1, "Juan", "Pérez", 30, "12345678", "Av. Siempre Viva 123", "987654321", "Activo", new ArrayList<>()));
+                pacientes.add(new Paciente(2, "María", "Gómez", 25, "23456789", "Jr. Las Flores 456", "912345678", "Activo", new ArrayList<>()));
+                pacientes.add(new Paciente(3, "Luis", "Ramírez", 40, "34567890", "Calle Los Olivos 789", "998877665", "Inactivo", new ArrayList<>()));
+                pacientes.add(new Paciente(4, "Ana", "Torres", 35, "45678901", "Av. Los Incas 321", "955667788", "Activo", new ArrayList<>()));
+                pacientes.add(new Paciente(5, "Carlos", "Mendoza", 28, "56789012", "Jr. San Martín 654", "944332211", "Activo", new ArrayList<>()));
+                expModel.preview(pacientes);
+                txtSReportes.setText("src/main/java/org/sistema/data/reportes/listaPacientes.txt");
             });
         }
     }

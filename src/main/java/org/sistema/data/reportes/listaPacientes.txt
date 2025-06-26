@@ -1,0 +1,14 @@
+|===============================LISTA COMPLETA DE PACIENTES===============================
+| ID	NOMBRE		APELLIDO	EDAD	DNI	       DIRECCION	        TELEFONO    ESTADO
+| 1     MIGUEL      CENTELLAS   27      73882207   CALLE CIBERTEC 13    970985452   ACTIVO
+| 2     HENOC       JORGE       21      78982207   CALLE UPC 13         970005451   ACTIVO
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
