@@ -1,5 +1,6 @@
 package org.sistema.vista;
 
+import org.sistema.vista.sec_citas.VentanaGestionCitas;
 import org.sistema.vista.sec_citas.VentanaRegCita;
 import org.sistema.vista.sec_exportar.VentanaReportesPac;
 import org.sistema.vista.sec_exportar.VentanaReportesCitas;
@@ -12,6 +13,7 @@ import java.io.FileNotFoundException;
 import java.io.Serializable;
 
 public class VentanaPrincipal extends JFrame implements Serializable {
+    private VentanaGestionCitas ventanaGestionCitas;
     private VentanaGestionPaciente ventanaGestionPaciente;
     private VentanaRegistroPaciente ventanaRegistroPaciente;
     private VentanaAyuda ventanaAyuda;
@@ -187,6 +189,11 @@ public class VentanaPrincipal extends JFrame implements Serializable {
             btnVentanaProgCita.addActionListener(e-> {
                 ventanaRegCita = new VentanaRegCita();
                 ventanaRegCita.setVisible(true);
+            });
+
+            btnVentanaModCita.addActionListener(e-> {
+                ventanaGestionCitas = new VentanaGestionCitas();
+                ventanaGestionCitas.setVisible(true);
             });
         }
     }

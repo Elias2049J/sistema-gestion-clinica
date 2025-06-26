@@ -1,2 +1,1 @@
 ID         NOMBRE          APELLIDO        EDAD   DNI          DIRECCION                      TELEFONO     ESTADO    
-1          Jorge           Herrera         45     12345678     Calle falsa 123                987654321    ACTIVO    
