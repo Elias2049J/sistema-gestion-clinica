@@ -1,11 +1,11 @@
 --------------------
 Ticket de Cita Nro.0
 Dni del Paciente: 12345678
-Nombres: Jorge
-Apellidos: Herrera
-Médico: Dr Strange
+Nombres: hola
+Apellidos: fasd
+Médico: Farruko
 Especialidad: Medicina General
-Fecha : 2025-11-10
-Hora05:26
-Costo: 65.0
+Fecha : 2025-05-10
+Hora10:15
+Costo: 145.0
 --------------------

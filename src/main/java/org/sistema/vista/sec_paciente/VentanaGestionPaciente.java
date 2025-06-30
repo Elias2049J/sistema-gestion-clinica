@@ -2,7 +2,6 @@ package org.sistema.vista.sec_paciente;
 
 import org.sistema.entidad.Paciente;
 import org.sistema.interfaces.CrudInterface;
-import org.sistema.model.CrudPacienteModel;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -15,9 +14,9 @@ public class VentanaGestionPaciente extends JFrame {
     private LienzoCentral lienzoCentral;
     private LienzoFooter lienzoFooter;
 
-    public VentanaGestionPaciente() {
+    public VentanaGestionPaciente(CrudInterface<Paciente, Integer> crudPacienteModel) {
         super();
-        this.crudPacienteModel = new CrudPacienteModel();
+        this.crudPacienteModel = crudPacienteModel;
         this.lienzoCentral = new LienzoCentral();
         this.lienzoHeader = new LienzoHeader();
         this.lienzoFooter = new LienzoFooter();

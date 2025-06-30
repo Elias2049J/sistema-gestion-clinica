@@ -1,5 +1,10 @@
 package org.sistema.vista;
 
+import org.sistema.entidad.Cita;
+import org.sistema.entidad.Paciente;
+import org.sistema.interfaces.CitaUseCase;
+import org.sistema.interfaces.CrudInterface;
+import org.sistema.model.*;
 import org.sistema.vista.sec_citas.VentanaGestionCitas;
 import org.sistema.vista.sec_citas.VentanaRegCita;
 import org.sistema.vista.sec_exportar.VentanaReportesPac;
@@ -9,10 +14,13 @@ import org.sistema.vista.sec_paciente.VentanaRegistroPaciente;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.FileNotFoundException;
 import java.io.Serializable;
 
 public class VentanaPrincipal extends JFrame implements Serializable {
+    private CrudInterface<Paciente, Integer> crudPacienteModel;
+    private CrudInterface<Cita, Integer> crudCitaModel;
+    private CitaUseCase citaModel;
+
     private VentanaGestionCitas ventanaGestionCitas;
     private VentanaGestionPaciente ventanaGestionPaciente;
     private VentanaRegistroPaciente ventanaRegistroPaciente;
@@ -25,8 +33,11 @@ public class VentanaPrincipal extends JFrame implements Serializable {
     private LienzoCentral lienzoCentral = new LienzoCentral();
     private LienzoFooter lienzoFooter = new LienzoFooter();
 
-    public VentanaPrincipal() throws HeadlessException {
+    public VentanaPrincipal(CrudInterface<Paciente, Integer> crudPacienteModel, CrudInterface<Cita, Integer> crudCitaModel) throws HeadlessException {
         super();
+        this.crudPacienteModel = crudPacienteModel;
+        this.crudCitaModel = crudCitaModel;
+        this.citaModel = new CitaModel();
         this.setTitle("Sistema Clínico");
         this.setSize(960, 514);
         this.setLocationRelativeTo(rootPane);
@@ -48,7 +59,6 @@ public class VentanaPrincipal extends JFrame implements Serializable {
 
         private JButton btnVentanaProgCita = new JButton("Programar Cita");
         private JButton btnVentanaModCita = new JButton("Modificar o Cancelar Cita");
-        private JButton btnVentanaImpCita = new JButton("Imprimir Cita");
 
         private JButton btnVentanaReportesPac = new JButton("Reportes de Pacientes");
         private JButton btnVentanaReportesCitas = new JButton("Reportes de Citas");
@@ -112,20 +122,17 @@ public class VentanaPrincipal extends JFrame implements Serializable {
             panelCitas.add(lblIconoCitas, gbcC);
             lblGestionCitas.setFont(new Font("Arial", Font.BOLD, 20));
             lblGestionCitas.setHorizontalAlignment(SwingConstants.CENTER);
-            gbcC.gridy = 1;
+            gbcC.gridy++;
             panelCitas.add(lblGestionCitas, gbcC);
             btnVentanaProgCita.setIcon(UIManager.getIcon("FileChooser.newFolderIcon"));
             btnVentanaModCita.setIcon(UIManager.getIcon("OptionPane.warningIcon"));
             btnVentanaHistCitas.setIcon(UIManager.getIcon("FileChooser.listViewIcon"));
-            btnVentanaImpCita.setIcon(UIManager.getIcon("FileView.hardDriveIcon"));
-            gbcC.gridy = 2;
+            gbcC.gridy++;
             panelCitas.add(btnVentanaProgCita, gbcC);
-            gbcC.gridy = 3;
+            gbcC.gridy++;
             panelCitas.add(btnVentanaModCita, gbcC);
-            gbcC.gridy = 4;
-            panelCitas.add(btnVentanaImpCita, gbcC);
             gbcC.fill = GridBagConstraints.HORIZONTAL;
-            gbcC.gridy = 5;
+            gbcC.gridy++;
             panelCitas.add(Box.createVerticalStrut(25), gbcC);
 
             // seccion de reportes
@@ -154,8 +161,6 @@ public class VentanaPrincipal extends JFrame implements Serializable {
             panelReportes.add(Box.createVerticalStrut(15), gbcR);
             gbcR.gridy = 5;
             panelReportes.add(Box.createVerticalStrut(15), gbcR);
-            gbcR.gridy = 6;
-            panelReportes.add(Box.createVerticalStrut(15), gbcR);
 
             // agregar los paneles al gbcPadre padre
             gbcPadre.gridx = 0;
@@ -167,32 +172,32 @@ public class VentanaPrincipal extends JFrame implements Serializable {
             this.add(panelReportes, gbcPadre);
 
             btnVentanaRegPaciente.addActionListener(e -> {
-                ventanaRegistroPaciente = new VentanaRegistroPaciente();
+                ventanaRegistroPaciente = new VentanaRegistroPaciente(crudPacienteModel);
                 ventanaRegistroPaciente.setVisible(true);
             });
 
             btnVentanaGestPaciente.addActionListener(e -> {
-                ventanaGestionPaciente = new VentanaGestionPaciente();
+                ventanaGestionPaciente = new VentanaGestionPaciente(crudPacienteModel);
                 ventanaGestionPaciente.setVisible(true);
             });
 
             btnVentanaReportesPac.addActionListener(e -> {
-                ventanaReportesPac = new VentanaReportesPac();
+                ventanaReportesPac = new VentanaReportesPac(crudPacienteModel);
                 ventanaReportesPac.setVisible(true);
             });
 
             btnVentanaReportesCitas.addActionListener(e -> {
-                ventanaReportesCitas = new VentanaReportesCitas();
+                ventanaReportesCitas = new VentanaReportesCitas(crudCitaModel);
                 ventanaReportesCitas.setVisible(true);
             });
 
             btnVentanaProgCita.addActionListener(e-> {
-                ventanaRegCita = new VentanaRegCita();
+                ventanaRegCita = new VentanaRegCita(crudCitaModel, crudPacienteModel, citaModel);
                 ventanaRegCita.setVisible(true);
             });
 
             btnVentanaModCita.addActionListener(e-> {
-                ventanaGestionCitas = new VentanaGestionCitas();
+                ventanaGestionCitas = new VentanaGestionCitas(crudPacienteModel, crudCitaModel);
                 ventanaGestionCitas.setVisible(true);
             });
         }

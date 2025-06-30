@@ -1,26 +1,27 @@
 package org.sistema.vista.sec_exportar;
 
 import lombok.Getter;
-import org.sistema.entidad.Paciente;
+import org.sistema.entidad.Cita;
 import org.sistema.interfaces.CrudInterface;
-import org.sistema.interfaces.ReportesInterface;
-import org.sistema.model.CrudPacienteModel;
-import org.sistema.model.ReportesModel;
+import org.sistema.interfaces.ReporteUseCase;
+import org.sistema.model.ReporteCita3MesesModel;
+import org.sistema.persistencia.PersistenciaRepCita3Meses;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 
 public class VentanaReportesCitas extends JFrame {
-    private CrudInterface<Paciente, Integer> crudPacienteModel;
-    private ReportesInterface ExpModel;
+    private CrudInterface<Cita, Integer> crudCitaModel;
+    private ReporteUseCase<Cita> reporte3MesesModel;
     private LienzoHeader lienzoHeader = new LienzoHeader();
     private LienzoCentral lienzoCentral = new LienzoCentral();
     private LienzoFooter lienzoFooter = new LienzoFooter(lienzoCentral);
 
-    public VentanaReportesCitas() {
+    public VentanaReportesCitas(CrudInterface<Cita, Integer> crudCitaModel) {
         super();
-        this.crudPacienteModel = new CrudPacienteModel();
-        this.ExpModel = new ReportesModel(crudPacienteModel);
+        this.crudCitaModel = crudCitaModel;
+        this.reporte3MesesModel = new ReporteCita3MesesModel(crudCitaModel, new PersistenciaRepCita3Meses());
         this.setTitle("ReportesInterface de Pacientes");
         this.setSize(800, 600);
         this.setLocationRelativeTo(rootPane);
@@ -30,35 +31,36 @@ public class VentanaReportesCitas extends JFrame {
         this.add(lienzoCentral, BorderLayout.CENTER);
         this.add(lienzoFooter, BorderLayout.SOUTH);
     }
+    
     @Getter
     class LienzoCentral extends JPanel {
         private JPanel panelBusqueda = new JPanel(new GridBagLayout());
-
         private JLabel lblBusqueda = new JLabel("Seleccione el reporte: ");
-        private JComboBox cboReportes = new JComboBox();
+        private JComboBox<String> cboReportes = new JComboBox<>();
         private JButton btnPreview = new JButton("Previsualizar");
-
         private JPanel panelResultados = new JPanel(new BorderLayout());
         private JTextArea txtSReportes = new JTextArea();
         private JScrollPane scpResultados;
+        private int reporteElegido = 0;
 
         public LienzoCentral() {
             super();
             this.setLayout(new GridBagLayout());
+            txtSReportes.setFont(new Font("Monospaced", Font.PLAIN, 18));
+            txtSReportes.setMargin(new Insets(20, 20, 20, 20));
+            txtSReportes.setEditable(false);
             scpResultados = new JScrollPane(txtSReportes);
             panelResultados.removeAll();
             panelResultados.add(scpResultados);
 
             GridBagConstraints gbcPadre = new GridBagConstraints();
             gbcPadre.insets = new Insets(10, 20, 10, 10);
-            panelResultados.add(scpResultados);
-
             // tamaño fijo para evitar que colapsen los jtf
             Dimension sizeFijo = new Dimension(200, 25);
             cboReportes.setPreferredSize(sizeFijo);
             cboReportes.setMinimumSize(sizeFijo);
             cboReportes.setMaximumSize(sizeFijo);
-            cboReportes.addItem(" ");
+            cboReportes.addItem("Seleccione un reporte");
             cboReportes.addItem("Citas de los Últimos 3 Meses");
             cboReportes.addItem("Citas por Especialidad");
             cboReportes.addItem("Historial de Citas por Paciente");
@@ -112,8 +114,6 @@ public class VentanaReportesCitas extends JFrame {
             gbcBusqueda.fill = GridBagConstraints.HORIZONTAL;
             gbcBusqueda.anchor = GridBagConstraints.CENTER;
             panelBusqueda.add(btnPreview, gbcBusqueda);
-
-            // ubicacion del panel busqueda en el grigbaglayout padre
             gbcPadre.gridx = 0;
             gbcPadre.gridy = gridy++;
             gbcPadre.weightx = 1;
@@ -130,6 +130,23 @@ public class VentanaReportesCitas extends JFrame {
             this.add(panelResultados, gbcPadre);
 
             btnPreview.addActionListener(e -> {
+                txtSReportes.setText("");
+                reporteElegido = cboReportes.getSelectedIndex();
+                if (reporteElegido == 0) {
+                    JOptionPane.showMessageDialog(this,
+                            "Por favor seleccione un tipo de reporte",
+                            "Aviso", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+                List<String> lineasReporte;
+                if (reporteElegido == 1) {
+                    lineasReporte = reporte3MesesModel.generarReporte();
+                } else {
+                    lineasReporte = java.util.Collections.singletonList("Reporte no implementado");
+                }
+                for (String linea : lineasReporte) {
+                    txtSReportes.append(linea + "\n");
+                }
             });
         }
     }
@@ -172,7 +189,22 @@ public class VentanaReportesCitas extends JFrame {
 
             btnSalir.addActionListener(e -> dispose());
 
-            btnImprimir.addActionListener(e ->dispose());
+            btnImprimir.addActionListener(e -> {
+                int reporteSeleccionado = lienzoCentral.getReporteElegido();
+                if (reporteSeleccionado == 0) {
+                    JOptionPane.showMessageDialog(lienzoCentral, "Visualice un reporte antes de imprimir", "Aviso", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+                if (reporteSeleccionado == 1) {
+                    if (reporte3MesesModel.imprimirReporte()) {
+                        JOptionPane.showMessageDialog(lienzoCentral, "Impresion exitosa", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(lienzoCentral, "Error al imprimir", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(lienzoCentral, "Impresión no implementada para este reporte", "Aviso", JOptionPane.WARNING_MESSAGE);
+                }
+            });
         }
 
         @Override

@@ -3,25 +3,29 @@ package org.sistema.vista.sec_exportar;
 import lombok.Getter;
 import org.sistema.entidad.Paciente;
 import org.sistema.interfaces.CrudInterface;
-import org.sistema.interfaces.ReportesInterface;
-import org.sistema.model.CrudPacienteModel;
-import org.sistema.model.ReportesModel;
+import org.sistema.interfaces.ReporteUseCase;
+import org.sistema.model.ReportePacienteModel;
+import org.sistema.model.ReporteTerceraEdadModel;
+import org.sistema.persistencia.PersistenciaRepPac;
+import org.sistema.persistencia.PersistenciaRepTerceraEdad;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
 public class VentanaReportesPac extends JFrame {
+    private ReporteUseCase<Paciente> reporteTerceraEdadModel;
     private CrudInterface<Paciente, Integer> crudPacienteModel;
-    private ReportesInterface<Paciente> reporteModel;
+    private ReporteUseCase<Paciente> reportePacienteModel;
     private LienzoHeader lienzoHeader = new LienzoHeader();
     private LienzoCentral lienzoCentral = new LienzoCentral();
     private LienzoFooter lienzoFooter = new LienzoFooter(lienzoCentral);
 
-    public VentanaReportesPac() {
+    public VentanaReportesPac(CrudInterface<Paciente, Integer> crudPacienteModel) {
         super();
-        this.crudPacienteModel = new CrudPacienteModel();
-        this.reporteModel = new ReportesModel(crudPacienteModel);
+        this.crudPacienteModel = crudPacienteModel;
+        this.reportePacienteModel = new ReportePacienteModel(crudPacienteModel, new PersistenciaRepPac());
+        this.reporteTerceraEdadModel = new ReporteTerceraEdadModel(crudPacienteModel, new PersistenciaRepTerceraEdad());
         this.setTitle("Reportes de Pacientes");
         this.setSize(800, 600);
         this.setLocationRelativeTo(rootPane);
@@ -50,6 +54,7 @@ public class VentanaReportesPac extends JFrame {
             this.setLayout(new GridBagLayout());
             txtSReportes.setFont(new Font("Monospaced", Font.PLAIN, 18));
             txtSReportes.setMargin(new Insets(20, 20, 20, 20));
+            txtSReportes.setEditable(false);
             scpResultados = new JScrollPane(txtSReportes);
             panelResultados.removeAll();
             panelResultados.add(scpResultados);
@@ -147,9 +152,9 @@ public class VentanaReportesPac extends JFrame {
                 List<String> lineasReporte;
 
                 if (reporteElegido == 1) {
-                    lineasReporte = reporteModel.getListaPacientesTerceraEdadReport();
+                    lineasReporte = reporteTerceraEdadModel.generarReporte();
                 } else {
-                    lineasReporte = reporteModel.getListaPacientesReport(crudPacienteModel.findAll());
+                    lineasReporte = reportePacienteModel.generarReporte();
                 }
                 for (String linea : lineasReporte) {
                     txtSReportes.append(linea + "\n");
@@ -204,7 +209,7 @@ public class VentanaReportesPac extends JFrame {
                 }
 
                 if (reporteSeleccionado == 1) {
-                    if (reporteModel.exportarReporteTerceraEdad()) {
+                    if (reporteTerceraEdadModel.imprimirReporte()) {
                         JOptionPane.showMessageDialog(lienzoCentral, "Impresion exitosa", "Éxito", JOptionPane.INFORMATION_MESSAGE);
                     } else {
                         JOptionPane.showMessageDialog(lienzoCentral, "Error al imprimir", "Error", JOptionPane.ERROR_MESSAGE);
@@ -212,10 +217,12 @@ public class VentanaReportesPac extends JFrame {
                     return;
                 }
 
-                if (reporteModel.exportarReporte(crudPacienteModel.findAll())) {
-                    JOptionPane.showMessageDialog(lienzoCentral, "Impresion Exitosa", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-                } else {
-                    JOptionPane.showMessageDialog(lienzoCentral, "Error al imprimir", "Error", JOptionPane.ERROR_MESSAGE);
+                if (reporteSeleccionado == 2) {
+                    if (reportePacienteModel.imprimirReporte()) {
+                        JOptionPane.showMessageDialog(lienzoCentral, "Impresion exitosa", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(lienzoCentral, "Error al imprimir", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
             });
         }

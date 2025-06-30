@@ -2,7 +2,6 @@ package org.sistema.vista.sec_paciente;
 
 import org.sistema.entidad.Paciente;
 import org.sistema.interfaces.CrudInterface;
-import org.sistema.model.CrudPacienteModel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,9 +13,9 @@ public class VentanaRegistroPaciente extends JFrame {
     private LienzoCentral lienzoCentral;
     private LienzoFooter lienzoFooter;
 
-    public VentanaRegistroPaciente() {
+    public VentanaRegistroPaciente(CrudInterface<Paciente, Integer> crudPacienteModel) {
         super();
-        this.crudPacienteModel = new CrudPacienteModel();
+        this.crudPacienteModel = crudPacienteModel;
         this.lienzoHeader = new LienzoHeader();
         this.lienzoCentral = new LienzoCentral();
         this.lienzoFooter = new LienzoFooter();
@@ -169,7 +168,7 @@ public class VentanaRegistroPaciente extends JFrame {
                 p.setTelefono(telefono);
                 p.setHistorialCitas(new ArrayList<>());
 
-                if (crudPacienteModel.crear(p)) {
+                if (crudPacienteModel.create(p)) {
                     JOptionPane.showMessageDialog(this, "Paciente registrado exitosamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
                     dispose();
                 } else {

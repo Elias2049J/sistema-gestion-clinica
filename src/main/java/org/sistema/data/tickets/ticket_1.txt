@@ -1,0 +1,11 @@
+--------------------
+Ticket de Cita Nro.1
+Dni del Paciente: 12345678
+Nombres: Hilario
+Apellidos: Zuñiga
+Médico: Guaza
+Especialidad: Pediatría
+Fecha : 2025-05-05
+Hora20:10
+Costo: 150.0
+--------------------

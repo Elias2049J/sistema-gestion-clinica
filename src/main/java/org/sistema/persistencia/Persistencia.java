@@ -27,6 +27,7 @@ public abstract class Persistencia<T> implements PersistenceInterface<T> {
         }
         return true;
     }
+
     //exporta una lista
     @Override
     public boolean exportarLista(List<T> lista) {

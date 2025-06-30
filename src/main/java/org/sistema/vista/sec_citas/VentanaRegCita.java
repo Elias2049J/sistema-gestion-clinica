@@ -1,13 +1,9 @@
 package org.sistema.vista.sec_citas;
 
-import lombok.Getter;
 import org.sistema.entidad.Cita;
 import org.sistema.entidad.Paciente;
 import org.sistema.interfaces.CitaUseCase;
 import org.sistema.interfaces.CrudInterface;
-import org.sistema.model.CitaModel;
-import org.sistema.model.CrudCitaModel;
-import org.sistema.model.CrudPacienteModel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,11 +20,11 @@ public class VentanaRegCita extends JFrame {
     private LienzoCentral lienzoCentral;
     private LienzoFooter lienzoFooter;
 
-    public VentanaRegCita() {
+    public VentanaRegCita(CrudInterface<Cita, Integer> crudCitaModel, CrudInterface<Paciente, Integer> crudPacienteModel, CitaUseCase citaModel) {
         super();
-        this.crudCitaModel = new CrudCitaModel();
-        this.crudPacienteModel = new CrudPacienteModel();
-        this.citaModel = new CitaModel();
+        this.crudCitaModel = crudCitaModel;
+        this.crudPacienteModel = crudPacienteModel;
+        this.citaModel = citaModel;
         this.lienzoHeader = new LienzoHeader();
         this.lienzoCentral = new LienzoCentral();
         this.lienzoFooter = new LienzoFooter();
@@ -221,7 +217,7 @@ public class VentanaRegCita extends JFrame {
                 cita.setCosto(costo);
                 cita.setEstado("PROGRAMADA");
 
-                if (crudCitaModel.crear(cita)) {
+                if (crudCitaModel.create(cita)) {
                     JOptionPane.showMessageDialog(this, "Cita registrada con éxito", "Éxito", JOptionPane.INFORMATION_MESSAGE);
                     resetCampos();
 
@@ -297,4 +293,3 @@ public class VentanaRegCita extends JFrame {
         }
     }
 }
-
