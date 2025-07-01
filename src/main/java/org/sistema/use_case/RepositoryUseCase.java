@@ -1,8 +1,8 @@
-package org.sistema.interfaces;
+package org.sistema.use_case;
 
 import java.util.List;
 
-public interface RepositoryInterface<T, ID> {
+public interface RepositoryUseCase<T, ID> {
     boolean save(T entity);
     boolean update(T entity);
     T getById(ID id);
@@ -10,5 +10,4 @@ public interface RepositoryInterface<T, ID> {
     boolean delete(ID id);
     List<T> findAll();
     boolean cargarDatos();
-    boolean exportarDatos();
 }

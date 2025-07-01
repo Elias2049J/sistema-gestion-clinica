@@ -2,14 +2,15 @@ package org.sistema.vista;
 
 import org.sistema.entidad.Cita;
 import org.sistema.entidad.Paciente;
-import org.sistema.interfaces.CitaUseCase;
-import org.sistema.interfaces.CrudInterface;
+import org.sistema.use_case.CitaUseCase;
+import org.sistema.use_case.CrudUseCase;
 import org.sistema.model.*;
 import org.sistema.vista.sec_citas.VentanaGestionCitas;
 import org.sistema.vista.sec_citas.VentanaRegCita;
 import org.sistema.vista.sec_exportar.VentanaReportesPac;
 import org.sistema.vista.sec_exportar.VentanaReportesCitas;
 import org.sistema.vista.sec_paciente.VentanaGestionPaciente;
+import org.sistema.vista.sec_paciente.VentanaHistorialCitas;
 import org.sistema.vista.sec_paciente.VentanaRegistroPaciente;
 
 import javax.swing.*;
@@ -17,13 +18,14 @@ import java.awt.*;
 import java.io.Serializable;
 
 public class VentanaPrincipal extends JFrame implements Serializable {
-    private CrudInterface<Paciente, Integer> crudPacienteModel;
-    private CrudInterface<Cita, Integer> crudCitaModel;
+    private CrudUseCase<Paciente, Integer, String> crudPacienteModel;
+    private CrudUseCase<Cita, Integer, String> crudCitaModel;
     private CitaUseCase citaModel;
 
     private VentanaGestionCitas ventanaGestionCitas;
     private VentanaGestionPaciente ventanaGestionPaciente;
     private VentanaRegistroPaciente ventanaRegistroPaciente;
+    private VentanaHistorialCitas ventanaHistorialCitas;
     private VentanaAyuda ventanaAyuda;
     private VentanaReportesPac ventanaReportesPac;
     private VentanaReportesCitas ventanaReportesCitas;
@@ -33,7 +35,7 @@ public class VentanaPrincipal extends JFrame implements Serializable {
     private LienzoCentral lienzoCentral = new LienzoCentral();
     private LienzoFooter lienzoFooter = new LienzoFooter();
 
-    public VentanaPrincipal(CrudInterface<Paciente, Integer> crudPacienteModel, CrudInterface<Cita, Integer> crudCitaModel) throws HeadlessException {
+    public VentanaPrincipal(CrudUseCase<Paciente, Integer, String> crudPacienteModel, CrudUseCase<Cita, Integer, String> crudCitaModel) throws HeadlessException {
         super();
         this.crudPacienteModel = crudPacienteModel;
         this.crudCitaModel = crudCitaModel;
@@ -199,6 +201,11 @@ public class VentanaPrincipal extends JFrame implements Serializable {
             btnVentanaModCita.addActionListener(e-> {
                 ventanaGestionCitas = new VentanaGestionCitas(crudPacienteModel, crudCitaModel);
                 ventanaGestionCitas.setVisible(true);
+            });
+
+            btnVentanaHistCitas.addActionListener(e-> {
+                ventanaHistorialCitas = new VentanaHistorialCitas(crudPacienteModel, crudCitaModel);
+                ventanaHistorialCitas.setVisible(true);
             });
         }
     }

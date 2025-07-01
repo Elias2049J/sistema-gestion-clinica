@@ -2,8 +2,8 @@ package org.sistema.vista.sec_citas;
 
 import org.sistema.entidad.Cita;
 import org.sistema.entidad.Paciente;
-import org.sistema.interfaces.CitaUseCase;
-import org.sistema.interfaces.CrudInterface;
+import org.sistema.use_case.CitaUseCase;
+import org.sistema.use_case.CrudUseCase;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,14 +13,14 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 public class VentanaRegCita extends JFrame {
-    private CrudInterface<Cita, Integer> crudCitaModel;
-    private CrudInterface<Paciente, Integer> crudPacienteModel;
+    private CrudUseCase<Cita, Integer, String> crudCitaModel;
+    private CrudUseCase<Paciente, Integer, String> crudPacienteModel;
     private CitaUseCase citaModel;
     private LienzoHeader lienzoHeader;
     private LienzoCentral lienzoCentral;
     private LienzoFooter lienzoFooter;
 
-    public VentanaRegCita(CrudInterface<Cita, Integer> crudCitaModel, CrudInterface<Paciente, Integer> crudPacienteModel, CitaUseCase citaModel) {
+    public VentanaRegCita(CrudUseCase<Cita, Integer, String> crudCitaModel, CrudUseCase<Paciente, Integer, String> crudPacienteModel, CitaUseCase citaModel) {
         super();
         this.crudCitaModel = crudCitaModel;
         this.crudPacienteModel = crudPacienteModel;

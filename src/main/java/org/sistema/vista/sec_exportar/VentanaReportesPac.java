@@ -2,8 +2,8 @@ package org.sistema.vista.sec_exportar;
 
 import lombok.Getter;
 import org.sistema.entidad.Paciente;
-import org.sistema.interfaces.CrudInterface;
-import org.sistema.interfaces.ReporteUseCase;
+import org.sistema.use_case.CrudUseCase;
+import org.sistema.use_case.ReporteUseCase;
 import org.sistema.model.ReportePacienteModel;
 import org.sistema.model.ReporteTerceraEdadModel;
 import org.sistema.persistencia.PersistenciaRepPac;
@@ -15,13 +15,13 @@ import java.util.List;
 
 public class VentanaReportesPac extends JFrame {
     private ReporteUseCase<Paciente> reporteTerceraEdadModel;
-    private CrudInterface<Paciente, Integer> crudPacienteModel;
+    private CrudUseCase<Paciente, Integer, String> crudPacienteModel;
     private ReporteUseCase<Paciente> reportePacienteModel;
     private LienzoHeader lienzoHeader = new LienzoHeader();
     private LienzoCentral lienzoCentral = new LienzoCentral();
     private LienzoFooter lienzoFooter = new LienzoFooter(lienzoCentral);
 
-    public VentanaReportesPac(CrudInterface<Paciente, Integer> crudPacienteModel) {
+    public VentanaReportesPac(CrudUseCase<Paciente, Integer, String> crudPacienteModel) {
         super();
         this.crudPacienteModel = crudPacienteModel;
         this.reportePacienteModel = new ReportePacienteModel(crudPacienteModel, new PersistenciaRepPac());

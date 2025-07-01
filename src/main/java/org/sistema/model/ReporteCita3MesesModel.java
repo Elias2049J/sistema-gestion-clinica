@@ -3,9 +3,9 @@ package org.sistema.model;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.sistema.entidad.Cita;
-import org.sistema.interfaces.CrudInterface;
-import org.sistema.interfaces.PersistenceInterface;
-import org.sistema.interfaces.ReporteUseCase;
+import org.sistema.use_case.CrudUseCase;
+import org.sistema.use_case.PersistenceUseCase;
+import org.sistema.use_case.ReporteUseCase;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -14,8 +14,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReporteCita3MesesModel implements ReporteUseCase<Cita> {
-    private CrudInterface<Cita, Integer> model;
-    private PersistenceInterface<Cita> persistencia;
+    private CrudUseCase<Cita, Integer, String> model;
+    private PersistenceUseCase<Cita> persistencia;
 
     @Override
     public List<String> generarReporte() {

@@ -2,20 +2,20 @@ package org.sistema.vista.sec_citas;
 
 import org.sistema.entidad.Cita;
 import org.sistema.entidad.Paciente;
-import org.sistema.interfaces.CrudInterface;
+import org.sistema.use_case.CrudUseCase;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
 public class VentanaGestionCitas extends JFrame{
-    private CrudInterface<Paciente, Integer> crudPacienteModel;
-    private CrudInterface<Cita, Integer> crudCitaModel;
+    private CrudUseCase<Paciente, Integer, String> crudPacienteModel;
+    private CrudUseCase<Cita, Integer, String> crudCitaModel;
     private LienzoCentral lienzoCentral;
     private LienzoHeader lienzoHeader;
     private LienzoFooter lienzoFooter;
 
-    public VentanaGestionCitas(CrudInterface<Paciente, Integer> crudPacienteModel, CrudInterface<Cita, Integer> crudCitaModel) throws HeadlessException {
+    public VentanaGestionCitas(CrudUseCase<Paciente, Integer, String> crudPacienteModel, CrudUseCase<Cita, Integer, String> crudCitaModel) throws HeadlessException {
         super();
         this.crudPacienteModel = crudPacienteModel;
         this.crudCitaModel = crudCitaModel;

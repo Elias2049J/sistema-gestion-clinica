@@ -1,11 +1,11 @@
 package org.sistema.persistencia;
 
-import org.sistema.interfaces.PersistenceInterface;
+import org.sistema.use_case.PersistenceUseCase;
 
 import java.io.*;
 import java.util.List;
 
-public abstract class Persistencia<T> implements PersistenceInterface<T> {
+public abstract class Persistencia<T> implements PersistenceUseCase<T> {
     //importa una lista
     @Override
     public boolean importarLista(List<T> lista) {

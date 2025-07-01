@@ -3,17 +3,17 @@ package org.sistema.model;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.sistema.entidad.Paciente;
-import org.sistema.interfaces.CrudInterface;
-import org.sistema.interfaces.PersistenceInterface;
-import org.sistema.interfaces.ReporteUseCase;
+import org.sistema.use_case.CrudUseCase;
+import org.sistema.use_case.PersistenceUseCase;
+import org.sistema.use_case.ReporteUseCase;
 
 import java.util.ArrayList;
 import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ReportePacienteModel implements ReporteUseCase<Paciente> {
-    private CrudInterface<Paciente, Integer> crudPacienteModel;
-    private PersistenceInterface<Paciente> persistenciaRepPac;
+    private CrudUseCase<Paciente, Integer, String> crudPacienteModel;
+    private PersistenceUseCase<Paciente> persistenciaRepPac;
 
     @Override
     public List<String> generarReporte() {
