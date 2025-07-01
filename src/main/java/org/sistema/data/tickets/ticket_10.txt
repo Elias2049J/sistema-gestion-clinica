@@ -1,0 +1,11 @@
+--------------------
+Ticket de Cita Nro. 10
+Dni del Paciente: 98765421
+Nombres: Miguel
+Apellidos: Centellas
+Médico: chapatin
+Especialidad: Medicina General
+Fecha: 2025-07-30
+Hora: 05:25
+Costo: 20.0
+--------------------

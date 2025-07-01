@@ -1,0 +1,11 @@
+--------------------
+Ticket de Cita Nro. 6
+Dni del Paciente: 12345678
+Nombres: hola
+Apellidos: fasd
+Médico: henoc
+Especialidad: Medicina General
+Fecha: 2025-08-12
+Hora: 03:00
+Costo: 30.0
+--------------------

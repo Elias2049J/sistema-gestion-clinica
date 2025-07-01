@@ -7,6 +7,8 @@ import org.sistema.use_case.CrudUseCase;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 public class VentanaGestionCitas extends JFrame{
     private CrudUseCase<Paciente, Integer, String> crudPacienteModel;
@@ -108,8 +110,11 @@ public class VentanaGestionCitas extends JFrame{
                     return;
                 }
                 Cita cita = getCitaDeFila(fila);
+                if (cita == null) return;
+
                 if (crudCitaModel.update(cita)) {
                     JOptionPane.showMessageDialog(this, "Cita actualizada con éxito.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                    actualizarTabla();
                 } else {
                     JOptionPane.showMessageDialog(this, "No se pudo actualizar cita.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
@@ -126,23 +131,54 @@ public class VentanaGestionCitas extends JFrame{
                     JOptionPane.showMessageDialog(this, "Seleccione una cita para cancelar.", "Aviso", JOptionPane.WARNING_MESSAGE);
                     return;
                 }
-                int idCliente = Integer.parseInt(modeloTabla.getValueAt(fila, 0).toString());
-                int confirmacion = JOptionPane.showConfirmDialog(this, "¿Cancelar Cita?", "Confirmar", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+
+                int confirmacion = JOptionPane.showConfirmDialog(this, "¿Está seguro de cancelar esta cita?", "Confirmar cancelación", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
                 if (confirmacion != JOptionPane.YES_OPTION) return;
-                if (crudPacienteModel.delete(idCliente)) {
-                    JOptionPane.showMessageDialog(this, "Cita cancelada con éxito.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+
+                Cita cita = getCitaDeFila(fila);
+                if (cita == null) return;
+
+                // Cambiar estado a "Cancelada"
+                cita.setEstado("Cancelada");
+
+                if (crudCitaModel.update(cita)) {
+                    JOptionPane.showMessageDialog(this, "La cita fue cancelada correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
                     actualizarTabla();
+                } else {
+                    JOptionPane.showMessageDialog(this, "No se pudo cancelar la cita.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             });
         }
 
         private Cita getCitaDeFila(int fila) {
-            Integer idCliente = Integer.parseInt(modeloTabla.getValueAt(fila, 0).toString());
-            String direccion = modeloTabla.getValueAt(fila, 1).toString();
-            String tipoCliente = modeloTabla.getValueAt(fila, 2).toString();
+            try {
+                Integer idCita = Integer.parseInt(modeloTabla.getValueAt(fila, 0).toString());
+                String nombrePaciente = modeloTabla.getValueAt(fila, 1).toString();
+                String medico = modeloTabla.getValueAt(fila, 2).toString();
+                String especialidad = modeloTabla.getValueAt(fila, 3).toString();
+                String fecha = modeloTabla.getValueAt(fila, 4).toString();
+                String hora = modeloTabla.getValueAt(fila, 5).toString();
+                double costo = Double.parseDouble(modeloTabla.getValueAt(fila, 6).toString());
+                String estado = modeloTabla.getValueAt(fila, 7).toString();
 
-            Cita cita = new Cita();
-            return cita;
+                Paciente paciente = new Paciente();
+                paciente.setNombre(nombrePaciente); // Solo nombre (si tienes ID, mejor)
+
+                Cita cita = new Cita();
+                cita.setIdCita(idCita);
+                cita.setPaciente(paciente);
+                cita.setMedico(medico);
+                cita.setEspecialidad(especialidad);
+                cita.setFecha(LocalDate.parse(fecha));
+                cita.setHora(LocalTime.parse(hora));
+                cita.setCosto(costo);
+                cita.setEstado(estado);
+
+                return cita;
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Error al recuperar los datos de la fila.\n" + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                return null;
+            }
         }
 
         private boolean actualizarTabla() {

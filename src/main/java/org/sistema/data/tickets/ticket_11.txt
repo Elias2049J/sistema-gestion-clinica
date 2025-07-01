@@ -1,0 +1,11 @@
+--------------------
+Ticket de Cita Nro. 11
+Dni del Paciente: 12345678
+Nombres: Maria
+Apellidos: Calderon
+Médico: henoc
+Especialidad: Traumatología
+Fecha: 2025-08-25
+Hora: 09:00
+Costo: 40.0
+--------------------

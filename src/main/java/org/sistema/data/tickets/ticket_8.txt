@@ -1,0 +1,11 @@
+--------------------
+Ticket de Cita Nro. 8
+Dni del Paciente: 12345678
+Nombres: hola
+Apellidos: fasd
+Médico: miguel
+Especialidad: Dermatología
+Fecha: 2025-08-15
+Hora: 03:00
+Costo: 50.0
+--------------------
