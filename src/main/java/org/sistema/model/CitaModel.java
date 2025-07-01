@@ -1,7 +1,7 @@
 package org.sistema.model;
 
 import org.sistema.entidad.Cita;
-import org.sistema.interfaces.CitaUseCase;
+import org.sistema.use_case.CitaUseCase;
 import org.sistema.persistencia.PersistenciaTicketCita;
 
 public class CitaModel implements CitaUseCase {

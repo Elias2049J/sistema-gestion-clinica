@@ -1,20 +1,21 @@
 package org.sistema.vista.sec_paciente;
 
 import org.sistema.entidad.Paciente;
-import org.sistema.interfaces.CrudInterface;
+import org.sistema.use_case.CrudUseCase;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.ArrayList;
 
 public class VentanaGestionPaciente extends JFrame {
-    private CrudInterface<Paciente, Integer> crudPacienteModel;
+    private CrudUseCase<Paciente, Integer, String> crudPacienteModel;
     private LienzoHeader lienzoHeader;
     private LienzoCentral lienzoCentral;
     private LienzoFooter lienzoFooter;
 
-    public VentanaGestionPaciente(CrudInterface<Paciente, Integer> crudPacienteModel) {
+    public VentanaGestionPaciente(CrudUseCase<Paciente, Integer, String> crudPacienteModel) {
         super();
         this.crudPacienteModel = crudPacienteModel;
         this.lienzoCentral = new LienzoCentral();
@@ -46,12 +47,19 @@ public class VentanaGestionPaciente extends JFrame {
         public Dimension getPreferredSize() {
             Container contenedorPadre = getParent();
             int ancho = contenedorPadre.getWidth();
-            int alto = (int) (contenedorPadre.getHeight() * 0.12);
+            int alto = (int) (contenedorPadre.getHeight() * 0.08);
             return new Dimension(ancho, alto);
         }
     }
 
     class LienzoCentral extends JPanel {
+        //panel de busqueda
+        private JPanel panelBusqueda = new JPanel();
+        private JLabel lblSelPaciente = new JLabel("Ingresar nombre: ");
+        private JTextField jtfBuscar = new JTextField(20);
+        private JButton btnBusqueda = new JButton("Buscar");
+        private JButton btnBorrar = new JButton("Borrar");
+
         // panel superior de tabla
         private JPanel panelTabla = new JPanel();
         private JTable tablaDatos = new JTable();
@@ -72,6 +80,14 @@ public class VentanaGestionPaciente extends JFrame {
         public LienzoCentral() {
             super();
             this.setLayout(new BorderLayout());
+            // panel busqueda
+            this.panelBusqueda.setLayout(new FlowLayout(FlowLayout.CENTER));
+            this.panelBusqueda.setBorder(new EmptyBorder(20, 20, 20, 20));
+            this.panelBusqueda.add(lblSelPaciente);
+            this.panelBusqueda.add(jtfBuscar);
+            this.panelBusqueda.add(btnBusqueda);
+            this.panelBusqueda.add(btnBorrar);
+            this.add(panelBusqueda, BorderLayout.NORTH);
 
             // panel tabla
             this.panelTabla.setLayout(new GridBagLayout());
@@ -102,20 +118,27 @@ public class VentanaGestionPaciente extends JFrame {
             // panel btns
             this.panelBtns.setLayout(new GridBagLayout());
             this.gbcInferior.insets = new Insets(10, 10, 10, 10);
-            this.btnGuardar.setBackground(new Color(33, 122, 210));
-            this.btnGuardar.setForeground(Color.WHITE);
-            this.btnDescartar.setBackground(new Color(33, 122, 210));
-            this.btnDescartar.setForeground(Color.WHITE);
-            this.btnEliminar.setBackground(new Color(33, 122, 210));
-            this.btnEliminar.setForeground(Color.WHITE);
-            this.btnEliminarTodo.setBackground(new Color(33, 122, 210));
-            this.btnEliminarTodo.setForeground(Color.WHITE);
-
             this.panelBtns.add(btnGuardar, gbcInferior);
             this.panelBtns.add(btnDescartar, gbcInferior);
             this.panelBtns.add(btnEliminar, gbcInferior);
             this.panelBtns.add(btnEliminarTodo, gbcInferior);
             this.add(panelBtns, BorderLayout.SOUTH);
+
+            btnBusqueda.addActionListener(e-> {
+                String nombre = jtfBuscar.getText().trim().toLowerCase();
+                if (nombre.isBlank()) return;
+                Paciente pB = crudPacienteModel.getByAttribute(nombre);
+                try {
+                    setPatientFoundRow(pB);
+                } catch (Exception ex) {
+                    System.out.println(ex.getMessage());
+                }
+            });
+
+            btnBorrar.addActionListener(e-> {
+                jtfBuscar.setText("");
+                actualizarTabla();
+            });
 
             btnGuardar.addActionListener(e -> {
                 int fila = tablaDatos.getSelectedRow();
@@ -197,6 +220,21 @@ public class VentanaGestionPaciente extends JFrame {
                                             "Error", JOptionPane.ERROR_MESSAGE);
                 return null;
             }
+        }
+
+        private boolean setPatientFoundRow(Paciente p) {
+            modeloTabla.setRowCount(0);
+            Object[] fila = new Object[8];
+            fila[0] = p.getIdPaciente();
+            fila[1] = p.getNombre() != null ? p.getNombre() : "n/a";
+            fila[2] = p.getApellido() != null ? p.getApellido() : "n/a";
+            fila[3] = p.getEdad() != null ? p.getEdad() : "n/a";
+            fila[4] = p.getDni() != null ? p.getDni() : "n/a";
+            fila[5] = p.getDireccion() != null ? p.getDireccion() : "n/a";
+            fila[6] = p.getTelefono() != null ? p.getTelefono() : "n/a";
+            fila[7] = p.getEstado() != null ? p.getEstado() : "n/a";
+            modeloTabla.addRow(fila);
+            return true;
         }
 
         private boolean actualizarTabla() {

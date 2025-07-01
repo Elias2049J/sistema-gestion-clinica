@@ -2,8 +2,8 @@ package org.sistema.vista.sec_exportar;
 
 import lombok.Getter;
 import org.sistema.entidad.Cita;
-import org.sistema.interfaces.CrudInterface;
-import org.sistema.interfaces.ReporteUseCase;
+import org.sistema.use_case.CrudUseCase;
+import org.sistema.use_case.ReporteUseCase;
 import org.sistema.model.ReporteCita3MesesModel;
 import org.sistema.persistencia.PersistenciaRepCita3Meses;
 
@@ -12,13 +12,13 @@ import java.awt.*;
 import java.util.List;
 
 public class VentanaReportesCitas extends JFrame {
-    private CrudInterface<Cita, Integer> crudCitaModel;
+    private CrudUseCase<Cita, Integer, String> crudCitaModel;
     private ReporteUseCase<Cita> reporte3MesesModel;
     private LienzoHeader lienzoHeader = new LienzoHeader();
     private LienzoCentral lienzoCentral = new LienzoCentral();
     private LienzoFooter lienzoFooter = new LienzoFooter(lienzoCentral);
 
-    public VentanaReportesCitas(CrudInterface<Cita, Integer> crudCitaModel) {
+    public VentanaReportesCitas(CrudUseCase<Cita, Integer, String> crudCitaModel) {
         super();
         this.crudCitaModel = crudCitaModel;
         this.reporte3MesesModel = new ReporteCita3MesesModel(crudCitaModel, new PersistenciaRepCita3Meses());

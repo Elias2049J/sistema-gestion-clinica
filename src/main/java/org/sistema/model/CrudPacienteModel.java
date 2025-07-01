@@ -5,8 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.sistema.entidad.Paciente;
 import org.sistema.entidad.Cita;
-import org.sistema.interfaces.RepositoryInterface;
-import org.sistema.interfaces.CrudInterface;
+import org.sistema.use_case.RepositoryUseCase;
+import org.sistema.use_case.CrudUseCase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,9 +14,9 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CrudPacienteModel implements CrudInterface<Paciente, Integer> {
-    private RepositoryInterface<Paciente, Integer> pacienteRepository;
-    private RepositoryInterface<Cita, Integer> citaRepository;
+public class CrudPacienteModel implements CrudUseCase<Paciente, Integer, String> {
+    private RepositoryUseCase<Paciente, Integer> pacienteRepository;
+    private RepositoryUseCase<Cita, Integer> citaRepository;
 
     @Override
     public boolean create(Paciente objeto) {
@@ -37,6 +37,16 @@ public class CrudPacienteModel implements CrudInterface<Paciente, Integer> {
     @Override
     public Paciente getById(Integer id) {
         return pacienteRepository.getById(id);
+    }
+
+    @Override
+    public Paciente getByAttribute(String n) {
+        for (Paciente p : pacienteRepository.findAll()) {
+            if (p.getNombre() != null && p.getNombre().equalsIgnoreCase(n)) {
+                return p;
+            }
+        }
+        return null;
     }
 
     @Override

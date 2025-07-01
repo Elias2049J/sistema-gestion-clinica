@@ -5,8 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.sistema.entidad.Cita;
 import org.sistema.entidad.Paciente;
-import org.sistema.interfaces.RepositoryInterface;
-import org.sistema.interfaces.CrudInterface;
+import org.sistema.use_case.RepositoryUseCase;
+import org.sistema.use_case.CrudUseCase;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -16,9 +16,9 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CrudCitaModel implements CrudInterface<Cita, Integer> {
-    private RepositoryInterface<Cita, Integer> citaRepository;
-    private RepositoryInterface<Paciente, Integer> pacienteRepository;
+public class CrudCitaModel implements CrudUseCase<Cita, Integer, String> {
+    private RepositoryUseCase<Cita, Integer> citaRepository;
+    private RepositoryUseCase<Paciente, Integer> pacienteRepository;
 
     @Override
     public boolean create(Cita objeto) {
@@ -64,6 +64,11 @@ public class CrudCitaModel implements CrudInterface<Cita, Integer> {
     @Override
     public Cita getById(Integer id) {
         return citaRepository.getById(id);
+    }
+
+    @Override
+    public Cita getByAttribute(String s) {
+        return null;
     }
 
     @Override

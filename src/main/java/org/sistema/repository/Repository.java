@@ -1,18 +1,18 @@
 package org.sistema.repository;
 
-import org.sistema.interfaces.PersistenceInterface;
-import org.sistema.interfaces.RepositoryInterface;
+import org.sistema.use_case.PersistenceUseCase;
+import org.sistema.use_case.RepositoryUseCase;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
-public class Repository<T, ID> implements RepositoryInterface<T, ID> {
+public class Repository<T, ID> implements RepositoryUseCase<T, ID> {
     protected List<T> elementos = new ArrayList<>();
     private final Function<T, ID> idExtractor;
-    private final PersistenceInterface<T> persistencia;
+    private final PersistenceUseCase<T> persistencia;
 
-    public Repository(PersistenceInterface<T> persistencia, Function<T, ID> idExtractor) {
+    public Repository(PersistenceUseCase<T> persistencia, Function<T, ID> idExtractor) {
         this.persistencia = persistencia;
         this.idExtractor = idExtractor;
         this.cargarDatos();
@@ -63,10 +63,5 @@ public class Repository<T, ID> implements RepositoryInterface<T, ID> {
     @Override
     public boolean cargarDatos() {
         return persistencia.importarLista(this.elementos);
-    }
-
-    @Override
-    public boolean exportarDatos() {
-        return persistencia.exportarLista(this.elementos);
     }
 }

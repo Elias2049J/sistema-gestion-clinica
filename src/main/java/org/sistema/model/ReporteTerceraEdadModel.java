@@ -3,9 +3,9 @@ package org.sistema.model;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.sistema.entidad.Paciente;
-import org.sistema.interfaces.CrudInterface;
-import org.sistema.interfaces.PersistenceInterface;
-import org.sistema.interfaces.ReporteUseCase;
+import org.sistema.use_case.CrudUseCase;
+import org.sistema.use_case.PersistenceUseCase;
+import org.sistema.use_case.ReporteUseCase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,13 +13,11 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ReporteTerceraEdadModel implements ReporteUseCase<Paciente> {
-    private CrudInterface<Paciente, Integer> crudPacienteModel;
-    private PersistenceInterface<Paciente> persistenciaRepTerceraEdad;
+    private CrudUseCase<Paciente, Integer, String> crudPacienteModel;
+    private PersistenceUseCase<Paciente> persistenciaRepTerceraEdad;
 
     @Override
     public List<String> generarReporte() {
-
-
         List<String> report = new ArrayList<>();
         report.add("|===============================PACIENTES DE TERCERA EDAD===============================");
         report.add(String.format("| %-10s %-15s %-15s %-6s %-12s %-30s %-12s %-10s",

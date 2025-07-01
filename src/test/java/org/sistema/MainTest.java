@@ -2,8 +2,6 @@ package org.sistema;
 
 import org.sistema.entidad.Cita;
 import org.sistema.entidad.Paciente;
-import org.sistema.interfaces.CrudInterface;
-import org.sistema.interfaces.RepositoryInterface;
 import org.sistema.model.CrudCitaModel;
 import org.sistema.model.CrudPacienteModel;
 import org.sistema.persistencia.PersistenciaCita;

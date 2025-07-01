@@ -1,19 +1,19 @@
 package org.sistema.vista.sec_paciente;
 
 import org.sistema.entidad.Paciente;
-import org.sistema.interfaces.CrudInterface;
+import org.sistema.use_case.CrudUseCase;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
 public class VentanaRegistroPaciente extends JFrame {
-    private CrudInterface<Paciente, Integer> crudPacienteModel;
+    private CrudUseCase<Paciente, Integer, String> crudPacienteModel;
     private LienzoHeader lienzoHeader;
     private LienzoCentral lienzoCentral;
     private LienzoFooter lienzoFooter;
 
-    public VentanaRegistroPaciente(CrudInterface<Paciente, Integer> crudPacienteModel) {
+    public VentanaRegistroPaciente(CrudUseCase<Paciente, Integer, String> crudPacienteModel) {
         super();
         this.crudPacienteModel = crudPacienteModel;
         this.lienzoHeader = new LienzoHeader();
