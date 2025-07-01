@@ -47,6 +47,7 @@ public class CrudCitaModel implements CrudInterface<Cita, Integer> {
         }
 
         objeto.setIdCita(idCita);
+        objeto.setPaciente(pacienteActual);
         objeto.setFecha(objeto.getFecha() != null ? objeto.getFecha() : LocalDate.now());
         objeto.setHora(objeto.getHora() != null ? objeto.getHora() : LocalTime.now());
         objeto.setEstado("PROGRAMADA");

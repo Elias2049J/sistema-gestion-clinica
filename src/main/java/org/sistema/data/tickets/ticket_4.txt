@@ -1,0 +1,11 @@
+--------------------
+Ticket de Cita Nro. 4
+Dni del Paciente: 12345678
+Nombres: hola
+Apellidos: fasd
+Médico: henoc
+Especialidad: Pediatría
+Fecha: 2025-07-12
+Hora: 12:00
+Costo: 30.0
+--------------------
