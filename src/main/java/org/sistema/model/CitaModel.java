@@ -14,4 +14,10 @@ public class CitaModel implements CitaUseCase {
     public boolean imprimirCita(Cita c) {
         return persistenciaTicketCita.imprimirTicket(c);
     }
+
+    @Override
+    public boolean cancelarCita(Cita c) {
+        c.setEstado("CANCELADA");
+        return true;
+    }
 }

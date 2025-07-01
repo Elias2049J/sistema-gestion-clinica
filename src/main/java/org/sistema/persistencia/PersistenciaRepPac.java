@@ -16,8 +16,8 @@ public class PersistenciaRepPac extends PersistenciaPaciente {
 
     @Override
     protected String getCabecera() {
-        return "|===============================LISTA COMPLETA DE PACIENTES===============================\n" +
-                String.format("| %-10s %-15s %-15s %-6s %-12s %-30s %-12s %-10s",
+        return "|================================================LISTA COMPLETA DE PACIENTES=======================================|\n" +
+                String.format("%-10s %-15s %-15s %-6s %-12s %-30s %-12s %-10s",
                         "ID", "NOMBRE", "APELLIDO", "EDAD", "DNI", "DIRECCION", "TELEFONO", "ESTADO");
     }
 }

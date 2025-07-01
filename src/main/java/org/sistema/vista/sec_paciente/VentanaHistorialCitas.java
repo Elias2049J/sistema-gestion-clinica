@@ -169,10 +169,7 @@ public class VentanaHistorialCitas extends JFrame {
 
             btnAyuda.addActionListener(e -> {
                 JOptionPane.showMessageDialog(lienzoCentral,
-                        "Esta ventana permite gestionar los pacientes del sistema.\n" +
-                                "- Para editar: seleccione una fila, modifique los datos y haga clic en 'Guardar'.\n" +
-                                "- Para eliminar: seleccione una fila y haga clic en 'Eliminar'.\n" +
-                                "- Para descartar cambios: haga clic en 'Descartar'.",
+                        "Esta ventana permite visualizar el historial de citas de un paciente.\n",
                         "Ayuda", JOptionPane.INFORMATION_MESSAGE);
             });
         }

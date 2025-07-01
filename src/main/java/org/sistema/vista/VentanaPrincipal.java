@@ -195,7 +195,7 @@ public class VentanaPrincipal extends JFrame implements Serializable {
             });
 
             btnVentanaModCita.addActionListener(e-> {
-                ventanaGestionCitas = new VentanaGestionCitas(crudPacienteModel, crudCitaModel);
+                ventanaGestionCitas = new VentanaGestionCitas(crudPacienteModel, crudCitaModel, citaModel);
                 ventanaGestionCitas.setVisible(true);
             });
         }

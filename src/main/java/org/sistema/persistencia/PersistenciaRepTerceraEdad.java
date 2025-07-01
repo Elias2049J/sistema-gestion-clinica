@@ -9,7 +9,7 @@ public class PersistenciaRepTerceraEdad extends PersistenciaPaciente {
 
     @Override
     protected String getCabecera() {
-        return "|===============================PACIENTES DE TERCERA EDAD===============================\n" +
+        return "|============================================LISTA PACIENTES DE TERCERA EDAD=======================================|\n" +
                 String.format("| %-10s %-15s %-15s %-6s %-12s %-30s %-12s %-10s",
                         "ID", "NOMBRE", "APELLIDO", "EDAD", "DNI", "DIRECCION", "TELEFONO", "ESTADO");
     }

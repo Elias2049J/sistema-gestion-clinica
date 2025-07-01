@@ -2,6 +2,7 @@ package org.sistema.vista.sec_citas;
 
 import org.sistema.entidad.Cita;
 import org.sistema.entidad.Paciente;
+import org.sistema.use_case.CitaUseCase;
 import org.sistema.use_case.CrudUseCase;
 
 import javax.swing.*;
@@ -13,14 +14,16 @@ import java.time.LocalTime;
 public class VentanaGestionCitas extends JFrame{
     private CrudUseCase<Paciente, Integer, String> crudPacienteModel;
     private CrudUseCase<Cita, Integer, String> crudCitaModel;
+    private CitaUseCase citaModel;
     private LienzoCentral lienzoCentral;
     private LienzoHeader lienzoHeader;
     private LienzoFooter lienzoFooter;
 
-    public VentanaGestionCitas(CrudUseCase<Paciente, Integer, String> crudPacienteModel, CrudUseCase<Cita, Integer, String> crudCitaModel) throws HeadlessException {
+    public VentanaGestionCitas(CrudUseCase<Paciente, Integer, String> crudPacienteModel, CrudUseCase<Cita, Integer, String> crudCitaModel, CitaUseCase citaModel) throws HeadlessException {
         super();
         this.crudPacienteModel = crudPacienteModel;
         this.crudCitaModel = crudCitaModel;
+        this.citaModel = citaModel;
         this.lienzoCentral = new LienzoCentral();
         this.lienzoHeader = new LienzoHeader();
         this.lienzoFooter = new LienzoFooter();
@@ -137,10 +140,7 @@ public class VentanaGestionCitas extends JFrame{
 
                 Cita cita = getCitaDeFila(fila);
                 if (cita == null) return;
-
-                // Cambiar estado a "Cancelada"
-                cita.setEstado("Cancelada");
-
+                citaModel.cancelarCita(cita);
                 if (crudCitaModel.update(cita)) {
                     JOptionPane.showMessageDialog(this, "La cita fue cancelada correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
                     actualizarTabla();
@@ -228,7 +228,7 @@ public class VentanaGestionCitas extends JFrame{
             });
 
             btnAyuda.addActionListener(e -> {
-                JOptionPane.showMessageDialog(this,
+                JOptionPane.showMessageDialog(lienzoCentral,
                     "Esta ventana permite gestionar las citas programadas:\n\n" +
                     "- Modificación: Seleccione una fila, edite los datos y haga clic en 'Guardar Cambios'.\n" +
                     "- Cancelación: Seleccione una cita y haga clic en 'Cancelar Cita'.\n" +

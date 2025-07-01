@@ -1,2 +1,3 @@
-|===============================LISTA COMPLETA DE PACIENTES===============================
+================================================LISTA COMPLETA DE PACIENTES=======================================|
 | ID         NOMBRE          APELLIDO        EDAD   DNI          DIRECCION                      TELEFONO     ESTADO    
+1          Chopo           Del 8           45     12345678     calle                          123456789    ACTIVO    

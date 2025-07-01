@@ -19,7 +19,7 @@ public class ReporteTerceraEdadModel implements ReporteUseCase<Paciente> {
     @Override
     public List<String> generarReporte() {
         List<String> report = new ArrayList<>();
-        report.add("|===============================PACIENTES DE TERCERA EDAD===============================");
+        report.add("|==============================================LISTA PACIENTES DE TERCERA EDAD=======================================|");
         report.add(String.format("| %-10s %-15s %-15s %-6s %-12s %-30s %-12s %-10s",
                 "ID", "NOMBRE", "APELLIDO", "EDAD", "DNI", "DIRECCION", "TELEFONO", "ESTADO"));
 
