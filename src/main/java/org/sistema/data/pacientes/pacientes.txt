@@ -1,5 +1,3 @@
 ID         NOMBRE          APELLIDO        EDAD   DNI          DIRECCION                      TELEFONO     ESTADO    
-2          Hola            mundo           32     32165487     calle 13                       321654987    ACTIVO    
-4          afsdf           basdf           75     32165498     calle 18                       987654321    ACTIVO    
-5          afdsfas         sdfasdf         85     98765421     asdfasdf                       123456789    ACTIVO    
-3          hola            fasd            65     12345678     calle 15                       123456789    ACTIVO    
+5          Miguel          Centellas       85     98765421     asdfasdf                       123456789    ACTIVO    
+2          Maria           Calderon        32     12345678     calle 13                       321654987    ACTIVO    

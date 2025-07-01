@@ -1,2 +1,5 @@
 Id_Cita      ID_Paciente    Medico          Especialidad         Fecha        Hora         Costo      Estado         
-1            3              henoc           Cardiología          2025-07-12   12:00        25.0       PROGRAMADA     
+1            null           miguel          Dermatología         2025-08-15   03:00        50.0       Cancelada      
+2            null           henoc           Pediatría            2025-09-16   06:15        90.0       Cancelada      
+3            null           chapatin        Medicina General     2025-07-30   05:25        20.0       Cancelada      
+4            null           henoc           Traumatología        2025-08-25   09:00        40.0       Cancelada      
