@@ -1,3 +1,3 @@
 Id_Cita      ID_Paciente    Medico          Especialidad         Fecha        Hora         Costo      Estado         
 1            3              Farruko         Medicina General     2025-05-10   10:15        145.0      PROGRAMADA     
-2            1              Guaza           Pediatría            2025-05-05   20:10        150.0      PROGRAMADA     
+3            3              CHAPATIN        Dermatología         2025-07-12   12:00        25.0       PROGRAMADA     

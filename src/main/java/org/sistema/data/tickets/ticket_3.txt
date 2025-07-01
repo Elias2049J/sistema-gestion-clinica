@@ -1,0 +1,11 @@
+--------------------
+Ticket de Cita Nro. 3
+Dni del Paciente: 12345678
+Nombres: Hilario
+Apellidos: Zuñiga
+Médico: chapatin
+Especialidad: Traumatología
+Fecha: 2025-07-12
+Hora: 12:00
+Costo: 25.0
+--------------------

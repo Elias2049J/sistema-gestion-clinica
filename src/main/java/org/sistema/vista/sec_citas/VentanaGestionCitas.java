@@ -33,12 +33,12 @@ public class VentanaGestionCitas extends JFrame{
     }
 
     class LienzoHeader extends JPanel{
-        private JLabel lblTitulo = new JLabel("GESTIÓN DE CLIENTES", SwingConstants.CENTER);
+        private JLabel lblTitulo = new JLabel("GESTIÓN DE CITAS", SwingConstants.CENTER);
 
         public LienzoHeader ( ){
             super();
             this.setLayout(new BorderLayout());
-            this.setBackground(new Color(30, 31, 34));
+            this.setBackground(new Color(33, 122, 210));
             this.lblTitulo.setForeground(Color.WHITE);
             this.lblTitulo.setFont(new Font("Arial", Font.BOLD, 22));
             this.add(lblTitulo, BorderLayout.CENTER);
@@ -58,17 +58,15 @@ public class VentanaGestionCitas extends JFrame{
         private JPanel panelTabla = new JPanel();
         private JTable tablaDatos = new JTable();
         private JScrollPane scpTabla = new JScrollPane();
-        private String[] columnas = {"Id_Cliente", "Direccion", "Tipo_Cliente", "Nombre", "Apellido", "DNI", "Razon_Social", "RUC"};
+        private String[] columnas = {"Id_Cita", "Paciente", "Médico", "Especialidad", "Fecha", "Hora", "Costo", "Estado"};
         private Object[][] datos;
         private DefaultTableModel modeloTabla = new DefaultTableModel();
         private GridBagConstraints gbcSuperior = new GridBagConstraints();
         // panel inferior de botones
         private JPanel panelBtns = new JPanel();
-        private JButton btnGuardar = new JButton("Guardar Cambios en la fila");
+        private JButton btnGuardar = new JButton("Guardar Cambios");
         private JButton btnDescartar = new JButton("Descatar Cambios");
-        private JButton btnRegCli = new JButton("Registrar Cliente");
-        private JButton btnRegCuenta = new JButton("Abrir una Cuenta");
-        private JButton btnEliminar = new JButton("Eliminar Cliente");
+        private   JButton btnCancelar = new JButton("Cancelar Cita");
         private GridBagConstraints gbcInferior = new GridBagConstraints();
 
         public LienzoCentral() {
@@ -90,22 +88,18 @@ public class VentanaGestionCitas extends JFrame{
             //panel btns
             this.panelBtns.setLayout(new GridBagLayout());
             this.gbcInferior.insets = new Insets(10, 10, 10, 10);
-            this.btnGuardar.setBackground(new Color(0x333533));
+            this.btnGuardar.setBackground(new Color(33, 122, 210));
             this.btnGuardar.setForeground(Color.WHITE);
-            this.btnDescartar.setBackground(new Color(0x333533));
+            this.btnDescartar.setBackground(new Color(33, 122, 210));
             this.btnDescartar.setForeground(Color.WHITE);
-            this.btnRegCli.setBackground(new Color(0x333533));
-            this.btnRegCli.setForeground(Color.WHITE);
-            this.btnRegCuenta.setBackground(new Color(0x333533));
-            this.btnRegCuenta.setForeground(Color.WHITE);
-            this.btnEliminar.setBackground(new Color(0x333533));
-            this.btnEliminar.setForeground(Color.WHITE);
+            this.btnCancelar.setBackground(new Color(33, 122, 210));
+            this.btnCancelar.setForeground(Color.WHITE);
             this.panelBtns.add(btnGuardar, gbcInferior);
             this.panelBtns.add(btnDescartar, gbcInferior);
-            this.panelBtns.add(btnRegCli, gbcInferior);
-            this.panelBtns.add(btnRegCuenta, gbcInferior);
-            this.panelBtns.add(btnEliminar, gbcInferior);
+            this.panelBtns.add(btnCancelar, gbcInferior);
             this.add(panelBtns, BorderLayout.SOUTH);
+            actualizarTabla();
+
 
             btnGuardar.addActionListener(e -> {
                 int fila = tablaDatos.getSelectedRow();
@@ -115,9 +109,9 @@ public class VentanaGestionCitas extends JFrame{
                 }
                 Cita cita = getCitaDeFila(fila);
                 if (crudCitaModel.update(cita)) {
-                    JOptionPane.showMessageDialog(this, "Cliente actualizado con éxito.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Cita actualizada con éxito.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
                 } else {
-                    JOptionPane.showMessageDialog(this, "No se pudo actualizar el cliente.", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "No se pudo actualizar cita.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             });
 
@@ -126,17 +120,17 @@ public class VentanaGestionCitas extends JFrame{
                 JOptionPane.showMessageDialog(this, "Cambios descartados.", "Información", JOptionPane.INFORMATION_MESSAGE);
             });
 
-            btnEliminar.addActionListener(e -> {
+            btnCancelar.addActionListener(e -> {
                 int fila = tablaDatos.getSelectedRow();
                 if (fila == -1) {
-                    JOptionPane.showMessageDialog(this, "Seleccione una fila para eliminar.", "Aviso", JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Seleccione una cita para cancelar.", "Aviso", JOptionPane.WARNING_MESSAGE);
                     return;
                 }
                 int idCliente = Integer.parseInt(modeloTabla.getValueAt(fila, 0).toString());
-                int confirmacion = JOptionPane.showConfirmDialog(this, "¿Eliminar Cliente?", "Confirmar", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+                int confirmacion = JOptionPane.showConfirmDialog(this, "¿Cancelar Cita?", "Confirmar", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
                 if (confirmacion != JOptionPane.YES_OPTION) return;
                 if (crudPacienteModel.delete(idCliente)) {
-                    JOptionPane.showMessageDialog(this, "Cliente eliminado con éxito.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Cita cancelada con éxito.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
                     actualizarTabla();
                 }
             });
@@ -155,6 +149,15 @@ public class VentanaGestionCitas extends JFrame{
             modeloTabla.setRowCount(0);
             for (Cita c : crudCitaModel.findAll()) {
                 Object[] fila = new Object[8];
+                fila[0]=c.getIdCita()!= null ? c.getIdCita() : "n/a";
+                fila[1]=c.getPaciente().getNombre()!= null ? c.getPaciente().getNombre() : "n/a";
+                fila[2]=c.getMedico()!= null ? c.getMedico() : "n/a";
+                fila[3]=c.getEspecialidad()!= null ? c.getEspecialidad() : "n/a";
+                fila[4]=c.getFecha()!= null ? c.getFecha() : "n/a";
+                fila[5]=c.getHora()!= null ? c.getHora() : "n/a";
+                fila[6]= String.valueOf(c.getCosto()) != null ? c.getCosto() : "n/a";
+                fila[7]=c.getEstado()!= null ? c.getEstado() : "n/a";
+
                 modeloTabla.addRow(fila);
             }
             return true;
@@ -167,7 +170,7 @@ public class VentanaGestionCitas extends JFrame{
         public LienzoFooter (){
             super();
             this.setLayout(new FlowLayout(FlowLayout.RIGHT));
-            this.setBackground(new Color(37, 55, 40));
+            this.setBackground(new Color(33, 122, 210));
             this.setForeground(Color.WHITE);
             this.add(btnAyuda);
             this.add(btnSalir);
