@@ -1,7 +1,9 @@
 package org.sistema.vista.sec_paciente;
 
 import org.sistema.entidad.Paciente;
+import org.sistema.model.PacienteModel;
 import org.sistema.use_case.CrudUseCase;
+import org.sistema.use_case.PacienteUseCase;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,6 +11,7 @@ import java.util.ArrayList;
 
 public class VentanaRegistroPaciente extends JFrame {
     private CrudUseCase<Paciente, Integer, String> crudPacienteModel;
+    private PacienteUseCase pacienteModel;
     private LienzoHeader lienzoHeader;
     private LienzoCentral lienzoCentral;
     private LienzoFooter lienzoFooter;
@@ -16,6 +19,7 @@ public class VentanaRegistroPaciente extends JFrame {
     public VentanaRegistroPaciente(CrudUseCase<Paciente, Integer, String> crudPacienteModel) {
         super();
         this.crudPacienteModel = crudPacienteModel;
+        this.pacienteModel = new PacienteModel(crudPacienteModel);
         this.lienzoHeader = new LienzoHeader();
         this.lienzoCentral = new LienzoCentral();
         this.lienzoFooter = new LienzoFooter();
@@ -141,8 +145,16 @@ public class VentanaRegistroPaciente extends JFrame {
                     return;
                 }
 
-                if (dni.isEmpty() || !dni.matches("\\d{8}")) {
+                if (dni.isEmpty() || dni.isBlank() || !dni.matches("\\d{8}")) {
                     JOptionPane.showMessageDialog(this, "DNI inválido. Debe ser numérico y de 8 dígitos.", "Error", JOptionPane.ERROR_MESSAGE);
+                    jtfDni.requestFocus();
+                    return;
+                }
+
+                if (!pacienteModel.validarDni(dni)) {
+                    JOptionPane.showMessageDialog(this,
+                        "Ya existe un paciente registrado con este DNI",
+                        "DNI duplicado", JOptionPane.ERROR_MESSAGE);
                     jtfDni.requestFocus();
                     return;
                 }

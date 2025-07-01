@@ -1,3 +1,0 @@
-Id_Cita      ID_Paciente    Medico          Especialidad         Fecha        Hora         Costo      Estado         
-2            1              Jorge           Dermatología         2025-10-25   10:14        321.0      CANCELADA      
-1            1              Jorge           Medicina General     2025-06-25   10:15        140.0      CANCELADA      
