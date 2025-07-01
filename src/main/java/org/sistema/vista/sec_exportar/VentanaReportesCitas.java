@@ -3,7 +3,9 @@ package org.sistema.vista.sec_exportar;
 import lombok.Getter;
 import org.sistema.entidad.Cita;
 import org.sistema.model.ReporteCitaModel;
+import org.sistema.model.ReporteCitasCanceladasModel;
 import org.sistema.persistencia.PersistenciaRepCita;
+import org.sistema.persistencia.PersistenciaRepCitasCanceladas;
 import org.sistema.use_case.CrudUseCase;
 import org.sistema.use_case.ReporteUseCase;
 import org.sistema.model.ReporteCita3MesesModel;
@@ -17,6 +19,7 @@ public class VentanaReportesCitas extends JFrame {
     private CrudUseCase<Cita, Integer, String> crudCitaModel;
     private ReporteUseCase<Cita> reporte3MesesModel;
     private ReporteUseCase<Cita> reporteCitaModel;
+    private ReporteUseCase<Cita> reporteCitasCanceladasModel;
     private LienzoHeader lienzoHeader = new LienzoHeader();
     private LienzoCentral lienzoCentral = new LienzoCentral();
     private LienzoFooter lienzoFooter = new LienzoFooter(lienzoCentral);
@@ -26,7 +29,8 @@ public class VentanaReportesCitas extends JFrame {
         this.crudCitaModel = crudCitaModel;
         this.reporte3MesesModel = new ReporteCita3MesesModel(crudCitaModel, new PersistenciaRepCita3Meses());
         this.reporteCitaModel = new ReporteCitaModel(crudCitaModel, new PersistenciaRepCita());
-        this.setTitle("ReportesInterface de Pacientes");
+        this.reporteCitasCanceladasModel = new ReporteCitasCanceladasModel(crudCitaModel, new PersistenciaRepCitasCanceladas());
+        this.setTitle("Reportes de Citas");
         this.setSize(800, 600);
         this.setLocationRelativeTo(rootPane);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -67,6 +71,7 @@ public class VentanaReportesCitas extends JFrame {
             cboReportes.addItem("Seleccione un reporte");
             cboReportes.addItem("Citas de los Últimos 3 Meses");
             cboReportes.addItem("Total de Citas");
+            cboReportes.addItem("Citas Canceladas");
 
             // elementos del panel de busqueda
             GridBagConstraints gbcBusqueda = new GridBagConstraints();
@@ -146,6 +151,8 @@ public class VentanaReportesCitas extends JFrame {
                     contenidoReporte = reporte3MesesModel.generarReporte();
                 } else if (reporteElegido == 2) {
                     contenidoReporte = reporteCitaModel.generarReporte();
+                } else if (reporteElegido == 3) {
+                    contenidoReporte = reporteCitasCanceladasModel.generarReporte();
                 } else {
                     contenidoReporte = java.util.Collections.singletonList("Reporte no implementado");
                 }
@@ -216,6 +223,12 @@ public class VentanaReportesCitas extends JFrame {
                     } else {
                         JOptionPane.showMessageDialog(lienzoCentral, "Error al imprimir", "Error", JOptionPane.ERROR_MESSAGE);
                     }
+                } else if (reporteSeleccionado == 3) {
+                    if (reporteCitasCanceladasModel.imprimirReporte()) {
+                        JOptionPane.showMessageDialog(lienzoCentral, "Impresión exitosa", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(lienzoCentral, "Error al imprimir", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 } else {
                     JOptionPane.showMessageDialog(lienzoCentral, "Impresión no implementada para este reporte", "Aviso", JOptionPane.WARNING_MESSAGE);
                 }
@@ -226,7 +239,8 @@ public class VentanaReportesCitas extends JFrame {
                     "Ventana de Reportes de Citas:\n\n" +
                     "1. Seleccione el tipo de reporte del menú desplegable:\n" +
                     "   - Citas de los Últimos 3 Meses: Muestra todas las citas programadas en los últimos 3 meses.\n" +
-                    "   - Total de Citas: Muestra todas las citas registradas en el sistema.\n\n" +
+                    "   - Total de Citas: Muestra todas las citas registradas en el sistema.\n" +
+                    "   - Citas Canceladas: Muestra todas las citas que han sido canceladas.\n\n" +
                     "2. Haga clic en 'Previsualizar' para ver el reporte en pantalla.\n\n" +
                     "3. Utilice 'Imprimir Reporte' para guardar el reporte en un archivo de texto.\n\n" +
                     "Nota: Debe previsualizar un reporte antes de imprimirlo.",

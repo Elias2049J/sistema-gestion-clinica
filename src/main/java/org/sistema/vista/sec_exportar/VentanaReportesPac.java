@@ -5,8 +5,10 @@ import org.sistema.entidad.Paciente;
 import org.sistema.use_case.CrudUseCase;
 import org.sistema.use_case.ReporteUseCase;
 import org.sistema.model.ReportePacienteModel;
+import org.sistema.model.ReportePacientesMenoresEdad;
 import org.sistema.model.ReporteTerceraEdadModel;
 import org.sistema.persistencia.PersistenciaRepPac;
+import org.sistema.persistencia.PersistenciaRepPacientesMenoresEdad;
 import org.sistema.persistencia.PersistenciaRepTerceraEdad;
 
 import javax.swing.*;
@@ -17,6 +19,7 @@ public class VentanaReportesPac extends JFrame {
     private ReporteUseCase<Paciente> reporteTerceraEdadModel;
     private CrudUseCase<Paciente, Integer, String> crudPacienteModel;
     private ReporteUseCase<Paciente> reportePacienteModel;
+    private ReporteUseCase<Paciente> reportePacientesMenoresEdadModel;
     private LienzoHeader lienzoHeader = new LienzoHeader();
     private LienzoCentral lienzoCentral = new LienzoCentral();
     private LienzoFooter lienzoFooter = new LienzoFooter(lienzoCentral);
@@ -26,6 +29,7 @@ public class VentanaReportesPac extends JFrame {
         this.crudPacienteModel = crudPacienteModel;
         this.reportePacienteModel = new ReportePacienteModel(crudPacienteModel, new PersistenciaRepPac());
         this.reporteTerceraEdadModel = new ReporteTerceraEdadModel(crudPacienteModel, new PersistenciaRepTerceraEdad());
+        this.reportePacientesMenoresEdadModel = new ReportePacientesMenoresEdad(crudPacienteModel, new PersistenciaRepPacientesMenoresEdad());
         this.setTitle("Reportes de Pacientes");
         this.setSize(800, 600);
         this.setLocationRelativeTo(rootPane);
@@ -70,6 +74,7 @@ public class VentanaReportesPac extends JFrame {
             cboReportes.addItem("Seleccione un reporte");
             cboReportes.addItem("Pacientes de la tercera edad");
             cboReportes.addItem("Lista Completa de Pacientes");
+            cboReportes.addItem("Pacientes menores de edad");
 
             // elementos del panel de busqueda
             GridBagConstraints gbcBusqueda = new GridBagConstraints();
@@ -153,6 +158,8 @@ public class VentanaReportesPac extends JFrame {
 
                 if (reporteElegido == 1) {
                     lineasReporte = reporteTerceraEdadModel.generarReporte();
+                } else if (reporteElegido == 3) {
+                    lineasReporte = reportePacientesMenoresEdadModel.generarReporte();
                 } else {
                     lineasReporte = reportePacienteModel.generarReporte();
                 }
@@ -225,6 +232,12 @@ public class VentanaReportesPac extends JFrame {
                     } else {
                         JOptionPane.showMessageDialog(lienzoCentral, "Error al imprimir", "Error", JOptionPane.ERROR_MESSAGE);
                     }
+                } else if (reporteSeleccionado == 3) {
+                    if (reportePacientesMenoresEdadModel.imprimirReporte()) {
+                        JOptionPane.showMessageDialog(lienzoCentral, "Impresion exitosa", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(lienzoCentral, "Error al imprimir", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
             });
 
@@ -233,7 +246,8 @@ public class VentanaReportesPac extends JFrame {
                     "Ventana de Reportes de Pacientes:\n\n" +
                     "1. Seleccione el tipo de reporte del menú desplegable:\n" +
                     "   - Pacientes de la tercera edad: Muestra todos los pacientes mayores de 60 años.\n" +
-                    "   - Lista Completa de Pacientes: Muestra todos los pacientes registrados en el sistema.\n\n" +
+                    "   - Lista Completa de Pacientes: Muestra todos los pacientes registrados en el sistema.\n" +
+                    "   - Pacientes menores de edad: Muestra todos los pacientes menores de 18 años.\n\n" +
                     "2. Haga clic en 'Previsualizar' para ver el reporte en pantalla.\n\n" +
                     "3. Utilice 'Imprimir Reporte' para guardar el reporte en un archivo de texto.\n\n" +
                     "Nota: Debe previsualizar un reporte antes de intentar imprimirlo.",
