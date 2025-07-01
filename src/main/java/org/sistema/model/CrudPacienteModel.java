@@ -51,15 +51,10 @@ public class CrudPacienteModel implements CrudUseCase<Paciente, Integer, String>
 
     @Override
     public boolean delete(Integer id) {
-        List<Integer> lista = new ArrayList<>();
-        for (Cita c : citaRepository.findAll()) {
-            if (c.getPaciente() != null && c.getPaciente().getIdPaciente() != null &&
-                    c.getPaciente().getIdPaciente().equals(id)) {
-                lista.add(c.getIdCita());
+        for (Cita cita : new ArrayList<>(citaRepository.findAll())) {
+            if (cita.getPaciente() != null && cita.getPaciente().getIdPaciente().equals(id)) {
+                citaRepository.delete(cita.getIdCita());
             }
-        }
-        for (Integer idCita : lista) {
-            citaRepository.delete(idCita);
         }
         return pacienteRepository.delete(id);
     }

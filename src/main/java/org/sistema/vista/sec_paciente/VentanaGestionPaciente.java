@@ -1,5 +1,6 @@
 package org.sistema.vista.sec_paciente;
 
+import org.sistema.entidad.Cita;
 import org.sistema.entidad.Paciente;
 import org.sistema.use_case.CrudUseCase;
 
@@ -11,12 +12,15 @@ import java.util.ArrayList;
 
 public class VentanaGestionPaciente extends JFrame {
     private CrudUseCase<Paciente, Integer, String> crudPacienteModel;
+    private CrudUseCase<Cita, Integer, String> crudCitaModel;
+    private VentanaHistorialCitas ventanaHistorialCitas;
     private LienzoHeader lienzoHeader;
     private LienzoCentral lienzoCentral;
     private LienzoFooter lienzoFooter;
 
-    public VentanaGestionPaciente(CrudUseCase<Paciente, Integer, String> crudPacienteModel) {
+    public VentanaGestionPaciente(CrudUseCase<Paciente, Integer, String> crudPacienteModel, CrudUseCase<Cita, Integer, String> crudCitaModel) {
         super();
+        this.crudCitaModel = crudCitaModel;
         this.crudPacienteModel = crudPacienteModel;
         this.lienzoCentral = new LienzoCentral();
         this.lienzoHeader = new LienzoHeader();
@@ -71,6 +75,7 @@ public class VentanaGestionPaciente extends JFrame {
 
         // panel inferior de botones
         private JPanel panelBtns = new JPanel();
+        private JButton btnHistorial = new JButton("Ver Citas");
         private JButton btnGuardar = new JButton("Guardar Cambios en la fila");
         private JButton btnDescartar = new JButton("Descartar Cambios");
         private JButton btnEliminar = new JButton("Eliminar Paciente");
@@ -118,11 +123,23 @@ public class VentanaGestionPaciente extends JFrame {
             // panel btns
             this.panelBtns.setLayout(new GridBagLayout());
             this.gbcInferior.insets = new Insets(10, 10, 10, 10);
+            this.panelBtns.add(btnHistorial, gbcInferior);
             this.panelBtns.add(btnGuardar, gbcInferior);
             this.panelBtns.add(btnDescartar, gbcInferior);
             this.panelBtns.add(btnEliminar, gbcInferior);
             this.panelBtns.add(btnEliminarTodo, gbcInferior);
             this.add(panelBtns, BorderLayout.SOUTH);
+
+            btnHistorial.addActionListener(e-> {
+                int fila = tablaDatos.getSelectedRow();
+                if (fila == -1) {
+                    JOptionPane.showMessageDialog(this, "Seleccione un paciente", "Aviso", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+                Paciente p = getPacienteDeFila(fila);
+                ventanaHistorialCitas = new VentanaHistorialCitas(crudPacienteModel, crudCitaModel, p);
+                ventanaHistorialCitas.setVisible(true);
+            });
 
             btnBusqueda.addActionListener(e-> {
                 String nombre = jtfBuscar.getText().trim().toLowerCase();

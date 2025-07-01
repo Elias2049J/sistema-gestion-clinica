@@ -155,9 +155,8 @@ public class VentanaGestionCitas extends JFrame{
                 fila[3]=c.getEspecialidad()!= null ? c.getEspecialidad() : "n/a";
                 fila[4]=c.getFecha()!= null ? c.getFecha() : "n/a";
                 fila[5]=c.getHora()!= null ? c.getHora() : "n/a";
-                fila[6]= String.valueOf(c.getCosto()) != null ? c.getCosto() : "n/a";
+                fila[6]= !String.valueOf(c.getCosto()).isBlank() ? c.getCosto() : "n/a";
                 fila[7]=c.getEstado()!= null ? c.getEstado() : "n/a";
-
                 modeloTabla.addRow(fila);
             }
             return true;

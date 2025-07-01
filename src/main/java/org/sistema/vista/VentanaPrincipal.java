@@ -57,7 +57,6 @@ public class VentanaPrincipal extends JFrame implements Serializable {
 
         private JButton btnVentanaRegPaciente = new JButton("Registrar Paciente");
         private JButton btnVentanaGestPaciente = new JButton("Gestionar Pacientes");
-        private JButton btnVentanaHistCitas = new JButton("Buscar Historial de Citas");
 
         private JButton btnVentanaProgCita = new JButton("Programar Cita");
         private JButton btnVentanaModCita = new JButton("Modificar o Cancelar Cita");
@@ -102,13 +101,11 @@ public class VentanaPrincipal extends JFrame implements Serializable {
             panelPacientes.add(lblGestionPacientes, gbcP);
             btnVentanaRegPaciente.setIcon(UIManager.getIcon("FileView.fileIcon"));
             btnVentanaGestPaciente.setIcon(UIManager.getIcon("FileView.directoryIcon"));
-            gbcP.gridy = 2;
+            gbcP.gridy++;
             panelPacientes.add(btnVentanaRegPaciente, gbcP);
-            gbcP.gridy = 3;
+            gbcP.gridy++;
             panelPacientes.add(btnVentanaGestPaciente, gbcP);
-            gbcP.gridy = 4;
-            panelPacientes.add(btnVentanaHistCitas, gbcP);
-            gbcP.gridy = 5;
+            gbcP.gridy++;
             panelPacientes.add(Box.createVerticalStrut(25), gbcP);
 
             // seccion de citas
@@ -128,7 +125,6 @@ public class VentanaPrincipal extends JFrame implements Serializable {
             panelCitas.add(lblGestionCitas, gbcC);
             btnVentanaProgCita.setIcon(UIManager.getIcon("FileChooser.newFolderIcon"));
             btnVentanaModCita.setIcon(UIManager.getIcon("OptionPane.warningIcon"));
-            btnVentanaHistCitas.setIcon(UIManager.getIcon("FileChooser.listViewIcon"));
             gbcC.gridy++;
             panelCitas.add(btnVentanaProgCita, gbcC);
             gbcC.gridy++;
@@ -179,7 +175,7 @@ public class VentanaPrincipal extends JFrame implements Serializable {
             });
 
             btnVentanaGestPaciente.addActionListener(e -> {
-                ventanaGestionPaciente = new VentanaGestionPaciente(crudPacienteModel);
+                ventanaGestionPaciente = new VentanaGestionPaciente(crudPacienteModel, crudCitaModel);
                 ventanaGestionPaciente.setVisible(true);
             });
 
@@ -201,11 +197,6 @@ public class VentanaPrincipal extends JFrame implements Serializable {
             btnVentanaModCita.addActionListener(e-> {
                 ventanaGestionCitas = new VentanaGestionCitas(crudPacienteModel, crudCitaModel);
                 ventanaGestionCitas.setVisible(true);
-            });
-
-            btnVentanaHistCitas.addActionListener(e-> {
-                ventanaHistorialCitas = new VentanaHistorialCitas(crudPacienteModel, crudCitaModel);
-                ventanaHistorialCitas.setVisible(true);
             });
         }
     }

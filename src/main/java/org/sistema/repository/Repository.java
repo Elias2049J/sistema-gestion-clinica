@@ -65,3 +65,5 @@ public class Repository<T, ID> implements RepositoryUseCase<T, ID> {
         return persistencia.importarLista(this.elementos);
     }
 }
+
+

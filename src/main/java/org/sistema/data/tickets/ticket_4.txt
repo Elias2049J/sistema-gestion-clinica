@@ -1,0 +1,11 @@
+--------------------
+Ticket de Cita Nro. 4
+Dni del Paciente: 12345678
+Nombres: hola
+Apellidos: fasd
+Médico: GuAZaaa
+Especialidad: Cardiología
+Fecha: 2025-05-20
+Hora: 15:14
+Costo: 140.0
+--------------------

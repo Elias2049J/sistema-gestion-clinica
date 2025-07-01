@@ -12,12 +12,15 @@ import java.util.ArrayList;
 public class VentanaHistorialCitas extends JFrame {
     private CrudUseCase<Paciente, Integer, String> crudPacienteModel;
     private CrudUseCase<Cita, Integer, String> crudCitaModel;
+    private Paciente paciente;
     private LienzoHeader lienzoHeader;
     private LienzoCentral lienzoCentral;
     private LienzoFooter lienzoFooter;
 
-    public VentanaHistorialCitas(CrudUseCase<Paciente, Integer, String> crudPacienteModel, CrudUseCase<Cita, Integer, String> crudCitaModel) {
+    public VentanaHistorialCitas(CrudUseCase<Paciente, Integer, String> crudPacienteModel, CrudUseCase<Cita, Integer, String> crudCitaModel, Paciente p) {
         super();
+        this.paciente = p;
+        this.crudCitaModel = crudCitaModel;
         this.crudPacienteModel = crudPacienteModel;
         this.lienzoCentral = new LienzoCentral();
         this.lienzoHeader = new LienzoHeader();
@@ -58,7 +61,7 @@ public class VentanaHistorialCitas extends JFrame {
         private JPanel panelTabla = new JPanel();
         private JTable tablaDatos = new JTable();
         private JScrollPane scpTabla = new JScrollPane();
-        private String[] columnas = {"ID", "Nombre", "Apellido", "Edad", "DNI", "Dirección", "Teléfono", "Estado"};
+        private String[] columnas = {"Id_Cita", "Médico", "Especialidad", "Fecha", "Hora", "Costo", "Estado"};
         private Object[][] datos;
         private DefaultTableModel modeloTabla = new DefaultTableModel();
         private GridBagConstraints gbcSuperior = new GridBagConstraints();
@@ -83,16 +86,15 @@ public class VentanaHistorialCitas extends JFrame {
             this.gbcSuperior.fill = GridBagConstraints.BOTH;
 
             this.datos = new Object[crudPacienteModel.findAll().size()][columnas.length];
-            for (int i = 0; i < crudPacienteModel.findAll().size(); i++) {
-                Paciente p = crudPacienteModel.findAll().get(i);
-                datos[i][0] = p.getIdPaciente();
-                datos[i][1] = p.getNombre() != null ? p.getNombre() : "n/a";
-                datos[i][2] = p.getApellido() != null ? p.getApellido() : "n/a";
-                datos[i][3] = p.getEdad() != null ? p.getEdad() : "n/a";
-                datos[i][4] = p.getDni() != null ? p.getDni() : "n/a";
-                datos[i][5] = p.getDireccion() != null ? p.getDireccion() : "n/a";
-                datos[i][6] = p.getTelefono() != null ? p.getTelefono() : "n/a";
-                datos[i][7] = p.getEstado() != null ? p.getEstado() : "n/a";
+            for (int i = 0; i < paciente.getHistorialCitas().size(); i++) {
+                Cita c = paciente.getHistorialCitas().get(i);
+                datos[i][0] = c.getIdCita();
+                datos[i][1] = c.getMedico() != null ? c.getMedico() : "n/a";
+                datos[i][2] = c.getEspecialidad() != null ? c.getEspecialidad() : "n/a";
+                datos[i][3] = c.getFecha() != null ? c.getFecha() : "n/a";
+                datos[i][4] = c.getHora() != null ? c.getHora() : "n/a";
+                datos[i][5] = !String.valueOf(c.getCosto()).isBlank() ? c.getCosto() : "n/a";
+                datos[i][6] = c.getEstado() != null ? c.getEstado() : "n/a";
             }
 
             this.modeloTabla.setDataVector(datos, columnas);

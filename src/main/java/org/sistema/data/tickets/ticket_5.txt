@@ -1,0 +1,11 @@
+--------------------
+Ticket de Cita Nro. 5
+Dni del Paciente: 32165487
+Nombres: Hola
+Apellidos: mundo
+Médico: Chapatin
+Especialidad: Dermatología
+Fecha: 2025-05-25
+Hora: 15:14
+Costo: 654.0
+--------------------
