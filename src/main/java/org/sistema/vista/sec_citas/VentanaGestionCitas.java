@@ -153,7 +153,7 @@ public class VentanaGestionCitas extends JFrame{
         private Cita getCitaDeFila(int fila) {
             try {
                 Integer idCita = Integer.parseInt(modeloTabla.getValueAt(fila, 0).toString());
-                String nombrePaciente = modeloTabla.getValueAt(fila, 1).toString();
+                String nombre = modeloTabla.getValueAt(fila, 1).toString();
                 String medico = modeloTabla.getValueAt(fila, 2).toString();
                 String especialidad = modeloTabla.getValueAt(fila, 3).toString();
                 String fecha = modeloTabla.getValueAt(fila, 4).toString();
@@ -161,12 +161,23 @@ public class VentanaGestionCitas extends JFrame{
                 double costo = Double.parseDouble(modeloTabla.getValueAt(fila, 6).toString());
                 String estado = modeloTabla.getValueAt(fila, 7).toString();
 
-                Paciente paciente = new Paciente();
-                paciente.setNombre(nombrePaciente); // Solo nombre (si tienes ID, mejor)
+                Paciente pE = crudPacienteModel.getByAttribute(nombre);
+
+                if (pE == null) {
+                    Cita citaOriginal = crudCitaModel.getById(idCita);
+                    if (citaOriginal != null) {
+                        pE = citaOriginal.getPaciente();
+                    }
+                }
+
+                if (pE == null) {
+                    pE = new Paciente();
+                    pE.setNombre(nombre);
+                }
 
                 Cita cita = new Cita();
                 cita.setIdCita(idCita);
-                cita.setPaciente(paciente);
+                cita.setPaciente(pE);
                 cita.setMedico(medico);
                 cita.setEspecialidad(especialidad);
                 cita.setFecha(LocalDate.parse(fecha));
@@ -175,8 +186,9 @@ public class VentanaGestionCitas extends JFrame{
                 cita.setEstado(estado);
 
                 return cita;
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, "Error al recuperar los datos de la fila.\n" + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Error al obtener datos de la fila: " + e.getMessage(),
+                                            "Error", JOptionPane.ERROR_MESSAGE);
                 return null;
             }
         }
@@ -213,6 +225,16 @@ public class VentanaGestionCitas extends JFrame{
 
             btnSalir.addActionListener(e -> {
                 dispose();
+            });
+
+            btnAyuda.addActionListener(e -> {
+                JOptionPane.showMessageDialog(this,
+                    "Esta ventana permite gestionar las citas programadas:\n\n" +
+                    "- Modificación: Seleccione una fila, edite los datos y haga clic en 'Guardar Cambios'.\n" +
+                    "- Cancelación: Seleccione una cita y haga clic en 'Cancelar Cita'.\n" +
+                    "- Para descartar cambios no guardados: Haga clic en 'Descartar Cambios'.\n\n" +
+                    "Nota: Al cancelar una cita, su estado cambiará a 'Cancelada' pero quedará registrado.",
+                    "Ayuda - Gestión de Citas", JOptionPane.INFORMATION_MESSAGE);
             });
         }
 

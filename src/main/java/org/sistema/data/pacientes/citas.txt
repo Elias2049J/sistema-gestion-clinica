@@ -1,2 +1,0 @@
-Id_Cita      ID_Paciente    Medico          Especialidad         Fecha        Hora         Costo      Estado         
-1            2              Chapatin        Dermatología         2025-05-25   15:14        654.0      PROGRAMADA     

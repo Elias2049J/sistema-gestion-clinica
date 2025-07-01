@@ -2,6 +2,8 @@ package org.sistema.vista.sec_exportar;
 
 import lombok.Getter;
 import org.sistema.entidad.Cita;
+import org.sistema.model.ReporteCitaModel;
+import org.sistema.persistencia.PersistenciaRepCita;
 import org.sistema.use_case.CrudUseCase;
 import org.sistema.use_case.ReporteUseCase;
 import org.sistema.model.ReporteCita3MesesModel;
@@ -14,6 +16,7 @@ import java.util.List;
 public class VentanaReportesCitas extends JFrame {
     private CrudUseCase<Cita, Integer, String> crudCitaModel;
     private ReporteUseCase<Cita> reporte3MesesModel;
+    private ReporteUseCase<Cita> reporteCitaModel;
     private LienzoHeader lienzoHeader = new LienzoHeader();
     private LienzoCentral lienzoCentral = new LienzoCentral();
     private LienzoFooter lienzoFooter = new LienzoFooter(lienzoCentral);
@@ -22,6 +25,7 @@ public class VentanaReportesCitas extends JFrame {
         super();
         this.crudCitaModel = crudCitaModel;
         this.reporte3MesesModel = new ReporteCita3MesesModel(crudCitaModel, new PersistenciaRepCita3Meses());
+        this.reporteCitaModel = new ReporteCitaModel(crudCitaModel, new PersistenciaRepCita());
         this.setTitle("ReportesInterface de Pacientes");
         this.setSize(800, 600);
         this.setLocationRelativeTo(rootPane);
@@ -62,8 +66,7 @@ public class VentanaReportesCitas extends JFrame {
             cboReportes.setMaximumSize(sizeFijo);
             cboReportes.addItem("Seleccione un reporte");
             cboReportes.addItem("Citas de los Últimos 3 Meses");
-            cboReportes.addItem("Citas por Especialidad");
-            cboReportes.addItem("Historial de Citas por Paciente");
+            cboReportes.addItem("Total de Citas");
 
             // elementos del panel de busqueda
             GridBagConstraints gbcBusqueda = new GridBagConstraints();
@@ -138,13 +141,15 @@ public class VentanaReportesCitas extends JFrame {
                             "Aviso", JOptionPane.WARNING_MESSAGE);
                     return;
                 }
-                List<String> lineasReporte;
+                List<String> contenidoReporte;
                 if (reporteElegido == 1) {
-                    lineasReporte = reporte3MesesModel.generarReporte();
+                    contenidoReporte = reporte3MesesModel.generarReporte();
+                } else if (reporteElegido == 2) {
+                    contenidoReporte = reporteCitaModel.generarReporte();
                 } else {
-                    lineasReporte = java.util.Collections.singletonList("Reporte no implementado");
+                    contenidoReporte = java.util.Collections.singletonList("Reporte no implementado");
                 }
-                for (String linea : lineasReporte) {
+                for (String linea : contenidoReporte) {
                     txtSReportes.append(linea + "\n");
                 }
             });
@@ -177,14 +182,17 @@ public class VentanaReportesCitas extends JFrame {
         private JButton btnImprimir = new JButton("Imprimir Reporte");
         private LienzoCentral lienzoCentral;
         private JButton btnSalir = new JButton("Salir");
+        private JButton btnAyuda = new JButton("Ayuda");
+
         public LienzoFooter(LienzoCentral lienzoCentral){
             super();
             this.lienzoCentral = lienzoCentral;
-            this.setLayout(new BorderLayout());
+            this.setLayout(new FlowLayout(FlowLayout.RIGHT));
             this.setBackground(new Color(33, 122, 210));
             this.setForeground(Color.WHITE);
-            this.add(btnSalir, BorderLayout.EAST);
-            this.add(btnImprimir, BorderLayout.WEST);
+            this.add(btnImprimir);
+            this.add(btnAyuda);
+            this.add(btnSalir);
             this.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
             btnSalir.addActionListener(e -> dispose());
@@ -195,15 +203,34 @@ public class VentanaReportesCitas extends JFrame {
                     JOptionPane.showMessageDialog(lienzoCentral, "Visualice un reporte antes de imprimir", "Aviso", JOptionPane.WARNING_MESSAGE);
                     return;
                 }
+
                 if (reporteSeleccionado == 1) {
                     if (reporte3MesesModel.imprimirReporte()) {
-                        JOptionPane.showMessageDialog(lienzoCentral, "Impresion exitosa", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                        JOptionPane.showMessageDialog(lienzoCentral, "Impresión exitosa", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(lienzoCentral, "Error al imprimir", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                } else if (reporteSeleccionado == 2) {
+                    if (reporteCitaModel.imprimirReporte()) {
+                        JOptionPane.showMessageDialog(lienzoCentral, "Impresión exitosa", "Éxito", JOptionPane.INFORMATION_MESSAGE);
                     } else {
                         JOptionPane.showMessageDialog(lienzoCentral, "Error al imprimir", "Error", JOptionPane.ERROR_MESSAGE);
                     }
                 } else {
                     JOptionPane.showMessageDialog(lienzoCentral, "Impresión no implementada para este reporte", "Aviso", JOptionPane.WARNING_MESSAGE);
                 }
+            });
+
+            btnAyuda.addActionListener(e -> {
+                JOptionPane.showMessageDialog(lienzoCentral,
+                    "Ventana de Reportes de Citas:\n\n" +
+                    "1. Seleccione el tipo de reporte del menú desplegable:\n" +
+                    "   - Citas de los Últimos 3 Meses: Muestra todas las citas programadas en los últimos 3 meses.\n" +
+                    "   - Total de Citas: Muestra todas las citas registradas en el sistema.\n\n" +
+                    "2. Haga clic en 'Previsualizar' para ver el reporte en pantalla.\n\n" +
+                    "3. Utilice 'Imprimir Reporte' para guardar el reporte en un archivo de texto.\n\n" +
+                    "Nota: Debe previsualizar un reporte antes de imprimirlo.",
+                    "Ayuda - Reportes de Citas", JOptionPane.INFORMATION_MESSAGE);
             });
         }
 

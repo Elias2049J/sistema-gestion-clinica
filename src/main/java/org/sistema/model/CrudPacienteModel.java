@@ -61,6 +61,26 @@ public class CrudPacienteModel implements CrudUseCase<Paciente, Integer, String>
 
     @Override
     public List<Paciente> findAll() {
-        return pacienteRepository.findAll();
+        List<Paciente> pacientes = pacienteRepository.findAll();
+        for (Paciente paciente : pacientes) {
+            syncHistorialCitas(paciente);
+        }
+        return pacientes;
+    }
+
+    private void syncHistorialCitas(Paciente paciente) {
+        if (paciente.getHistorialCitas() == null) {
+            paciente.setHistorialCitas(new ArrayList<>());
+        } else {
+            paciente.getHistorialCitas().clear();
+        }
+        for (Cita cita : citaRepository.findAll()) {
+            if (cita.getPaciente() != null &&
+                cita.getPaciente().getIdPaciente() != null &&
+                cita.getPaciente().getIdPaciente().equals(paciente.getIdPaciente())) {
+                paciente.getHistorialCitas().add(cita);
+                cita.setPaciente(paciente);
+            }
+        }
     }
 }

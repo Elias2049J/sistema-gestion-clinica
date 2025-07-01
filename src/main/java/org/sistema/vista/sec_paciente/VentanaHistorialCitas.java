@@ -7,7 +7,6 @@ import org.sistema.use_case.CrudUseCase;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.util.ArrayList;
 
 public class VentanaHistorialCitas extends JFrame {
     private CrudUseCase<Paciente, Integer, String> crudPacienteModel;
@@ -66,14 +65,6 @@ public class VentanaHistorialCitas extends JFrame {
         private DefaultTableModel modeloTabla = new DefaultTableModel();
         private GridBagConstraints gbcSuperior = new GridBagConstraints();
 
-        // panel inferior de botones
-        private JPanel panelBtns = new JPanel();
-        private JButton btnGuardar = new JButton("Guardar Cambios en la fila");
-        private JButton btnDescartar = new JButton("Descartar Cambios");
-        private JButton btnEliminar = new JButton("Eliminar Paciente");
-        private JButton btnEliminarTodo = new JButton("Eliminar Todos");
-        private GridBagConstraints gbcInferior = new GridBagConstraints();
-
         public LienzoCentral() {
             super();
             this.setLayout(new BorderLayout());
@@ -85,16 +76,19 @@ public class VentanaHistorialCitas extends JFrame {
             this.gbcSuperior.weighty = 1;
             this.gbcSuperior.fill = GridBagConstraints.BOTH;
 
-            this.datos = new Object[crudPacienteModel.findAll().size()][columnas.length];
-            for (int i = 0; i < paciente.getHistorialCitas().size(); i++) {
-                Cita c = paciente.getHistorialCitas().get(i);
-                datos[i][0] = c.getIdCita();
-                datos[i][1] = c.getMedico() != null ? c.getMedico() : "n/a";
-                datos[i][2] = c.getEspecialidad() != null ? c.getEspecialidad() : "n/a";
-                datos[i][3] = c.getFecha() != null ? c.getFecha() : "n/a";
-                datos[i][4] = c.getHora() != null ? c.getHora() : "n/a";
-                datos[i][5] = !String.valueOf(c.getCosto()).isBlank() ? c.getCosto() : "n/a";
-                datos[i][6] = c.getEstado() != null ? c.getEstado() : "n/a";
+            this.datos = new Object[paciente.getHistorialCitas() != null ? paciente.getHistorialCitas().size() : 0][columnas.length];
+
+            if (paciente.getHistorialCitas() != null) {
+                for (int i = 0; i < paciente.getHistorialCitas().size(); i++) {
+                    Cita c = paciente.getHistorialCitas().get(i);
+                    datos[i][0] = c.getIdCita();
+                    datos[i][1] = c.getMedico() != null ? c.getMedico() : "n/a";
+                    datos[i][2] = c.getEspecialidad() != null ? c.getEspecialidad() : "n/a";
+                    datos[i][3] = c.getFecha() != null ? c.getFecha() : "n/a";
+                    datos[i][4] = c.getHora() != null ? c.getHora() : "n/a";
+                    datos[i][5] = !String.valueOf(c.getCosto()).isBlank() ? c.getCosto() : "n/a";
+                    datos[i][6] = c.getEstado() != null ? c.getEstado() : "n/a";
+                }
             }
 
             this.modeloTabla.setDataVector(datos, columnas);
@@ -102,71 +96,6 @@ public class VentanaHistorialCitas extends JFrame {
             this.scpTabla.setViewportView(tablaDatos);
             this.panelTabla.add(scpTabla, gbcSuperior);
             this.add(panelTabla, BorderLayout.CENTER);
-
-            // panel btns
-            this.panelBtns.setLayout(new GridBagLayout());
-            this.gbcInferior.insets = new Insets(10, 10, 10, 10);
-            this.btnGuardar.setBackground(new Color(33, 122, 210));
-            this.btnGuardar.setForeground(Color.WHITE);
-            this.btnDescartar.setBackground(new Color(33, 122, 210));
-            this.btnDescartar.setForeground(Color.WHITE);
-            this.btnEliminar.setBackground(new Color(33, 122, 210));
-            this.btnEliminar.setForeground(Color.WHITE);
-            this.btnEliminarTodo.setBackground(new Color(33, 122, 210));
-            this.btnEliminarTodo.setForeground(Color.WHITE);
-
-            this.panelBtns.add(btnGuardar, gbcInferior);
-            this.panelBtns.add(btnDescartar, gbcInferior);
-            this.panelBtns.add(btnEliminar, gbcInferior);
-            this.panelBtns.add(btnEliminarTodo, gbcInferior);
-            this.add(panelBtns, BorderLayout.SOUTH);
-
-            btnGuardar.addActionListener(e -> {
-                int fila = tablaDatos.getSelectedRow();
-                if (fila == -1) {
-                    JOptionPane.showMessageDialog(this, "Seleccione una fila para guardar los cambios.", "Aviso", JOptionPane.WARNING_MESSAGE);
-                    return;
-                }
-                Paciente paciente = getPacienteDeFila(fila);
-                if (crudPacienteModel.update(paciente)) {
-                    JOptionPane.showMessageDialog(this, "Actualizado con éxito.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-                } else {
-                    JOptionPane.showMessageDialog(this, "No se pudo actualizar el paciente.", "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            });
-
-            btnDescartar.addActionListener(e -> {
-                actualizarTabla();
-                JOptionPane.showMessageDialog(this, "Cambios descartados.", "Información", JOptionPane.INFORMATION_MESSAGE);
-            });
-
-            btnEliminar.addActionListener(e -> {
-                int fila = tablaDatos.getSelectedRow();
-                if (fila == -1) {
-                    JOptionPane.showMessageDialog(this, "Seleccione una fila para eliminar.", "Aviso", JOptionPane.WARNING_MESSAGE);
-                    return;
-                }
-                int idPaciente = Integer.parseInt(modeloTabla.getValueAt(fila, 0).toString());
-                int confirmacion = JOptionPane.showConfirmDialog(this, "¿Eliminar Paciente? También se eliminarán todas sus citas.",
-                        "Confirmar", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-                if (confirmacion != JOptionPane.YES_OPTION) return;
-                if (crudPacienteModel.delete(idPaciente)) {
-                    JOptionPane.showMessageDialog(this, "Paciente eliminado con éxito.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-                    actualizarTabla();
-                } else {
-                    JOptionPane.showMessageDialog(this, "No se pudo eliminar el paciente.", "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            });
-
-            btnEliminarTodo.addActionListener(e-> {
-                int confirmacion = JOptionPane.showConfirmDialog(this, "¿Eliminar todo?",
-                        "Confirmar", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-                if (confirmacion != JOptionPane.YES_OPTION) return;
-                for (Paciente p : new ArrayList<>(crudPacienteModel.findAll())) {
-                    crudPacienteModel.delete(p.getIdPaciente());
-                }
-                actualizarTabla();
-            });
         }
 
         private Paciente getPacienteDeFila(int fila) {

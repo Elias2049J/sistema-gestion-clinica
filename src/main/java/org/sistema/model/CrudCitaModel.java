@@ -92,6 +92,19 @@ public class CrudCitaModel implements CrudUseCase<Cita, Integer, String> {
 
     @Override
     public List<Cita> findAll() {
-        return citaRepository.findAll();
+        List<Cita> citas = citaRepository.findAll();
+        for (Cita cita : citas) {
+            setDataPaciente(cita);
+        }
+        return citas;
+    }
+
+    private void setDataPaciente(Cita cita) {
+        if (cita.getPaciente() != null && cita.getPaciente().getIdPaciente() != null) {
+            Paciente pacienteCompleto = pacienteRepository.getById(cita.getPaciente().getIdPaciente());
+            if (pacienteCompleto != null) {
+                cita.setPaciente(pacienteCompleto);
+            }
+        }
     }
 }

@@ -187,14 +187,16 @@ public class VentanaReportesPac extends JFrame {
 
     class LienzoFooter extends JPanel {
         private JButton btnImprimir = new JButton("Imprimir Reporte");
+        private LienzoCentral lienzoCentral;
         private JButton btnSalir = new JButton("Salir");
-
+        private JButton btnAyuda = new JButton("Ayuda");
         public LienzoFooter(LienzoCentral lienzoCentral) {
             super();
             this.setLayout(new FlowLayout(FlowLayout.RIGHT));
             this.setBackground(new Color(33, 122, 210));
             this.setForeground(Color.WHITE);
             this.add(btnImprimir);
+            this.add(btnAyuda);
             this.add(btnSalir);
             this.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
@@ -224,6 +226,18 @@ public class VentanaReportesPac extends JFrame {
                         JOptionPane.showMessageDialog(lienzoCentral, "Error al imprimir", "Error", JOptionPane.ERROR_MESSAGE);
                     }
                 }
+            });
+
+            btnAyuda.addActionListener(e -> {
+                JOptionPane.showMessageDialog(lienzoCentral,
+                    "Ventana de Reportes de Pacientes:\n\n" +
+                    "1. Seleccione el tipo de reporte del menú desplegable:\n" +
+                    "   - Pacientes de la tercera edad: Muestra todos los pacientes mayores de 60 años.\n" +
+                    "   - Lista Completa de Pacientes: Muestra todos los pacientes registrados en el sistema.\n\n" +
+                    "2. Haga clic en 'Previsualizar' para ver el reporte en pantalla.\n\n" +
+                    "3. Utilice 'Imprimir Reporte' para guardar el reporte en un archivo de texto.\n\n" +
+                    "Nota: Debe previsualizar un reporte antes de intentar imprimirlo.",
+                    "Ayuda - Reportes de Pacientes", JOptionPane.INFORMATION_MESSAGE);
             });
         }
 
