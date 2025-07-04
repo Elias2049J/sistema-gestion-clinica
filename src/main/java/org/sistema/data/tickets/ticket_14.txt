@@ -1,0 +1,11 @@
+----------------------------------
+Ticket de Cita Nro. 14
+Dni del Paciente : 32165487
+Nombres          : Hola
+Apellidos        :  Hermano
+Médico           : Chapatin
+Especialidad     : Traumatología
+Fecha            : 2025-06-15
+Hora             : 14:25
+Costo            : 145.0
+----------------------------------

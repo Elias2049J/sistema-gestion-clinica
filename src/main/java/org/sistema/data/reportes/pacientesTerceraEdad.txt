@@ -1,2 +1,2 @@
-|===============================PACIENTES DE TERCERA EDAD===============================
-| ID         NOMBRE          APELLIDO        EDAD   DNI          DIRECCION                      TELEFONO     ESTADO    
+|================================================PACIENTES DE LA TERCERA EDAD=======================================|
+ID         NOMBRE          APELLIDO        EDAD   DNI          DIRECCION                      TELEFONO     ESTADO    

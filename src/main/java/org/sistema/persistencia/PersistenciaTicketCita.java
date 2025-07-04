@@ -12,17 +12,17 @@ public class PersistenciaTicketCita {
         Integer contador = getNumTicket();
         File archivo = new File("src/main/java/org/sistema/data/tickets/ticket_"+contador+".txt");
         try (PrintWriter pw = new PrintWriter(new FileWriter(archivo))) {
-            pw.println("--------------------");
+            pw.println("------------------------------------------------");
             pw.println("Ticket de Cita Nro. "+ contador);
-            pw.println("Dni del Paciente: " + c.getPaciente().getDni());
-            pw.println("Nombres: " + c.getPaciente().getNombre());
-            pw.println("Apellidos: " + c.getPaciente().getApellido());
-            pw.println("Médico: " + c.getMedico());
-            pw.println("Especialidad: " + c.getEspecialidad());
-            pw.println("Fecha: " + c.getFecha());
-            pw.println("Hora: " + c.getHora());
-            pw.println("Costo: " + c.getCosto());
-            pw.println("--------------------");
+            pw.println("Dni del Paciente : " + c.getPaciente().getDni());
+            pw.println("Nombres          : " + c.getPaciente().getNombre());
+            pw.println("Apellidos        :  " + c.getPaciente().getApellido());
+            pw.println("Médico           : " + c.getMedico());
+            pw.println("Especialidad     : " + c.getEspecialidad());
+            pw.println("Fecha            : " + c.getFecha());
+            pw.println("Hora             : " + c.getHora());
+            pw.println("Costo            : " + c.getCosto());
+            pw.println("-----------------------------------------------");
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }

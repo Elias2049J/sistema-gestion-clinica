@@ -1,11 +1,11 @@
 package org.sistema.persistencia;
 
-public class PersistenciaRepPacientesMenoresEdad extends PersistenciaRepPac {
-    protected String titulo = "LISTA PACIENTES MENORES DE EDAD";
+public class PersistenciaRepPac3raEdad extends PersistenciaRepPac {
+    protected String titulo = "PACIENTES DE LA TERCERA EDAD";
 
     @Override
     protected String getFilePath() {
-        return "src/main/java/org/sistema/data/reportes/pacientesMenoresEdad.txt";
+        return "src/main/java/org/sistema/data/reportes/pacientesTerceraEdad.txt";
     }
 
     @Override

@@ -1,0 +1,11 @@
+--------------------
+Ticket de Cita Nro. 13
+Dni del Paciente: 12345678
+Nombres: Jorge
+Apellidos: Herrera
+Médico: Madero García
+Especialidad: Dermatología
+Fecha: 2025-09-15
+Hora: 15:20
+Costo: 89.0
+--------------------

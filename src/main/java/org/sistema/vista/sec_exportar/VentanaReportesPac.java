@@ -9,7 +9,7 @@ import org.sistema.model.ReportePacientesMenoresEdad;
 import org.sistema.model.ReporteTerceraEdadModel;
 import org.sistema.persistencia.PersistenciaRepPac;
 import org.sistema.persistencia.PersistenciaRepPacientesMenoresEdad;
-import org.sistema.persistencia.PersistenciaRepTerceraEdad;
+import org.sistema.persistencia.PersistenciaRepPac3raEdad;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,7 +28,7 @@ public class VentanaReportesPac extends JFrame {
         super();
         this.crudPacienteModel = crudPacienteModel;
         this.reportePacienteModel = new ReportePacienteModel(crudPacienteModel, new PersistenciaRepPac());
-        this.reporteTerceraEdadModel = new ReporteTerceraEdadModel(crudPacienteModel, new PersistenciaRepTerceraEdad());
+        this.reporteTerceraEdadModel = new ReporteTerceraEdadModel(crudPacienteModel, new PersistenciaRepPac3raEdad());
         this.reportePacientesMenoresEdadModel = new ReportePacientesMenoresEdad(crudPacienteModel, new PersistenciaRepPacientesMenoresEdad());
         this.setTitle("Reportes de Pacientes");
         this.setSize(800, 600);

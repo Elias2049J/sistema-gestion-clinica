@@ -1,0 +1,2 @@
+ID         NOMBRE          APELLIDO        EDAD   DNI          DIRECCION                      TELEFONO     ESTADO    
+1          Jorge           Herrera         45     12345678     Calle 18                       123456789    ACTIVO    

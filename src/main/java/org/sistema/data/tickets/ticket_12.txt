@@ -1,0 +1,11 @@
+--------------------
+Ticket de Cita Nro. 12
+Dni del Paciente: 12345678
+Nombres: Jorge
+Apellidos: Herrera
+Médico: Chapatin Lorca
+Especialidad: Medicina General
+Fecha: 2025-07-10
+Hora: 10:25
+Costo: 100.0
+--------------------

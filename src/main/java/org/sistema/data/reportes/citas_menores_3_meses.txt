@@ -1,2 +1,1 @@
-|===============================CITAS MENORES A 3 MESES===============================
-Id_Cita      ID_Paciente                    Medico       Especialidad    Fecha           Hora       Costo                          Estado         
+================================CITAS DE LOS ULTIMOS 3 MESES=================================Id_Cita      ID_Paciente    Medico          Especialidad         Fecha        Hora         Costo      Estado         
